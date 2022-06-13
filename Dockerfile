@@ -31,8 +31,14 @@ RUN apt-get install -y wget
 RUN apt-get install -y manpages-dev
 RUN apt-get install -y g++
 RUN apt-get install -y gcc
+RUN apt-get install -y nodejs
 
 
+## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+RUN sudo apt update
+RUN sudo apt install gh
 
 # RUN add-apt-repository --remove ppa:fkrull/deadsnakes
 # RUN apt-get update
@@ -114,6 +120,13 @@ RUN apt-get update -q -y && \
 RUN apt-get install -y nautilus
 RUN apt install -y jupyter-core
 RUN apt install -y unzip
+RUN apt install -y zip
+RUN apt install -y p7zip-full
+RUN apt install -y apt-utils
+RUN apt install -y octave
+RUN apt install -y kmod
+RUN apt install -y octave
+
 
 ################################################################################
 # set up user
@@ -133,6 +146,10 @@ RUN mkdir ${HOME}/data
 RUN mkdir ${HOME}/labels
 RUN mkdir ${HOME}/preprocess
 RUN mkdir ${HOME}/output
+RUN mkdir ${HOME}/srcCode
+
+
+
 
 RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 
@@ -178,6 +195,7 @@ RUN set -x && \
     rmdir src && \
     apt-get purge -y --auto-remove build-essential
 
+
 # Set up launcher for websockify
 # (websockify must run in  Slicer's Python environment)
 COPY websockify ./Slicer/bin/
@@ -192,6 +210,7 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data
 RUN chown ${NB_USER} ${HOME} ${HOME}/labels
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/output
+RUN chown ${NB_USER} ${HOME} ${HOME}/srcCode
 
 USER ${NB_USER}
 
@@ -207,15 +226,29 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
 
 
 ##picai specific
+#krowa
 
 #download Pi cai data
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
 # unzip and remove zipped files
+# RUN unzip /home/sliceruser/picai_public_images_fold0.zip -d ${HOME}/data
+# RUN unzip /home/sliceruser/picai_public_images_fold1.zip -d ${HOME}/data
+# RUN unzip /home/sliceruser/picai_public_images_fold2.zip -d ${HOME}/data
+# RUN unzip /home/sliceruser/picai_public_images_fold3.zip -d ${HOME}/data
+# #RUN unzip /home/sliceruser/picai_public_images_fold4.zip -d ${HOME}/data
+
+# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
+# #RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
 
 ##picai specific end
+
+
 
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
@@ -227,9 +260,14 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
         git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
 ####### ## { Mitura start} ading libraries through pip 
+
+# RUN apt-get install -y software-properties-common
+# RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+# RUN apt install -y gcc-7 g++-7
+
 COPY requirements-dev.txt /tmp/
 
-
+ENV PATH=$PATH:'/home/sliceruser/Slicer/lib/Python/bin'
 
 
 
@@ -240,6 +278,16 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision to
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir -r /tmp/requirements-dev.txt
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
+
+
+#from https://thenewstack.io/integrate-jupyter-notebooks-with-github/
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter serverextension enable --py githubcommit
+
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter nbextension install --py githubcommit --user
+
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter nbextension enable githubcommit --user --py
+
+
 
 
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
@@ -268,20 +316,65 @@ CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERP
 
 COPY .slicerrc.py .
 
+## to use zenodo /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get -h
+        #for example  /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
+#### Pi-Cai specific and evaluation
+#install for preprocessing 
 
 #install prepared preprocessing and evaluation ready libraries
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
 
 
+
+#### Pi-Cai specific
+
+#prepare  csv containing metadata and paths
+COPY processMetaData.py .
+RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
+# we already unpacked files now we can remove zips
 RUN rm /home/sliceruser/picai_public_images_fold0.zip 
 RUN rm /home/sliceruser/picai_public_images_fold1.zip 
 RUN rm /home/sliceruser/picai_public_images_fold2.zip 
 RUN rm /home/sliceruser/picai_public_images_fold3.zip 
 RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
+#RUN reboot
 
+#COPY testBaselin.py .
+
+#used for logging lightning
+RUN mkdir ${HOME}/lightning_logs
+RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
+
+
+#login to github cli 
+COPY mytoken.txt .
+RUN gh auth login --with-token < mytoken.txt
+RUN git config --global user.name "Jakub Mitura"
+RUN git config --global user.email "jakub.mitura14@gmail.com"
+RUN git config -l
+
+
+#copy main repository inside image
+RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/srcCode
+
+# git push https://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@github.com/jakubMitura14/piCaiCode.git
+
+
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer testBaselin.py
+
+# as for some reason picai_public_images_fold4 i ready later than others
+
+#unzip and remove zipped files
+#RUN unzip /home/sliceruser/picai_public_images_fold4.zip -d ${HOME}/data
+
+#RUN 7z x /home/sliceruser/picai_public_images_fold4.zip -o.${HOME}/data
+#RUN rm /home/sliceruser/picai_public_images_fold4.zip
+
+
+#Pi-Cai specific end
 
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
@@ -294,6 +387,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.schema-version="1.0"
+
+
 
 
 
