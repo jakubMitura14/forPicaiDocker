@@ -1,7 +1,8 @@
 
 
 ## { Mitura start}
-FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+#FROM nvidia/cuda:11.3.1-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
 ################################################################################
 # Prevent apt-get from prompting for keyboard choice
@@ -125,39 +126,57 @@ RUN apt install -y apt-utils
 RUN apt install -y octave
 RUN apt install -y kmod
 RUN apt install -y octave
+RUN apt install -y zlib1g
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub && \
-    apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        cuda-command-line-tools-${CUDA/./-} \
-        libcublas-${CUDA/./-} \
-        cuda-nvrtc-${CUDA/./-} \
-        libcufft-${CUDA/./-} \
-        libcurand-${CUDA/./-} \
-        libcusolver-${CUDA/./-} \
-        libcusparse-${CUDA/./-} \
-        curl \
-        libcudnn8=${CUDNN}+cuda${CUDA} \
-        libfreetype6-dev \
-        libhdf5-serial-dev \
-        libzmq3-dev \
-        pkg-config \
-        software-properties-common \
-        unzip
+
+ARG CUDA=11.3
+ARG CUDNN=8.1.0.77-1
+ARG CUDNN_MAJOR_VERSION=8
+ARG LIB_DIR_PREFIX=x86_64
+ARG LIBNVINFER=7.2.2-1
+ARG LIBNVINFER_MAJOR_VERSION=7
+
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-get update 
+RUN  apt-get update && apt-get install -y --no-install-recommends build-essential 
+RUN  apt-get update && apt-get install -y --no-install-recommends cuda-command-line-tools-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends libcublas-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends cuda-nvrtc-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends libcufft-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends libcurand-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends libcusolver-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends libcusparse-11.3 
+RUN  apt-get update && apt-get install -y --no-install-recommends curl 
+#RUN  apt-get update && apt-get install -y --no-install-recommends libcudnn8  #=8.1.0.77-1+cuda11.3
+
+RUN  apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev 
+RUN  apt-get update && apt-get install -y --no-install-recommends libhdf5-serial-dev 
+RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev 
+RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
+RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
+RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
+
+# from https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-deb
+# RUN mv cuda-${OS}.pin /etc/apt/preferences.d/cuda-repository-pin-600
+# RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/${OS}/x86_64/7fa2af80.pub
+# RUN add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/${OS}/x86_64/ /"
+# RUN apt-get update
+# RUN apt-get install libcudnn8=${cudnn_version}-1+${cuda_version}
+# RUN apt-get install libcudnn8-dev=${cudnn_version}-1+${cuda_version}
 
 
 
 # Install TensorRT if not building for PowerPC
 # NOTE: libnvinfer uses cuda11.1 versions
-RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
-        apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
-        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
-        apt-get update && \
-        apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
-        libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*; }
+# RUN  apt-get update && \
+#         apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
+#         echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
+#         apt-get update && \
+#         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+#         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+#         && apt-get clean \
+#         && rm -rf /var/lib/apt/lists/*; 
 
 # For CUDA profiling, TensorFlow requires CUPTI.
 ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
@@ -191,7 +210,11 @@ RUN mkdir ${HOME}/labels
 RUN mkdir ${HOME}/preprocess
 RUN mkdir ${HOME}/output
 RUN mkdir ${HOME}/srcCode
-
+RUN mkdir ${HOME}/lightning_logs
+# COPY bashrc .
+# COPY bashrc /etc/bash.bashrc
+# RUN chown ${NB_USER} /etc/bash.bashrc
+#RUN chmod a+rwx /etc/bash.bashrc
 
 
 
@@ -255,6 +278,14 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/labels
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/output
 RUN chown ${NB_USER} ${HOME} ${HOME}/srcCode
+RUN chown ${NB_USER} /var/lib/dpkg
+RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
+
+RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/srcCode
+
+#used for logging lightning
+
+
 
 USER ${NB_USER}
 
@@ -267,9 +298,9 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 # First upgrade pip
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
 # from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip --no-cache-dir install --upgrade \
-    "pip<20.3" \
-    setuptools 
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip --no-cache-dir install --upgrade \
+#     "pip<20.3" \
+#     setuptools 
 
 
 # Options:
@@ -284,9 +315,7 @@ ARG TF_PACKAGE_VERSION=
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 
 
-COPY bashrc .
-COPY bashrc /etc/bash.bashrc
-RUN chmod a+rwx /etc/bash.bashrc
+
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
@@ -294,7 +323,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyt
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 #RUN jupyter serverextension enable --py jupyter_http_over_ws
 
-RUN apt-get autoremove -y && apt-get remove -y wget
+#RUN apt-get autoremove -y && apt-get remove -y wget
 
 
 
@@ -303,20 +332,6 @@ RUN apt-get autoremove -y && apt-get remove -y wget
 
 #download Pi cai data
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
-
-# unzip and remove zipped files
-# RUN unzip /home/sliceruser/picai_public_images_fold0.zip -d ${HOME}/data
-# RUN unzip /home/sliceruser/picai_public_images_fold1.zip -d ${HOME}/data
-# RUN unzip /home/sliceruser/picai_public_images_fold2.zip -d ${HOME}/data
-# RUN unzip /home/sliceruser/picai_public_images_fold3.zip -d ${HOME}/data
-# #RUN unzip /home/sliceruser/picai_public_images_fold4.zip -d ${HOME}/data
-
-# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-# #RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
 
 ##picai specific end
@@ -391,45 +406,56 @@ COPY .slicerrc.py .
         #for example  /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
 #### Pi-Cai specific and evaluation
-#install for preprocessing 
-
-#install prepared preprocessing and evaluation ready libraries
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+#install for preprocessing and evaluation
 
 
 
-#### Pi-Cai specific
 
-#prepare  csv containing metadata and paths
-COPY processMetaData.py .
-RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
-# we already unpacked files now we can remove zips
-RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-RUN rm /home/sliceruser/picai_public_images_fold4.zip
+
+
+
+
+# #install prepared preprocessing and evaluation ready libraries
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+
+
+
+# #### Pi-Cai specific
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+
+# #prepare  csv containing metadata and paths
+# COPY processMetaData.py .
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
+# # we already unpacked files now we can remove zips
+# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
 #RUN reboot
 
 #COPY testBaselin.py .
 
-#used for logging lightning
-RUN mkdir ${HOME}/lightning_logs
-RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
 
 
 #login to github cli 
-COPY mytoken.txt .
-RUN gh auth login --with-token < mytoken.txt
-RUN git config --global user.name "Jakub Mitura"
-RUN git config --global user.email "jakub.mitura14@gmail.com"
-RUN git config -l
+# COPY mytoken.txt .
+# RUN gh auth login --with-token < mytoken.txt
+# RUN git config --global user.name "Jakub Mitura"
+# RUN git config --global user.email "jakub.mitura14@gmail.com"
+# RUN git config -l
 
 
 #copy main repository inside image
-RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/srcCode
+
+
+
+
+
+
+
 
 # git push https://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@github.com/jakubMitura14/piCaiCode.git
 
