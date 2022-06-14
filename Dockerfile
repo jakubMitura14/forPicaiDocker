@@ -119,13 +119,57 @@ RUN apt-get update -q -y && \
     apt-get install -q -y --reinstall ca-certificates
 RUN apt-get install -y nautilus
 RUN apt install -y jupyter-core
-RUN apt install -y unzip
 RUN apt install -y zip
 RUN apt install -y p7zip-full
 RUN apt install -y apt-utils
 RUN apt install -y octave
 RUN apt install -y kmod
 RUN apt install -y octave
+
+#from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        cuda-command-line-tools-${CUDA/./-} \
+        libcublas-${CUDA/./-} \
+        cuda-nvrtc-${CUDA/./-} \
+        libcufft-${CUDA/./-} \
+        libcurand-${CUDA/./-} \
+        libcusolver-${CUDA/./-} \
+        libcusparse-${CUDA/./-} \
+        curl \
+        libcudnn8=${CUDNN}+cuda${CUDA} \
+        libfreetype6-dev \
+        libhdf5-serial-dev \
+        libzmq3-dev \
+        pkg-config \
+        software-properties-common \
+        unzip
+
+
+
+# Install TensorRT if not building for PowerPC
+# NOTE: libnvinfer uses cuda11.1 versions
+RUN [[ "${ARCH}" = "ppc64le" ]] || { apt-get update && \
+        apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
+        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
+        apt-get update && \
+        apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+        libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*; }
+
+# For CUDA profiling, TensorFlow requires CUPTI.
+ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+# Link the libcuda stub to the location where tensorflow is searching for it and reconfigure
+# dynamic linker run-time bindings
+RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
+    && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
+    && ldconfig
+
+# See http://bugs.python.org/issue19846
+ENV LANG C.UTF-8
 
 
 ################################################################################
@@ -222,6 +266,35 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
+# from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip --no-cache-dir install --upgrade \
+    "pip<20.3" \
+    setuptools 
+
+
+# Options:
+#   tensorflow
+#   tensorflow-gpu
+#   tf-nightly
+#   tf-nightly-gpu
+# Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
+# Installs the latest version by default.
+ARG TF_PACKAGE=tensorflow
+ARG TF_PACKAGE_VERSION=
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+
+
+COPY bashrc .
+COPY bashrc /etc/bash.bashrc
+RUN chmod a+rwx /etc/bash.bashrc
+
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
+# Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
+# Pin jedi; see https://github.com/ipython/ipython/issues/12740
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+#RUN jupyter serverextension enable --py jupyter_http_over_ws
+
+RUN apt-get autoremove -y && apt-get remove -y wget
 
 
 
@@ -274,20 +347,18 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/lib/Python/bin'
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+# tensorflow
+
+# RUN curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o Miniconda3-latest-Linux-x86_64.sh
+# RUN Miniconda3-latest-Linux-x86_64.sh
+# RUN conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+# RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+
+
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir -r /tmp/requirements-dev.txt
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
-
-
-#from https://thenewstack.io/integrate-jupyter-notebooks-with-github/
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter serverextension enable --py githubcommit
-
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter nbextension install --py githubcommit --user
-
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m jupyter nbextension enable githubcommit --user --py
-
-
 
 
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
