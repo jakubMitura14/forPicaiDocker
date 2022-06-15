@@ -209,7 +209,7 @@ RUN mkdir ${HOME}/data
 RUN mkdir ${HOME}/labels
 RUN mkdir ${HOME}/preprocess
 RUN mkdir ${HOME}/output
-RUN mkdir ${HOME}/srcCode
+RUN mkdir ${HOME}/piCaiCode
 RUN mkdir ${HOME}/lightning_logs
 # COPY bashrc .
 # COPY bashrc /etc/bash.bashrc
@@ -277,11 +277,11 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data
 RUN chown ${NB_USER} ${HOME} ${HOME}/labels
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/output
-RUN chown ${NB_USER} ${HOME} ${HOME}/srcCode
+RUN chown ${NB_USER} ${HOME} ${HOME}/piCaiCode
 RUN chown ${NB_USER} /var/lib/dpkg
 RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
 
-RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/srcCode
+RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
 
 #used for logging lightning
 
@@ -416,23 +416,23 @@ COPY .slicerrc.py .
 
 
 # #install prepared preprocessing and evaluation ready libraries
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
 
 
 
 # #### Pi-Cai specific
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
-# #prepare  csv containing metadata and paths
-# COPY processMetaData.py .
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
-# # we already unpacked files now we can remove zips
-# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold4.zip
+#prepare  csv containing metadata and paths
+COPY processMetaData.py .
+RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
+# we already unpacked files now we can remove zips
+RUN rm /home/sliceruser/picai_public_images_fold0.zip 
+RUN rm /home/sliceruser/picai_public_images_fold1.zip 
+RUN rm /home/sliceruser/picai_public_images_fold2.zip 
+RUN rm /home/sliceruser/picai_public_images_fold3.zip 
+RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
 #RUN reboot
 
@@ -441,11 +441,11 @@ COPY .slicerrc.py .
 
 
 #login to github cli 
-# COPY mytoken.txt .
-# RUN gh auth login --with-token < mytoken.txt
-# RUN git config --global user.name "Jakub Mitura"
-# RUN git config --global user.email "jakub.mitura14@gmail.com"
-# RUN git config -l
+COPY mytoken.txt .
+RUN gh auth login --with-token < mytoken.txt
+RUN git config --global user.name "Jakub Mitura"
+RUN git config --global user.email "jakub.mitura14@gmail.com"
+RUN git config -l
 
 
 #copy main repository inside image
@@ -454,22 +454,7 @@ COPY .slicerrc.py .
 
 
 
-
-
-
-# git push https://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@github.com/jakubMitura14/piCaiCode.git
-
-
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer testBaselin.py
-
-# as for some reason picai_public_images_fold4 i ready later than others
-
-#unzip and remove zipped files
-#RUN unzip /home/sliceruser/picai_public_images_fold4.zip -d ${HOME}/data
-
-#RUN 7z x /home/sliceruser/picai_public_images_fold4.zip -o.${HOME}/data
-#RUN rm /home/sliceruser/picai_public_images_fold4.zip
-
 
 #Pi-Cai specific end
 
