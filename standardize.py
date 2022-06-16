@@ -50,6 +50,14 @@ def removeOutliersBiasFieldCorrect(path,numberOfStandardDeviations = 4):
     return imageB
 
 #####################
+#taken and adapted from https://github.com/NIH-MIP/Radiology_Image_Preprocessing_for_Deep_Learning/blob/main/Codes/image/Nyul_preprocessing.py
+# !/usr/bin/env python3
+# -------------------------------------------------------------------------------
+# Author: Samira Masoudi
+# Date:   11.07.2019
+# Based on Nyul et al. 2000: New variants of a method of MRI scale standardization
+# Full version can be found at https://github.com/sergivalverde/MRI_intensity_normalization
+# -------------------------------------------------------------------------------
 
 def tic():
     global startTime_for_tictoc

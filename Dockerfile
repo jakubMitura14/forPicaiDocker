@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     # build-essential \
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get install -y build-essential
 RUN apt-get install -y wget
@@ -100,23 +100,23 @@ RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt
 #   - install ca-certs to prevent - fatal: unable to access 'https://github.com/novnc/websockify/': server certificate verification failed. CAfile: none CRLfile: none
 RUN apt-get update -q -y && \
     apt-get install -q -y \
-        vim net-tools curl \
-        libgl1-mesa-glx \
-        xserver-xorg-video-dummy \
-        libxrender1 \
-        libpulse0 \
-        libpulse-mainloop-glib0  \
-        libnss3  \
-        libxcomposite1 \
-        libxcursor1 \
-        libfontconfig1 \
-        libxrandr2 \
-        libasound2 \
-        libglu1 \
-        x11vnc \
-        awesome \
-        jq \
-        git && \
+    vim net-tools curl \
+    libgl1-mesa-glx \
+    xserver-xorg-video-dummy \
+    libxrender1 \
+    libpulse0 \
+    libpulse-mainloop-glib0  \
+    libnss3  \
+    libxcomposite1 \
+    libxcursor1 \
+    libfontconfig1 \
+    libxrandr2 \
+    libasound2 \
+    libglu1 \
+    x11vnc \
+    awesome \
+    jq \
+    git && \
     apt-get install -q -y --reinstall ca-certificates
 RUN apt-get install -y nautilus
 RUN apt install -y jupyter-core
@@ -156,6 +156,10 @@ RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev
 RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
 RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
 RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
+
+
+RUN apt install -y apt install cmake git build-essential
+
 
 # from https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-deb
 # RUN mv cuda-${OS}.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -198,9 +202,9 @@ ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
 
 RUN adduser --disabled-password \
-            --gecos "Default user" \
-            --uid ${NB_UID} \
-            ${NB_USER}
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
 
 WORKDIR ${HOME}
 
@@ -211,6 +215,7 @@ RUN mkdir ${HOME}/preprocess
 RUN mkdir ${HOME}/preprocess/monai_persistent_Dataset
 RUN mkdir ${HOME}/output
 RUN mkdir ${HOME}/piCaiCode
+RUN mkdir ${HOME}/build
 RUN mkdir ${HOME}/lightning_logs
 RUN mkdir ${HOME}/preprocess/standarizationModels
 RUN mkdir ${HOME}/preprocess/Bias_field_corrected
@@ -281,11 +286,16 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/labels
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/output
 RUN chown ${NB_USER} ${HOME} ${HOME}/piCaiCode
+RUN chown ${NB_USER} ${HOME} ${HOME}/build
 RUN chown ${NB_USER} /var/lib/dpkg
 RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/monai_persistent_Dataset
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/standarizationModels
 RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/Bias_field_corrected
+
+
+
+
 
 
 
@@ -351,8 +361,8 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
-        git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
-        git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
+    git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
+    git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
 ####### ## { Mitura start} ading libraries through pip 
 
@@ -410,7 +420,7 @@ CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERP
 COPY .slicerrc.py .
 
 ## to use zenodo /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get -h
-        #for example  /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+#for example  /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
 #### Pi-Cai specific and evaluation
 #install for preprocessing and evaluation
@@ -460,6 +470,16 @@ RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
 
 
+
+#for simple elastix from https://simpleelastix.readthedocs.io/GettingStarted.html
+RUN git clone https://github.com/SuperElastix/SimpleElastix
+RUN cd build
+RUN cmake ../SimpleElastix/SuperBuild
+RUN make -j4
+
+RUN cd ${HOME}/build/SimpleITK-build/Wrapping/Python
+# RUN python Packaging/setup.py install
+
 #copy main repository inside image
 RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
 
@@ -475,10 +495,10 @@ ARG IMAGE
 ARG VCS_REF
 ARG VCS_URL
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
+    org.label-schema.name=$IMAGE \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url=$VCS_URL \
+    org.label-schema.schema-version="1.0"
 
 
 
