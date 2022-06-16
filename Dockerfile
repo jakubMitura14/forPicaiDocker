@@ -208,9 +208,12 @@ WORKDIR ${HOME}
 RUN mkdir ${HOME}/data
 RUN mkdir ${HOME}/labels
 RUN mkdir ${HOME}/preprocess
+RUN mkdir ${HOME}/preprocess/monai_persistent_Dataset
 RUN mkdir ${HOME}/output
 RUN mkdir ${HOME}/piCaiCode
 RUN mkdir ${HOME}/lightning_logs
+RUN mkdir ${HOME}/preprocess/standarizationModels
+RUN mkdir ${HOME}/preprocess/Bias_field_corrected
 # COPY bashrc .
 # COPY bashrc /etc/bash.bashrc
 # RUN chown ${NB_USER} /etc/bash.bashrc
@@ -280,8 +283,12 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/output
 RUN chown ${NB_USER} ${HOME} ${HOME}/piCaiCode
 RUN chown ${NB_USER} /var/lib/dpkg
 RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
+RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/monai_persistent_Dataset
+RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/standarizationModels
+RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/Bias_field_corrected
 
-RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
+
+
 
 #used for logging lightning
 
@@ -434,7 +441,12 @@ RUN rm /home/sliceruser/picai_public_images_fold2.zip
 RUN rm /home/sliceruser/picai_public_images_fold3.zip 
 RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
-#RUN reboot
+# perform some standarization and bias field correction
+COPY processMetaData.py .
+RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+
+
+
 
 #COPY testBaselin.py .
 
@@ -449,9 +461,7 @@ RUN git config -l
 
 
 #copy main repository inside image
-
-
-
+RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
 
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer testBaselin.py
