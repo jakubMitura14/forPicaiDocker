@@ -33,6 +33,8 @@ RUN apt-get install -y manpages-dev
 RUN apt-get install -y g++
 RUN apt-get install -y gcc
 RUN apt-get install -y nodejs
+RUN apt-get install -y libssl-dev
+
 
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
@@ -127,6 +129,7 @@ RUN apt install -y octave
 RUN apt install -y kmod
 RUN apt install -y octave
 RUN apt install -y zlib1g
+RUN apt-get install -y python-dev
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
@@ -158,8 +161,8 @@ RUN  apt-get update && apt-get install -y --no-install-recommends software-prope
 RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
 
 
-RUN apt install -y apt install cmake git build-essential
-
+RUN apt-get install -y bzip2
+RUN apt-get install -y cmake
 
 # from https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux-deb
 # RUN mv cuda-${OS}.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -452,7 +455,7 @@ RUN rm /home/sliceruser/picai_public_images_fold3.zip
 RUN rm /home/sliceruser/picai_public_images_fold4.zip
 
 # perform some standarization and bias field correction
-COPY processMetaData.py .
+COPY standardize.py .
 RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
 
 
@@ -471,17 +474,36 @@ RUN git config -l
 
 
 
-#for simple elastix from https://simpleelastix.readthedocs.io/GettingStarted.html
-RUN git clone https://github.com/SuperElastix/SimpleElastix
-RUN cd build
-RUN cmake ../SimpleElastix/SuperBuild
-RUN make -j4
+
+
+
+
+
+
 
 RUN cd ${HOME}/build/SimpleITK-build/Wrapping/Python
 # RUN python Packaging/setup.py install
 
 #copy main repository inside image
 RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
+
+
+
+#USER root
+
+#for simple elastix from https://github.com/Emanoel-sabidussi/SimpleElastixWorkshop
+# RUN cd $HOME/work; \    
+#     git clone https://github.com/SuperElastix/SimpleElastix;\
+#     mkdir build; \ 
+#     cd build; \
+#     cmake ../SimpleElastix/SuperBuild; \
+#     make -j6; \
+#     cd $HOME/work/build/SimpleITK-build/Wrapping/Python; \
+#     /home/sliceruser/Slicer/bin/PythonSlicer -m Packaging/setup.py install; \
+#     cd $HOME/work; \
+#     git clone https://bitbucket.org/e_sabidussi/simpleelastix-workshop.git --depth 1
+
+
 
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer testBaselin.py

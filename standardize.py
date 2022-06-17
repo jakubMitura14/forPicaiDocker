@@ -277,7 +277,6 @@ def transform(image,meanLandmarks,mask=None):
 
 
 trainedModelsBasicPath='/home/sliceruser/preprocess/standarizationModels'
-seriesString="t2w"
 
 def trainStandarization(seriesString,train_patientsPaths):
     """
@@ -295,7 +294,7 @@ def trainStandarization(seriesString,train_patientsPaths):
 
 csvPath='/home/sliceruser/labels/clinical_information/marksheet.csv'
 df = pd.read_csv('/home/sliceruser/labels/processedMetaData.csv')
-
+print(df)
 
 def removeOutliersAndWrite(path):
     image=removeOutliersBiasFieldCorrect(path)

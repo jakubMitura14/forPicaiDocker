@@ -19,7 +19,6 @@ df["cor"] = ""
 df["hbv"] = ""
 df["sag"] = ""
 df["t2w"] = ""
-df["t2w"] = ""
 df["isAnythingInAnnotated"] = 0
 df["isAnyMissing"] = False
 
@@ -128,13 +127,6 @@ def getSize(row,colName):
         return nda.shape
     return (0,0,0)
 
-df["size_t2W"]= df.apply(lambda row : getSize(row, 't2W'), axis = 1)  
-
-
-            # image = sitk.ReadImage(pathh)
-            # print(image.GetSpacing())
-
-
 
 def getSize(row,colName):
     path=str(row[colName])
@@ -159,23 +151,29 @@ def getOriginn(row,colName):
 
 # we are loading the same images 3 times - consider refractoring
 # save sizes
+
+print(df)
+
 df["size_t2W"]= df.apply(lambda row : getSize(row,'t2w'), axis = 1)  
 df["size_adc"]= df.apply(lambda row : getSize(row,'adc'), axis = 1)  
 df["size_cor"]= df.apply(lambda row : getSize(row,'cor'), axis = 1)  
 df["size_hbv"]= df.apply(lambda row : getSize(row,'hbv'), axis = 1)  
-df["size_sag"]= df.apply(lambda row : getSize(row,'t2w'), axis = 1)  
+df["size_sag"]= df.apply(lambda row : getSize(row,'sag'), axis = 1)  
 # save spacing
 df["spac_t2W"]= df.apply(lambda row : getSpacingg(row,'t2w'), axis = 1)  
 df["spac_adc"]= df.apply(lambda row : getSpacingg(row,'adc'), axis = 1)  
 df["spac_cor"]= df.apply(lambda row : getSpacingg(row,'cor'), axis = 1)  
 df["spac_hbv"]= df.apply(lambda row : getSpacingg(row,'hbv'), axis = 1)  
-df["spac_sag"]= df.apply(lambda row : getSpacingg(row,'t2w'), axis = 1)  
+df["spac_sag"]= df.apply(lambda row : getSpacingg(row,'sag'), axis = 1)  
 #save origins
 df["orig_t2W"]= df.apply(lambda row : getOriginn(row,'t2w'), axis = 1)  
 df["orig_adc"]= df.apply(lambda row : getOriginn(row,'adc'), axis = 1)  
 df["orig_cor"]= df.apply(lambda row : getOriginn(row,'cor'), axis = 1)  
 df["orig_hbv"]= df.apply(lambda row : getOriginn(row,'hbv'), axis = 1)  
-df["orig_sag"]= df.apply(lambda row : getOriginn(row,'t2w'), axis = 1)      
+df["orig_sag"]= df.apply(lambda row : getOriginn(row,'sag'), axis = 1)      
 
 
 df.to_csv(os.path.join('/home/sliceruser/labels', 'processedMetaData.csv')) 
+
+
+
