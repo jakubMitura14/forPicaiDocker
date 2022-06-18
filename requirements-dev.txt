@@ -68,9 +68,12 @@ ipywidgets==7.7.0
 h5py==3.7.0
 itk-elastix==0.14.1
 zenodopy==0.2.0
-
-
-
+git+https://github.com/DIAGNijmegen/picai_baseline
+#from https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation/blob/main/requirements.txt
+evalutils==0.3.0
+nnunet==1.7.0
+SimpleITK>=2.1.1.2
+git+https://github.com/balbasty/nitorch#egg=nitorch[all]
 
 # zenodo_get==1.3.4
 # ipykernel
