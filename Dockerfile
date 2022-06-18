@@ -215,13 +215,13 @@ WORKDIR ${HOME}
 RUN mkdir ${HOME}/data
 RUN mkdir ${HOME}/labels
 RUN mkdir ${HOME}/data/preprocess
-RUN mkdir ${HOME}/preprocess/monai_persistent_Dataset
+RUN mkdir ${HOME}/data/preprocess/monai_persistent_Dataset
 RUN mkdir ${HOME}/output
 RUN mkdir ${HOME}/piCaiCode
 RUN mkdir ${HOME}/build
 RUN mkdir ${HOME}/lightning_logs
-RUN mkdir ${HOME}/preprocess/standarizationModels
-RUN mkdir ${HOME}/preprocess/Bias_field_corrected
+RUN mkdir ${HOME}/data/preprocess/standarizationModels
+RUN mkdir ${HOME}/data/preprocess/Bias_field_corrected
 # COPY bashrc .
 # COPY bashrc /etc/bash.bashrc
 # RUN chown ${NB_USER} /etc/bash.bashrc
@@ -291,9 +291,9 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/piCaiCode
 RUN chown ${NB_USER} ${HOME} ${HOME}/build
 RUN chown ${NB_USER} /var/lib/dpkg
 RUN chown ${NB_USER} ${HOME} ${HOME}/lightning_logs
-RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/monai_persistent_Dataset
-RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/standarizationModels
-RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess/Bias_field_corrected
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/monai_persistent_Dataset
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/standarizationModels
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
 
 
 
@@ -430,28 +430,22 @@ COPY .slicerrc.py .
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
 #host segmentations and baselines
-RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/picaiHost/picaiHostSegmentation
-RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/picaiHost/picaiHostBaseline
+RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/externalRepos/picaiHostSegmentation
+RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
+RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
+RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/conditionalAtlas
 
-
+COPY processMetaData.py .
+COPY standardize.py .
+COPY .managePicaiFiles.sh .
 
 
 
 
 # # #### download picai files and do some introductory preprocessing
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
-# #prepare  csv containing metadata and paths
-COPY processMetaData.py .
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
-# # we already unpacked files now we can remove zips
-# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold4.zip
-COPY standardize.py .
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+
+
 
 
 

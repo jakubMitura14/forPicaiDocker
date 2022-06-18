@@ -276,7 +276,7 @@ def transform(image,meanLandmarks,mask=None):
 #####################3
 
 
-trainedModelsBasicPath='/home/sliceruser/preprocess/standarizationModels'
+trainedModelsBasicPath='/home/sliceruser/data/preprocess/standarizationModels'
 
 def trainStandarization(seriesString,train_patientsPaths):
     """
@@ -284,7 +284,7 @@ def trainStandarization(seriesString,train_patientsPaths):
     train_patientsPaths - list of paths to mha files we use to define standard image values
     """
     trainedModel=join(trainedModelsBasicPath,'trained_model'+seriesString+'.npz')
-    train(train_patientsPaths, dir1=join("/home/sliceruser/preprocess/Bias_field_corrected",seriesString),
+    train(train_patientsPaths, dir1=join("/home/sliceruser/data/preprocess/Bias_field_corrected",seriesString),
                                     dir2=trainedModel)
     f = np.load(trainedModel, allow_pickle=True)
     Model = f['trainedModel'].all()
@@ -319,7 +319,7 @@ def iterateAndStandardize(seriesString):
     and overwrites it with normalised biased corrected and standardised version
     """
     #TODO paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
-    train_patientsPaths=df[seriesString].dropna().to_numpy()
+    train_patientsPaths=df[seriesString].dropna().to_numpy()[0:2]
     with mp.Pool(processes = mp.cpu_count()) as pool:
         pool.map(removeOutliersAndWrite,train_patientsPaths)
 
