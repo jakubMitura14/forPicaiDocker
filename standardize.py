@@ -293,7 +293,9 @@ def trainStandarization(seriesString,train_patientsPaths):
 
 
 csvPath='/home/sliceruser/labels/clinical_information/marksheet.csv'
-df = pd.read_csv('/home/sliceruser/labels/processedMetaData.csv')
+df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData.csv')
+
+
 print(df)
 
 def removeOutliersAndWrite(path):
@@ -303,7 +305,7 @@ def removeOutliersAndWrite(path):
     writer.SetFileName(path)
     writer.Execute(image)   
 
-def standardizeFromPathAndOverwrite(path):    
+def standardizeFromPathAndOverwrite(path,meanLandmarks):    
     image=sitk.ReadImage(path)
     image= transform(image,meanLandmarks=meanLandmarks)
     writer = sitk.ImageFileWriter()
@@ -325,7 +327,7 @@ def iterateAndStandardize(seriesString):
     meanLandmarks=trainStandarization(seriesString,train_patientsPaths)
 
     with mp.Pool(processes = mp.cpu_count()) as pool:
-        pool.map(standardizeFromPathAndOverwrite,train_patientsPaths)
+        pool.map(standardizeFromPathAndOverwrite,train_patientsPaths,meanLandmarks)
 
 iterateAndStandardize('t2w')
 iterateAndStandardize('adc')

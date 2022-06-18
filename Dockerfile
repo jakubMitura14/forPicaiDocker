@@ -214,7 +214,7 @@ WORKDIR ${HOME}
 ##picai specific
 RUN mkdir ${HOME}/data
 RUN mkdir ${HOME}/labels
-RUN mkdir ${HOME}/preprocess
+RUN mkdir ${HOME}/data/preprocess
 RUN mkdir ${HOME}/preprocess/monai_persistent_Dataset
 RUN mkdir ${HOME}/output
 RUN mkdir ${HOME}/piCaiCode
@@ -284,9 +284,8 @@ RUN chmod +x ${HOME}/Slicer/bin/websockify
 # - mybinder requirement
 # - chrome sandbox inside QtWebEngine does not support root.
 RUN chown ${NB_USER} ${HOME} ${HOME}/Slicer
-RUN chown ${NB_USER} ${HOME} ${HOME}/data
 RUN chown ${NB_USER} ${HOME} ${HOME}/labels
-RUN chown ${NB_USER} ${HOME} ${HOME}/preprocess
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/output
 RUN chown ${NB_USER} ${HOME} ${HOME}/piCaiCode
 RUN chown ${NB_USER} ${HOME} ${HOME}/build
@@ -421,68 +420,52 @@ CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERP
 # Install Slicer application startup script
 
 COPY .slicerrc.py .
-
-## to use zenodo /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get -h
-#for example  /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
-
-#### Pi-Cai specific and evaluation
-#install for preprocessing and evaluation
+# perform some standarization and bias field correction
 
 
 
 
-
-
-
-
+##############3 code from picai hosts
 # #install prepared preprocessing and evaluation ready libraries
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+#host segmentations and baselines
+RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/picaiHost/picaiHostSegmentation
+RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/picaiHost/picaiHostBaseline
 
 
 
-# #### Pi-Cai specific
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
-#prepare  csv containing metadata and paths
+
+
+# # #### download picai files and do some introductory preprocessing
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+
+# #prepare  csv containing metadata and paths
 COPY processMetaData.py .
-RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
-# we already unpacked files now we can remove zips
-RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-RUN rm /home/sliceruser/picai_public_images_fold4.zip
-
-# perform some standarization and bias field correction
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
+# # we already unpacked files now we can remove zips
+# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold4.zip
 COPY standardize.py .
-RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
-
-
-
-
-#COPY testBaselin.py .
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
 
 
 
 #login to github cli 
-COPY mytoken.txt .
-RUN gh auth login --with-token < mytoken.txt
-RUN git config --global user.name "Jakub Mitura"
-RUN git config --global user.email "jakub.mitura14@gmail.com"
-RUN git config -l
+# COPY mytoken.txt .
+# RUN gh auth login --with-token < mytoken.txt
+# RUN git config --global user.name "Jakub Mitura"
+# RUN git config --global user.email "jakub.mitura14@gmail.com"
+# RUN git config -l
 
 
 
 
 
-
-
-
-
-
-RUN cd ${HOME}/build/SimpleITK-build/Wrapping/Python
-# RUN python Packaging/setup.py install
 
 #copy main repository inside image
 RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
@@ -492,18 +475,6 @@ RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/piCaiCode
 #USER root
 
 #for simple elastix from https://github.com/Emanoel-sabidussi/SimpleElastixWorkshop
-# RUN cd $HOME/work; \    
-#     git clone https://github.com/SuperElastix/SimpleElastix;\
-#     mkdir build; \ 
-#     cd build; \
-#     cmake ../SimpleElastix/SuperBuild; \
-#     make -j6; \
-#     cd $HOME/work/build/SimpleITK-build/Wrapping/Python; \
-#     /home/sliceruser/Slicer/bin/PythonSlicer -m Packaging/setup.py install; \
-#     cd $HOME/work; \
-#     git clone https://bitbucket.org/e_sabidussi/simpleelastix-workshop.git --depth 1
-
-
 
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer testBaselin.py

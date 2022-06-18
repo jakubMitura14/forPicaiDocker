@@ -23,10 +23,7 @@ df["isAnythingInAnnotated"] = 0
 df["isAnyMissing"] = False
 
 
-rootdir = '/home/sliceruser/data/'
-
-zipDir= '/home/sliceruser/picai_public_images_fold0.zip'
-targetDir= '/home/sliceruser/data'
+targetDir= '/home/sliceruser/data/orig'
 def unpackk(zipDir,targetDir):
     with ZipFile(zipDir, "r") as zip_ref:
         for name in zip_ref.namelist():
@@ -48,10 +45,9 @@ unpackk( '/home/sliceruser/picai_public_images_fold3.zip', targetDir)
 unpackk( '/home/sliceruser/picai_public_images_fold4.zip', targetDir)   
 
 #create a dictionary of directories where key is the patient_id
-rootdir = '/home/sliceruser/data/'
 
 dirDict={}
-for subdir, dirs, files in os.walk(rootdir):
+for subdir, dirs, files in os.walk(targetDir):
     for subdirin, dirsin, filesin in os.walk(subdir):
         lenn= len(filesin)
         if(lenn>0):
@@ -65,14 +61,14 @@ for subdir, dirs, files in os.walk(labelsRootDir):
 #Constructing functions that when applied to each row will fill the necessary path data
 listOfDeficientStudyIds=[]
 
-def findPathh(row,dirDictt,keyWord,rootdir):
+def findPathh(row,dirDictt,keyWord,targetDir):
     patId=str(row['patient_id'])
     study_id=str(row['study_id'])
     #first check is such key present
     if(patId in dirDictt ):
         filtered = list(filter(lambda file_name:   (keyWord in file_name and  study_id  in  file_name  ), dirDictt[patId]  ))
         if(len(filtered)>0):
-            return os.path.join(rootdir,  patId, filtered[0] )
+            return os.path.join(targetDir,  patId, filtered[0] )
         else:
             print(f"no {keyWord} in {study_id}")
             listOfDeficientStudyIds.append(study_id)
@@ -82,7 +78,7 @@ def findPathh(row,dirDictt,keyWord,rootdir):
     
 
 def addPathsToDf(dff, dirDictt, keyWord):
-    return dff.apply(lambda row : findPathh(row,dirDictt ,keyWord,rootdir )   , axis = 1)
+    return dff.apply(lambda row : findPathh(row,dirDictt ,keyWord,targetDir )   , axis = 1)
 
 df['t2w'] =addPathsToDf(df,dirDict, 't2w')
 df["adc"] = addPathsToDf(df,dirDict, 'adc')
@@ -173,7 +169,7 @@ df["orig_hbv"]= df.apply(lambda row : getOriginn(row,'hbv'), axis = 1)
 df["orig_sag"]= df.apply(lambda row : getOriginn(row,'sag'), axis = 1)      
 
 
-df.to_csv(os.path.join('/home/sliceruser/labels', 'processedMetaData.csv')) 
+df.to_csv('/home/sliceruser/data/metadata/processedMetaData.csv') 
 
 
 
