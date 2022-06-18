@@ -291,8 +291,6 @@ def trainStandarization(seriesString,train_patientsPaths):
     meanLandmarks = Model['meanLandmarks']
     return meanLandmarks       
 
-
-csvPath='/home/sliceruser/labels/clinical_information/marksheet.csv'
 df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData.csv')
 
 
@@ -318,7 +316,7 @@ def iterateAndStandardize(seriesString):
     iterates over files from train_patientsPaths representing seriesString type of the study
     and overwrites it with normalised biased corrected and standardised version
     """
-    #TODO paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
+    #paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
     train_patientsPaths=df[seriesString].dropna().to_numpy()[0:2]
     with mp.Pool(processes = mp.cpu_count()) as pool:
         pool.map(removeOutliersAndWrite,train_patientsPaths)
@@ -334,3 +332,33 @@ iterateAndStandardize('adc')
 iterateAndStandardize('cor')
 iterateAndStandardize('hbv')
 iterateAndStandardize('sag')
+
+#Important !!! set all labels that are non 0 to 1
+def changeLabelToOnes(path):
+    """
+    as in the labels or meaningfull ones are greater then 0 so we need to process it and change any nymber grater to 0 to 1...
+    """
+    if(path!= " " and path!=""):
+        image1 = sitk.ReadImage(path)
+        data = sitk.GetArrayFromImage(image1)
+        data -= np.min(data)
+        data[data != 0] = 1
+        #recreating image keeping relevant metadata
+        image = sitk.GetImageFromArray(data)
+        image.SetSpacing(image1.GetSpacing())
+        image.SetOrigin(image1.GetOrigin())
+        image.SetDirection(image1.GetDirection())
+        writer = sitk.ImageFileWriter()
+        writer.KeepOriginalImageUIDOn()
+        writer.SetFileName(path)
+        writer.Execute(image)   
+    
+def iterateAndchangeLabelToOnes():
+    """
+    iterates over files from train_patientsPaths representing seriesString type of the study
+    and overwrites it with normalised biased corrected and standardised version
+    """
+    #paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
+    train_patientsPaths=df['reSampledPath'].dropna().to_numpy()
+    with mp.Pool(processes = mp.cpu_count()) as pool:
+        pool.map(changeLabelToOnes,train_patientsPaths)

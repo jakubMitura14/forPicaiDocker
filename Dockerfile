@@ -280,45 +280,39 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/monai_persistent_Dataset
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/standarizationModels
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
 
+COPY managePicaiFiles.sh .
+RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 
 
+USER ${NB_USER}
+RUN mkdir /tmp/runtime-sliceruser
+ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
+ENV PATH=$PATH:'/home/sliceruser/Slicer/lib/Python/bin'
 COPY processMetaData.py .
 COPY standardize.py .
-COPY managePicaiFiles.sh .
 
-#for downloading Pi cai data
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
-#downloading from zenodo and preprocessing picai files
-RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
-RUN /home/sliceruser/managePicaiFiles.sh
 
 ## needed for picai host prostate segmentation algorithm
 #### from https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation/blob/main/Dockerfile
 
 #RUN cd ${HOME}/externalRepos
 
-RUN mkdir -p /opt/algorithm/results/ \
-    && chown ${NB_USER}:algorithm /opt/algorithm/results/
-COPY --chown=${NB_USER}:algorithm results/ /opt/algorithm/results/
 
 
-# Extend the nnUNet installation with custom trainers
-COPY --chown=${NB_USER}:algorithm nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
-RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
-    mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
+# # Extend the nnUNet installation with custom trainers
+# COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
+# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+#     mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
 
-COPY --chown=${NB_USER}:algorithm nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
-RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
-    mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
+# COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
+# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+#     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
 
 
 
-USER ${NB_USER}
-RUN mkdir /tmp/runtime-sliceruser
-ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 
 # from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
@@ -356,13 +350,20 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN apt install -y gcc-7 g++-7
 
 COPY requirements-dev.txt /tmp/
-ENV PATH=$PATH:'/home/sliceruser/Slicer/lib/Python/bin'
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir -r /tmp/requirements-dev.txt
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
+
+
+#for downloading Pi cai data
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
+#downloading from zenodo and preprocessing metadata
+RUN /home/sliceruser/managePicaiFiles.sh
+#standarization
+RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
 
 
 

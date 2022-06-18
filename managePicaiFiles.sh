@@ -18,7 +18,7 @@ then
         rm /home/sliceruser/picai_public_images_fold3.zip 
         rm /home/sliceruser/picai_public_images_fold4.zip
         #standarization - it can take sth like 90h on 10 cores cpu
-        /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+        # /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
     fi
     else
         echo "no folder /home/sliceruser/data/orig"   
