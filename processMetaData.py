@@ -7,7 +7,11 @@ import os
 import SimpleITK as sitk
 from zipfile import ZipFile
 from zipfile import BadZipFile
-
+import dask.dataframe as dd
+import os
+import multiprocessing as mp
+import functools
+from functools import partial
 
 #read metadata, and add columns for additional information
 csvPath='/home/sliceruser/labels/clinical_information/marksheet.csv'
@@ -21,6 +25,23 @@ df["sag"] = ""
 df["t2w"] = ""
 df["isAnythingInAnnotated"] = 0
 df["isAnyMissing"] = False
+
+targetDir= '/home/sliceruser/data/orig'
+
+dirDict={}
+for subdir, dirs, files in os.walk(targetDir):
+    for subdirin, dirsin, filesin in os.walk(subdir):
+        lenn= len(filesin)
+        if(lenn>0):
+            dirDict[subdirin.split("/")[5]]=filesin
+
+labelsFiles=[]
+labelsRootDir = '/home/sliceruser/labels/csPCa_lesion_delineations/human_expert/resampled/'
+for subdir, dirs, files in os.walk(labelsRootDir):
+    labelsFiles=files
+    
+#Constructing functions that when applied to each row will fill the necessary path data
+listOfDeficientStudyIds=[]
 
 
 targetDir= '/home/sliceruser/data/orig'
@@ -45,23 +66,8 @@ unpackk( '/home/sliceruser/picai_public_images_fold3.zip', targetDir)
 unpackk( '/home/sliceruser/picai_public_images_fold4.zip', targetDir)   
 
 #create a dictionary of directories where key is the patient_id
-
-dirDict={}
-for subdir, dirs, files in os.walk(targetDir):
-    for subdirin, dirsin, filesin in os.walk(subdir):
-        lenn= len(filesin)
-        if(lenn>0):
-            dirDict[subdirin.split("/")[4]]=filesin
-
-labelsFiles=[]
-labelsRootDir = '/home/sliceruser/labels/csPCa_lesion_delineations/human_expert/resampled/'
-for subdir, dirs, files in os.walk(labelsRootDir):
-    labelsFiles=files
-    
-#Constructing functions that when applied to each row will fill the necessary path data
-listOfDeficientStudyIds=[]
-
 def findPathh(row,dirDictt,keyWord,targetDir):
+    row=row[1]
     patId=str(row['patient_id'])
     study_id=str(row['study_id'])
     #first check is such key present
@@ -75,17 +81,17 @@ def findPathh(row,dirDictt,keyWord,targetDir):
             return " " 
     listOfDeficientStudyIds.append(study_id)
     return " "
-    
 
-def addPathsToDf(dff, dirDictt, keyWord):
-    return dff.apply(lambda row : findPathh(row,dirDictt ,keyWord,targetDir )   , axis = 1)
+def iter_paths_apply(dff,keyword):
+    resList=[]
+    with mp.Pool(processes = mp.cpu_count()) as pool:
+        resList=pool.map(partial(findPathh,dirDictt=dirDict,keyWord='t2w',targetDir=targetDir)  ,list(dff.iterrows()))
+    dff[keyword]=resList   
 
-df['t2w'] =addPathsToDf(df,dirDict, 't2w')
-df["adc"] = addPathsToDf(df,dirDict, 'adc')
-df["cor"] = addPathsToDf(df,dirDict, 'cor')
-df["hbv"] = addPathsToDf(df,dirDict, 'hbv')
-df["sag"] = addPathsToDf(df,dirDict, 'sag')
-#now  resampled labels are in separate directory
+iter_paths_apply(df,'t2w')
+iter_paths_apply(df,'adc')
+iter_paths_apply(df,'hbv')
+iter_paths_apply(df,'sag')
 
 
 def findResampledLabel(row,labelsFiles):
@@ -101,6 +107,7 @@ def findResampledLabel(row,labelsFiles):
 df["reSampledPath"] =  df.apply(lambda row : findResampledLabel(row,labelsFiles )   , axis = 1)  
 
 def isAnythingInAnnotated(row):
+    row=row[1]
     reSampledPath=str(row['reSampledPath'])
     if(len(reSampledPath)>1):
         image = sitk.ReadImage(reSampledPath)
@@ -108,68 +115,44 @@ def isAnythingInAnnotated(row):
         return np.sum(nda)
     return 0
 
-df["isAnythingInAnnotated"]= df.apply(lambda row : isAnythingInAnnotated(row), axis = 1)  
+resList=[]
+with mp.Pool(processes = mp.cpu_count()) as pool:
+    resList=pool.map(isAnythingInAnnotated  ,list(df.iterrows()))
+df['isAnythingInAnnotated']=resList   
 
 #marking that we have something lacking here
 df["isAnyMissing"]=df.apply(lambda row : str(row['study_id']) in  listOfDeficientStudyIds  , axis = 1) 
 
-
+def ifShortReturnMinus(tupl, patId,colName):
+    if(len(tupl)!=3):
+        print("incorrect spacial data "+ colName+ "  "+patId+ " length "+ len(tupl) ) 
+        return (-1,-1,-1)
+    return tupl    
 #getting sizes and spacings ...
-def getSize(row,colName):
+def get_spatial_meta(row,colName):
+    row=row[1]
+    patId=str(row['patient_id'])
     path=str(row[colName])
     if(len(path)>1):
         image = sitk.ReadImage(path)
-        nda = sitk.GetArrayFromImage(image)
-        return nda.shape
-    return (0,0,0)
+        sizz= ifShortReturnMinus(image.GetSize(),patId,colName )
+        spac= ifShortReturnMinus(image.GetSpacing(),patId,colName)
+        orig= ifShortReturnMinus(image.GetOrigin(),patId,colName)
+        return list(sizz)+list(spac)+list(orig)
+    return [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+for keyWord in ['t2w','adc', 'cor','hbv','sag'  ]:    
+    resList=[]
+    with mp.Pool(processes = mp.cpu_count()) as pool:
+        resList=pool.map(partial(get_spatial_meta,colName=keyWord)  ,list(df.iterrows()))    
+    print(type(resList))    
+    df[keyWord+'_sizz_x']= list(map(lambda arr:arr[0], resList))    
+    df[keyWord+'_sizz_y']= list(map(lambda arr:arr[1], resList))    
+    df[keyWord+'_sizz_z']= list(map(lambda arr:arr[2], resList))
 
-
-def getSize(row,colName):
-    path=str(row[colName])
-    if(len(path)>1):
-        image = sitk.ReadImage(path)
-        return image.GetSize()
-    return (0,0,0)
-
-def getSpacingg(row,colName):
-    path=str(row[colName])
-    if(len(path)>1):
-        image = sitk.ReadImage(path)
-        return image.GetSpacing()
-    return (0,0,0)
-
-def getOriginn(row,colName):
-    path=str(row[colName])
-    if(len(path)>1):
-        image = sitk.ReadImage(path)
-        return image.GetOrigin()
-    return (0,0,0)
-
-# we are loading the same images 3 times - consider refractoring
-# save sizes
-
-print(df)
-
-df["size_t2W"]= df.apply(lambda row : getSize(row,'t2w'), axis = 1)  
-df["size_adc"]= df.apply(lambda row : getSize(row,'adc'), axis = 1)  
-df["size_cor"]= df.apply(lambda row : getSize(row,'cor'), axis = 1)  
-df["size_hbv"]= df.apply(lambda row : getSize(row,'hbv'), axis = 1)  
-df["size_sag"]= df.apply(lambda row : getSize(row,'sag'), axis = 1)  
-# save spacing
-df["spac_t2W"]= df.apply(lambda row : getSpacingg(row,'t2w'), axis = 1)  
-df["spac_adc"]= df.apply(lambda row : getSpacingg(row,'adc'), axis = 1)  
-df["spac_cor"]= df.apply(lambda row : getSpacingg(row,'cor'), axis = 1)  
-df["spac_hbv"]= df.apply(lambda row : getSpacingg(row,'hbv'), axis = 1)  
-df["spac_sag"]= df.apply(lambda row : getSpacingg(row,'sag'), axis = 1)  
-#save origins
-df["orig_t2W"]= df.apply(lambda row : getOriginn(row,'t2w'), axis = 1)  
-df["orig_adc"]= df.apply(lambda row : getOriginn(row,'adc'), axis = 1)  
-df["orig_cor"]= df.apply(lambda row : getOriginn(row,'cor'), axis = 1)  
-df["orig_hbv"]= df.apply(lambda row : getOriginn(row,'hbv'), axis = 1)  
-df["orig_sag"]= df.apply(lambda row : getOriginn(row,'sag'), axis = 1)      
-
-
-df.to_csv('/home/sliceruser/data/metadata/processedMetaData.csv') 
-
-
-
+    df[keyWord+'_spac_x']= list(map(lambda arr:arr[3], resList))    
+    df[keyWord+'_spac_y']= list(map(lambda arr:arr[4], resList))    
+    df[keyWord+'_spac_z']= list(map(lambda arr:arr[5], resList))    
+    
+    df[keyWord+'_orig_x']= list(map(lambda arr:arr[6], resList))    
+    df[keyWord+'_orig_y']= list(map(lambda arr:arr[7], resList))    
+    df[keyWord+'_orig_z']= list(map(lambda arr:arr[8], resList))    

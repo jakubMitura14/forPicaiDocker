@@ -22,6 +22,7 @@ def removeOutliersBiasFieldCorrect(path,numberOfStandardDeviations = 4):
     numberOfStandardDeviations- osed to define outliers
 
     """
+    
     image1 = sitk.ReadImage(path)
     data = sitk.GetArrayFromImage(image1)
     # shift the data up so that all intensity values turn positive
@@ -317,7 +318,7 @@ def iterateAndStandardize(seriesString):
     and overwrites it with normalised biased corrected and standardised version
     """
     #paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
-    train_patientsPaths=df[seriesString].dropna().to_numpy()[0:2]
+    train_patientsPaths=df[seriesString].dropna().astype('str')[(df[seriesString].str.len() >2)].to_numpy()[0:10]
     with mp.Pool(processes = mp.cpu_count()) as pool:
         pool.map(removeOutliersAndWrite,train_patientsPaths)
 
@@ -342,7 +343,7 @@ def changeLabelToOnes(path):
         image1 = sitk.ReadImage(path)
         data = sitk.GetArrayFromImage(image1)
         data -= np.min(data)
-        data[data != 0] = 1
+        data[data>= 1] = 1
         #recreating image keeping relevant metadata
         image = sitk.GetImageFromArray(data)
         image.SetSpacing(image1.GetSpacing())
@@ -359,6 +360,6 @@ def iterateAndchangeLabelToOnes():
     and overwrites it with normalised biased corrected and standardised version
     """
     #paralelize https://medium.com/python-supply/map-reduce-and-multiprocessing-8d432343f3e7
-    train_patientsPaths=df['reSampledPath'].dropna().to_numpy()
+    train_patientsPaths=df['reSampledPath'].dropna().astype('str')[(df['reSampledPath'].str.len() >2)].to_numpy()
     with mp.Pool(processes = mp.cpu_count()) as pool:
         pool.map(changeLabelToOnes,train_patientsPaths)

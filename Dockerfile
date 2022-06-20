@@ -20,18 +20,17 @@ RUN apt-get update && apt-get install -y \
     git \
     bzip2 \
     libx11-6 \
-    # build-essential \
+    build-essential \
+    wget\
+    manpages-dev\
+    g++\
+    gcc\
+    nodejs\
+    libssl-dev\
+    unzip\
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
-RUN apt-get update
-RUN apt-get install -y build-essential
-RUN apt-get install -y wget
-RUN apt-get install -y manpages-dev
-RUN apt-get install -y g++
-RUN apt-get install -y gcc
-RUN apt-get install -y nodejs
-RUN apt-get install -y libssl-dev
 
 
 
@@ -65,7 +64,7 @@ RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
 RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 RUN apt-get update
 RUN apt-get -y install cuda-11.3
-
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 ## { Mitura end}
 
 
@@ -110,51 +109,62 @@ RUN apt-get update -q -y && \
     x11vnc \
     awesome \
     jq \
+    nautilus\
+    jupyter-core\
+    zip\
+    p7zip-full\
+    apt-utils\
+    octave\
+    kmod\
+    zlib1g\
+    python-dev\
+    bzip2\
+    cmake\
+    cuda-command-line-tools-11.3 \
+    libcublas-11.3 \
+    cuda-nvrtc-11.3\
+    libcufft-11.3 \
+    libcurand-11.3 \
+    libcusolver-11.3 \
+    libcusparse-11.3 \
+    libfreetype6-dev \
+    curl\
+    libzmq3-dev \
+    pkg-config\
+    software-properties-common\
+    libhdf5-serial-dev\
     git && \
     apt-get install -q -y --reinstall ca-certificates
-RUN apt-get install -y nautilus
-RUN apt install -y jupyter-core
-RUN apt install -y zip
-RUN apt install -y p7zip-full
-RUN apt install -y apt-utils
-RUN apt install -y octave
-RUN apt install -y kmod
-RUN apt install -y octave
-RUN apt install -y zlib1g
-RUN apt-get install -y python-dev
+
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
-ARG CUDA=11.3
-ARG CUDNN=8.1.0.77-1
-ARG CUDNN_MAJOR_VERSION=8
-ARG LIB_DIR_PREFIX=x86_64
-ARG LIBNVINFER=7.2.2-1
-ARG LIBNVINFER_MAJOR_VERSION=7
+# ARG CUDA=11.3
+# ARG CUDNN=8.1.0.77-1
+# ARG CUDNN_MAJOR_VERSION=8
+# ARG LIB_DIR_PREFIX=x86_64
+# ARG LIBNVINFER=7.2.2-1
+# ARG LIBNVINFER_MAJOR_VERSION=7
 
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-RUN apt-get update 
-RUN  apt-get update && apt-get install -y --no-install-recommends build-essential 
-RUN  apt-get update && apt-get install -y --no-install-recommends cuda-command-line-tools-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends libcublas-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends cuda-nvrtc-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends libcufft-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends libcurand-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends libcusolver-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends libcusparse-11.3 
-RUN  apt-get update && apt-get install -y --no-install-recommends curl 
-#RUN  apt-get update && apt-get install -y --no-install-recommends libcudnn8  #=8.1.0.77-1+cuda11.3
+# RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+# RUN apt-get update 
+# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-command-line-tools-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcublas-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-nvrtc-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcufft-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcurand-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcusolver-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcusparse-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends curl 
+# #RUN  apt-get update && apt-get install -y --no-install-recommends libcudnn8  #=8.1.0.77-1+cuda11.3
 
-RUN  apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev 
-RUN  apt-get update && apt-get install -y --no-install-recommends libhdf5-serial-dev 
-RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev 
-RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
-RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
-RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
+# RUN  apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libhdf5-serial-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
+# RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
+# RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
 
-
-RUN apt-get install -y bzip2
-RUN apt-get install -y cmake
 
 
 # Install TensorRT if not building for PowerPC
@@ -195,17 +205,30 @@ RUN adduser --disabled-password \
 WORKDIR ${HOME}
 
 ##picai specific
-RUN mkdir ${HOME}/data
-RUN mkdir ${HOME}/labels
-RUN mkdir ${HOME}/data/preprocess
-RUN mkdir ${HOME}/data/orig
-RUN mkdir ${HOME}/data/preprocess/monai_persistent_Dataset
-RUN mkdir ${HOME}/output
-RUN mkdir ${HOME}/data/piCaiCode
-RUN mkdir ${HOME}/build
-RUN mkdir ${HOME}/data/lightning_logs
-RUN mkdir ${HOME}/data/preprocess/standarizationModels
-RUN mkdir ${HOME}/data/preprocess/Bias_field_corrected
+# RUN mkdir {${HOME}/data, ${HOME}/labels,${HOME}/data/preprocess, ${HOME}/data/orig
+# , ${HOME}/data/preprocess/monai_persistent_Dataset, ${HOME}/output,${HOME}/data/piCaiCode,${HOME}/build
+# , ${HOME}/data/lightning_logs, ${HOME}/data/preprocess/standarizationModels
+# , ${HOME}/data/preprocess/Bias_field_corrected, ${HOME}/data/metadata}
+
+
+
+# Install some basic utilities
+RUN mkdir \
+    ${HOME}/data \
+    ${HOME}/labels \
+    ${HOME}/data/preprocess \
+    ${HOME}/data/orig \
+    ${HOME}/data/preprocess/monai_persistent_Dataset \
+    ${HOME}/output \
+    ${HOME}/data/piCaiCode \
+    ${HOME}/build \
+    ${HOME}/data/lightning_logs \
+    ${HOME}/data/preprocess/standarizationModels \
+    ${HOME}/data/preprocess/Bias_field_corrected \
+    ${HOME}/data/metadata
+
+
+
 # COPY bashrc .
 # COPY bashrc /etc/bash.bashrc
 # RUN chown ${NB_USER} /etc/bash.bashrc
@@ -279,6 +302,11 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/lightning_logs
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/monai_persistent_Dataset
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/standarizationModels
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
+
+
+
+
 
 COPY managePicaiFiles.sh .
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
@@ -359,11 +387,39 @@ ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 
 #for downloading Pi cai data
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
 #downloading from zenodo and preprocessing metadata
-RUN /home/sliceruser/managePicaiFiles.sh
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+#         # #prepare  csv containing metadata and paths
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
+#         # # we already unpacked files now we can remove zips
+# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
+# RUN rm /home/sliceruser/picai_public_images_fold4.zip
+        #standarization - it can take sth like 90h on 10 cores cpu
+        # /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+#RUN /home/sliceruser/managePicaiFiles.sh
 #standarization
-RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+ 
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+
+#copy main repository inside image using token - as the repository is private
+RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
+
+##############3 code from picai hosts
+# #install prepared preprocessing and evaluation ready libraries
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+#host segmentations and baselines
+RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/externalRepos/picaiHostSegmentation
+RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
+RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
+RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
+#RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
+
+
 
 
 
@@ -383,28 +439,15 @@ CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERP
 
 COPY .slicerrc.py .
 
-##############3 code from picai hosts
-# #install prepared preprocessing and evaluation ready libraries
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
-#host segmentations and baselines
-RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/externalRepos/picaiHostSegmentation
-RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
-RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
-RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/conditionalAtlas
-RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos/otherForRegistration
-
-#copy main repository inside image
-RUN git clone https://github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
 
 
 
 #login to github cli 
-# COPY mytoken.txt .
-# RUN gh auth login --with-token < mytoken.txt
-# RUN git config --global user.name "Jakub Mitura"
-# RUN git config --global user.email "jakub.mitura14@gmail.com"
-# RUN git config -l
+COPY mytoken.txt .
+RUN gh auth login --with-token < mytoken.txt
+RUN git config --global user.name "Jakub Mitura"
+RUN git config --global user.email "jakub.mitura14@gmail.com"
+RUN git config -l
 
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
