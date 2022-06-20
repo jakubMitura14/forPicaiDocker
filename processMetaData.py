@@ -156,3 +156,5 @@ for keyWord in ['t2w','adc', 'cor','hbv','sag'  ]:
     df[keyWord+'_orig_x']= list(map(lambda arr:arr[6], resList))    
     df[keyWord+'_orig_y']= list(map(lambda arr:arr[7], resList))    
     df[keyWord+'_orig_z']= list(map(lambda arr:arr[8], resList))    
+
+df.to_csv('/home/sliceruser/data/metadata/processedMetaData.csv') 
