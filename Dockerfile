@@ -309,7 +309,10 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
 COPY managePicaiFiles.sh .
+COPY uniRes.sh .
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/uniRes.sh"]
+
 
 
 USER ${NB_USER}
@@ -357,8 +360,8 @@ COPY standardize.py .
 
 
 
-
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
@@ -420,7 +423,8 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 #RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
 
 
-
+#install unires properly
+RUN /home/sliceruser/uniRes.sh
 
 
 # Install Slicer extensions

@@ -1,7 +1,6 @@
 # Full requirements for developments
 pytorch-ignite==0.4.8
 PyWavelets==1.3.0
-
 scipy==1.8.1
 #itk>=5.2
 nibabel==3.2.2
@@ -78,8 +77,13 @@ zenodo_get==1.3.4
 git+https://github.com/DIAGNijmegen/picai_baseline
 git+https://github.com/DIAGNijmegen/picai_prep
 git+https://github.com/DIAGNijmegen/picai_eval
+git+https://github.com/brudfors/UniRes
 KevinSR==0.1.19
 dask==2022.6.0
+jupyterlab_tabnine
+"intensity-normalization[ants]"
+pymedio[all]
+antspyx
 # ipykernel
 # jupyter
 #setuptools

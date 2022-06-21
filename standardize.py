@@ -295,8 +295,6 @@ def trainStandarization(seriesString,train_patientsPaths):
 df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData.csv')
 
 
-print(df)
-
 def removeOutliersAndWrite(path):
     image=removeOutliersBiasFieldCorrect(path)
     writer = sitk.ImageFileWriter()
