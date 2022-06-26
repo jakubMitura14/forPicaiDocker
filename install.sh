@@ -62,51 +62,51 @@ em.installExtension(extensionPackageFilename)
 
 # Mitura start
 
-echo "Install extensions"
-$slicer_executable -c '
-em = slicer.app.extensionsManagerModel()
-extensionMetaData = em.retrieveExtensionMetadataByName("SlicerRadiomics")
-if slicer.app.majorVersion*100+slicer.app.minorVersion < 413:
-    # Slicer-4.11
-    itemId = extensionMetaData["item_id"]
-    url = f"{em.serverUrl().toString()}/download?items={itemId}"
-    extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
-    slicer.util.downloadFile(url, extensionPackageFilename)
-else:
-    # Slicer-4.13
-    itemId = extensionMetaData["_id"]
-    url = f"{em.serverUrl().toString()}/api/v1/item/{itemId}/download"
-    extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
-    slicer.util.downloadFile(url, extensionPackageFilename)
-    # Prevent showing popups for installing dependencies
-    # (this is not needed right now for SlicerJupyter, but we still add this line here
-    # because this docker image may be used by other projects as a starting point)
-    em.interactive = False
-em.installExtension(extensionPackageFilename)
-'
+# echo "Install extensions"
+# $slicer_executable -c '
+# em = slicer.app.extensionsManagerModel()
+# extensionMetaData = em.retrieveExtensionMetadataByName("SlicerRadiomics")
+# if slicer.app.majorVersion*100+slicer.app.minorVersion < 413:
+#     # Slicer-4.11
+#     itemId = extensionMetaData["item_id"]
+#     url = f"{em.serverUrl().toString()}/download?items={itemId}"
+#     extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
+#     slicer.util.downloadFile(url, extensionPackageFilename)
+# else:
+#     # Slicer-4.13
+#     itemId = extensionMetaData["_id"]
+#     url = f"{em.serverUrl().toString()}/api/v1/item/{itemId}/download"
+#     extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
+#     slicer.util.downloadFile(url, extensionPackageFilename)
+#     # Prevent showing popups for installing dependencies
+#     # (this is not needed right now for SlicerJupyter, but we still add this line here
+#     # because this docker image may be used by other projects as a starting point)
+#     em.interactive = False
+# em.installExtension(extensionPackageFilename)
+# '
 
-echo "Install extensions"
-$slicer_executable -c '
-em = slicer.app.extensionsManagerModel()
-extensionMetaData = em.retrieveExtensionMetadataByName("SlicerElastix")
-if slicer.app.majorVersion*100+slicer.app.minorVersion < 413:
-    # Slicer-4.11
-    itemId = extensionMetaData["item_id"]
-    url = f"{em.serverUrl().toString()}/download?items={itemId}"
-    extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
-    slicer.util.downloadFile(url, extensionPackageFilename)
-else:
-    # Slicer-4.13
-    itemId = extensionMetaData["_id"]
-    url = f"{em.serverUrl().toString()}/api/v1/item/{itemId}/download"
-    extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
-    slicer.util.downloadFile(url, extensionPackageFilename)
-    # Prevent showing popups for installing dependencies
-    # (this is not needed right now for SlicerJupyter, but we still add this line here
-    # because this docker image may be used by other projects as a starting point)
-    em.interactive = False
-em.installExtension(extensionPackageFilename)
-'
+# echo "Install extensions"
+# $slicer_executable -c '
+# em = slicer.app.extensionsManagerModel()
+# extensionMetaData = em.retrieveExtensionMetadataByName("SlicerElastix")
+# if slicer.app.majorVersion*100+slicer.app.minorVersion < 413:
+#     # Slicer-4.11
+#     itemId = extensionMetaData["item_id"]
+#     url = f"{em.serverUrl().toString()}/download?items={itemId}"
+#     extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
+#     slicer.util.downloadFile(url, extensionPackageFilename)
+# else:
+#     # Slicer-4.13
+#     itemId = extensionMetaData["_id"]
+#     url = f"{em.serverUrl().toString()}/api/v1/item/{itemId}/download"
+#     extensionPackageFilename = f"{slicer.app.temporaryPath}/{itemId}"
+#     slicer.util.downloadFile(url, extensionPackageFilename)
+#     # Prevent showing popups for installing dependencies
+#     # (this is not needed right now for SlicerJupyter, but we still add this line here
+#     # because this docker image may be used by other projects as a starting point)
+#     em.interactive = False
+# em.installExtension(extensionPackageFilename)
+# '
 
 
 

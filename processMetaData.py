@@ -65,17 +65,17 @@ def unpackk(zipDir,targetDir):
     #    # Extract all the contents of zip file in different directory
     #    zipObj.extractall(targetDir)
         
-unpackk( '/home/sliceruser/picai_public_images_fold0.zip', targetDir)      
-unpackk( '/home/sliceruser/picai_public_images_fold1.zip', targetDir)      
-unpackk( '/home/sliceruser/picai_public_images_fold2.zip', targetDir)      
-unpackk( '/home/sliceruser/picai_public_images_fold3.zip', targetDir)      
-unpackk( '/home/sliceruser/picai_public_images_fold4.zip', targetDir) 
+# unpackk( '/home/sliceruser/picai_public_images_fold0.zip', targetDir)      
+# unpackk( '/home/sliceruser/picai_public_images_fold1.zip', targetDir)      
+# unpackk( '/home/sliceruser/picai_public_images_fold2.zip', targetDir)      
+# unpackk( '/home/sliceruser/picai_public_images_fold3.zip', targetDir)      
+# unpackk( '/home/sliceruser/picai_public_images_fold4.zip', targetDir) 
 
-# unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold0.zip', targetDir)      
-# unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold1.zip', targetDir)      
-# unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold2.zip', targetDir)      
-# unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold3.zip', targetDir)      
-# unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold4.zip', targetDir) 
+unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold0.zip', targetDir)      
+unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold1.zip', targetDir)      
+unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold2.zip', targetDir)      
+unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold3.zip', targetDir)      
+unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold4.zip', targetDir) 
 
 
 #create a dictionary of directories where key is the patient_id

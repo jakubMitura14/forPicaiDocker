@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
     git \
     bzip2 \
     libx11-6 \
-    build-essential \
     wget\
     manpages-dev\
     g++\
@@ -278,8 +277,12 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt-get purge -y --auto-remove build-essential
-
+    apt-get purge \
+    #gcc-7 \ 
+    # g++-7 
+    -y --auto-remove build-essential
+    # working with G++ versions https://askubuntu.com/questions/26498/how-to-choose-the-default-gcc-and-g-version
+    # error no /opt/rh/devtoolset-7/root/usr/bin/gcc
 
 # Set up launcher for websockify
 # (websockify must run in  Slicer's Python environment)
@@ -305,8 +308,13 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
+# RUN update-alternatives --remove-all gcc 
+# RUN update-alternatives --remove-all g++
+RUN apt-get purge -y gcc
+RUN apt-get purge -y g++
 
-
+RUN apt-get install -y gcc-7
+RUN apt-get install -y g++-7 
 
 COPY managePicaiFiles.sh .
 COPY uniRes.sh .
