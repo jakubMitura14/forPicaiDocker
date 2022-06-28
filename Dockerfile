@@ -416,7 +416,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     types-pkg_resources \
     mypy>=0.790 \
     ninja==1.10.2.3 \
-    torchvision==0.12.0 \
+    #torchvision==0.12.0 \
     opencv-python==4.5.5.64 \
     psutil==5.9.1 \
     Sphinx==3.5.3 \
@@ -432,12 +432,12 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     transformers==4.19.2 \
     mlflow==1.26.1 \
     matplotlib!=3.5.0 \
-    tensorboardX==2.5 \
+    #tensorboardX==2.5 \
     types-PyYAML \
     pyyaml==6.0 \
     fire==0.4.0 \
-    jsonschema==4.6.0 \
-    monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]==0.8.1 
+    jsonschema==4.6.0 
+    #monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]==0.8.1 
     # kymatio==0.2.1 \
     # juliacall==0.8.0 \
     # jupyterlab_github==3.0.1 \
