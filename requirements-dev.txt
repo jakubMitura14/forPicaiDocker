@@ -79,10 +79,20 @@ git+https://github.com/DIAGNijmegen/picai_prep
 git+https://github.com/DIAGNijmegen/picai_eval
 #git+https://github.com/brudfors/UniRes
 KevinSR==0.1.19
+dask==2022.6.0
+#jupyterlab_tabnine
 intensity-normalization[ants]
+#pymedio[all]
+#antspyx
+# ipykernel
+# jupyter
+#setuptools
+
 numba==0.55.2
-#pyro-ppl[extras]==1.8.1
-SimpleITK-SimpleElastix
+#pyro-ppl==1.8.1
+
+#SimpleITK-SimpleElastix
+
 #pymedio[all]
 #antspyx
 # ipykernel

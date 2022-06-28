@@ -26,11 +26,13 @@ df["t2w"] = ""
 df["isAnythingInAnnotated"] = 0
 df["isAnyMissing"] = False
 
-for keyWord in ['t2w','adc', 'cor','hbv','sag'  ]:
-    colName= 'stand_and_bias_'+keyWord
-    df[colName]=False
-    colName= 'Nyul_'+keyWord
-    df[colName]=False
+df["adc_resmaplA"]=""
+df["hbv_resmaplA"]=""
+# for keyWord in ['t2w','adc', 'cor','hbv','sag'  ]:
+#     colName= 'stand_and_bias_'+keyWord
+#     df[colName]=False
+#     colName= 'Nyul_'+keyWord
+#     df[colName]=False
 df['labels_to_one']=False 
 targetDir= '/home/sliceruser/data/orig'
 
@@ -98,7 +100,7 @@ def findPathh(row,dirDictt,keyWord,targetDir):
 def iter_paths_apply(dff,keyword):
     resList=[]
     with mp.Pool(processes = mp.cpu_count()) as pool:
-        resList=pool.map(partial(findPathh,dirDictt=dirDict,keyWord=keyword,targetDir=targetDir)  ,list(dff.iterrows()))
+        resList=pool.map(partial(findPathh,dirDictt=k,keyWord=keyword,targetDir=targetDir)  ,list(dff.iterrows()))
     dff[keyword]=resList   
 
 iter_paths_apply(df,'t2w')

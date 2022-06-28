@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     git \
     bzip2 \
     libx11-6 \
+    build-essential \
     wget\
     manpages-dev\
     g++\
@@ -277,12 +278,8 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt-get purge \
-    #gcc-7 \ 
-    # g++-7 
-    -y --auto-remove build-essential
-    # working with G++ versions https://askubuntu.com/questions/26498/how-to-choose-the-default-gcc-and-g-version
-    # error no /opt/rh/devtoolset-7/root/usr/bin/gcc
+    apt-get purge -y --auto-remove build-essential
+
 
 # Set up launcher for websockify
 # (websockify must run in  Slicer's Python environment)
@@ -308,18 +305,13 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
-# RUN update-alternatives --remove-all gcc 
-# RUN update-alternatives --remove-all g++
-RUN apt-get purge -y gcc
-RUN apt-get purge -y g++
 
-RUN apt-get install -y gcc-7
-RUN apt-get install -y g++-7 
+
 
 COPY managePicaiFiles.sh .
-COPY uniRes.sh .
+COPY uniRes_elastix.sh .
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/uniRes.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
 
 
 
@@ -329,7 +321,7 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
-ENV PATH=$PATH:'/home/sliceruser/Slicer/lib/Python/bin'
+ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 COPY processMetaData.py .
 COPY standardize.py .
 
@@ -373,6 +365,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyt
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
@@ -428,11 +421,13 @@ RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.
 RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
 RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
+RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+
 #RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
 
 
 #install unires properly
-RUN /home/sliceruser/uniRes.sh
+RUN /home/sliceruser/uniRes_elastix.sh
 
 
 # Install Slicer extensions
@@ -452,14 +447,32 @@ CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERP
 COPY .slicerrc.py .
 
 
-
-
 #login to github cli 
 COPY mytoken.txt .
 RUN gh auth login --with-token < mytoken.txt
 RUN git config --global user.name "Jakub Mitura"
 RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
+
+
+USER root
+# ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+# ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
+
+
+# set PYTHONHOME=C:\Python33
+# set PYTHONPATH=C:\Python33\lib
+
+RUN update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 3
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt install -y python3.11
+# RUN apt install -y python3.11-dev
+# RUN apt install -y python3.11-gdbm
+USER ${NB_USER}
+
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
+
+
 
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
@@ -475,3 +488,5 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 ##/home/sliceruser/Slicer/Slicer
 
+#cd /home/sliceruser/data/piCaiCode/preprocessing
+#/home/sliceruser/Slicer/bin/PythonSlicer -m /home/sliceruser/data/piCaiCode/preprocessing/primRespacing.py
