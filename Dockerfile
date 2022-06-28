@@ -519,10 +519,9 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
-
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer && \
-    rm ${HOME}/install.sh
-# USER ${NB_USER}
+#USER root
+RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+#USER ${NB_USER}
 
 EXPOSE $VNCPORT $JUPYTERPORT
 COPY run.sh .
