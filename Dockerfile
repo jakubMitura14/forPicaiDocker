@@ -521,6 +521,8 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 #RUN /home/sliceruser/uniRes_elastix.sh
 USER root
 RUN chmod ugo+rwx /home/sliceruser/install.sh
+RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+
 USER ${NB_USER}
 
 RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
