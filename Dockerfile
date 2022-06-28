@@ -313,12 +313,14 @@ COPY uniRes_elastix.sh .
 COPY requirements-dev.txt .
 COPY start-xorg.sh .
 COPY install.sh .
+COPY run.sh .
 
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
 
 
 
@@ -518,9 +520,9 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
 
-RUN ./install.sh ${HOME}/Slicer/Slicer && \
+RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer && \
     rm ${HOME}/install.sh
-USER ${NB_USER}
+# USER ${NB_USER}
 
 EXPOSE $VNCPORT $JUPYTERPORT
 COPY run.sh .
