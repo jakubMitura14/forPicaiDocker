@@ -434,6 +434,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 USER root
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
 
 COPY start-xorg.sh .
 COPY install.sh .
