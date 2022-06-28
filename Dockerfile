@@ -429,7 +429,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 
 #install unires properly
-RUN /home/sliceruser/uniRes_elastix.sh
+#RUN /home/sliceruser/uniRes_elastix.sh
 
 
 # Install Slicer extensions
