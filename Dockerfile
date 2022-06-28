@@ -436,8 +436,8 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     types-PyYAML \
     pyyaml==6.0 \
     fire==0.4.0 \
-    jsonschema==4.6.0 \ 
-    monai[nibabel, skimage, pillow, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tifffile, imagecodecs]==0.8.1 
+    jsonschema==4.6.0 \
+    monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]==0.8.1 
     # kymatio==0.2.1 \
     # juliacall==0.8.0 \
     # jupyterlab_github==3.0.1 \
