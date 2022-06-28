@@ -529,8 +529,8 @@ USER ${NB_USER}
 COPY .slicerrc.py .
 
 #login to github cli 
-COPY mytoken.txt .
-RUN gh auth login --with-token < mytoken.txt
+# COPY mytoken.txt .
+# RUN gh auth login --with-token < mytoken.txt
 RUN git config --global user.name "Jakub Mitura"
 RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
