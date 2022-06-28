@@ -436,41 +436,40 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     types-PyYAML \
     pyyaml==6.0 \
     fire==0.4.0 \
-    jsonschema==4.6.0
-    #monai[nibabel,skimage,pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]==0.8.1 
-    # kymatio==0.2.1 \
-    # juliacall==0.8.0 \
-    # jupyterlab_github==3.0.1 \
-    # torchio==0.18.77 \
-    # pytorch-lightning==1.6.4 \
-    # git+https://github.com/sat28/githubcommit.git \
-    # gdown==4.4.0 \
-    # seaborn==0.11.2 \
-    # PyTorchUtils==0.0.3 \
-    # optuna==2.10.0 \
-    # jupyterlab-git==0.37.1 \
-    # comet-ml==3.31.3 \
-    # voxelmorph==0.2 \
-    # tensorflow==2.9.1 \
-    # tensorflow_addons==0.17.0 \
-    # ipywidgets==7.7.0 \
-    # h5py==3.7.0 \
-    # itk-elastix==0.14.1 \
-    # zenodopy==0.2.0 \
-    # evalutils==0.3.0 \
-    # nnunet==1.7.0 \
-    # SimpleITK>=2.1.1.2 \
-    # git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
-    # threadpoolctl==3.1.0 \
-    # batchgenerators==0.24 \
-    # zenodo_get==1.3.4 \
-    # git+https://github.com/DIAGNijmegen/picai_baseline \
-    # git+https://github.com/DIAGNijmegen/picai_prep \
-    # git+https://github.com/DIAGNijmegen/picai_eval \
-    # KevinSR==0.1.19 \
-    # dask==2022.6.0 \
-    # intensity-normalization[ants] \
-    # numba==0.55.2
+    jsonschema==4.6.0 \
+    kymatio==0.2.1 \
+    juliacall==0.8.0 \
+    jupyterlab_github==3.0.1 \
+    torchio==0.18.77 \
+    pytorch-lightning==1.6.4 \
+    git+https://github.com/sat28/githubcommit.git \
+    gdown==4.4.0 \
+    seaborn==0.11.2 \
+    PyTorchUtils==0.0.3 \
+    optuna==2.10.0 \
+    jupyterlab-git==0.37.1 \
+    comet-ml==3.31.3 \
+    voxelmorph==0.2 \
+    tensorflow==2.9.1 \
+    tensorflow_addons==0.17.0 \
+    ipywidgets==7.7.0 \
+    h5py==3.7.0 \
+    itk-elastix==0.14.1 \
+    zenodopy==0.2.0 \
+    evalutils==0.3.0 \
+    nnunet==1.7.0 \
+    SimpleITK>=2.1.1.2 \
+    git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
+    threadpoolctl==3.1.0 \
+    batchgenerators==0.24 \
+    zenodo_get==1.3.4 \
+    git+https://github.com/DIAGNijmegen/picai_baseline \
+    git+https://github.com/DIAGNijmegen/picai_prep \
+    git+https://github.com/DIAGNijmegen/picai_eval \
+    KevinSR==0.1.19 \
+    dask==2022.6.0 \
+    intensity-normalization[ants] \
+    numba==0.55.2
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
@@ -514,7 +513,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 USER root
-RUN /home/sliceruser/uniRes_elastix.sh
+#RUN /home/sliceruser/uniRes_elastix.sh
 COPY start-xorg.sh .
 COPY install.sh .
 RUN ./install.sh ${HOME}/Slicer/Slicer && \
