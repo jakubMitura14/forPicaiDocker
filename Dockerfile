@@ -310,8 +310,11 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 COPY managePicaiFiles.sh .
 COPY uniRes_elastix.sh .
+COPY requirements-dev.txt .
+
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 
 
 
@@ -381,7 +384,6 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 # RUN apt install -y gcc-7 g++-7
 
-COPY requirements-dev.txt .
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
