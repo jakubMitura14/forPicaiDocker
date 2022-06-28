@@ -390,6 +390,88 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision to
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
+    pytorch-ignite==0.4.8 \
+    PyWavelets==1.3.0 \
+    scipy==1.8.1 \
+    nibabel==3.2.2 \
+    pillow!=8.3.0 \  
+    tensorboard==2.9.0 \
+    scikit-image==0.19.2 \
+    tqdm>=4.47.0 \
+    lmdb==1.3.0 \
+    flake8>=3.8.1 \
+    flake8-bugbear \
+    flake8-comprehensions \
+    flake8-executable \
+    flake8-pyi \
+    pylint!=2.13 \
+    mccabe \
+    pep8-naming \
+    pycodestyle \
+    pyflakes==2.4.0 \
+    black \
+    isort \
+    pytype>=2020.6.1 \
+    types-pkg_resources \
+    mypy>=0.790 \
+    ninja==1.10.2.3 \
+    torchvision==0.12.0 \
+    opencv-python==4.5.5.64 \
+    psutil==5.9.1 \
+    Sphinx==3.5.3 \
+    recommonmark==0.6.0 \
+    sphinx-autodoc-typehints==1.11.1 \
+    sphinx-rtd-theme==0.5.2 \
+    cucim==22.2.1; platform_system == "Linux" \
+    imagecodecs; platform_system == "Linux" \
+    tifffile; platform_system == "Linux" \
+    pandas==1.4.2 \
+    requests==2.27.1 \
+    einops==0.4.1 \
+    transformers==4.19.2 \
+    mlflow==1.26.1 \
+    matplotlib!=3.5.0 \
+    tensorboardX==2.5 \
+    types-PyYAML \
+    pyyaml==6.0 \
+    fire==0.4.0 \
+    jsonschema==4.6.0 \
+    monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]==0.8.1 \
+    kymatio==0.2.1 \
+    juliacall==0.8.0 \
+    jupyterlab_github==3.0.1 \
+    torchio==0.18.77 \
+    pytorch-lightning==1.6.4 \
+    git+https://github.com/sat28/githubcommit.git \
+    gdown==4.4.0 \
+    seaborn==0.11.2 \
+    PyTorchUtils==0.0.3 \
+    optuna==2.10.0 \
+    jupyterlab-git==0.37.1 \
+    comet-ml==3.31.3 \
+    voxelmorph==0.2 \
+    tensorflow==2.9.1 \
+    tensorflow_addons==0.17.0 \
+    ipywidgets==7.7.0 \
+    h5py==3.7.0 \
+    itk-elastix==0.14.1 \
+    zenodopy==0.2.0 \
+    evalutils==0.3.0 \
+    nnunet==1.7.0 \
+    SimpleITK>=2.1.1.2 \
+    git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
+    threadpoolctl==3.1.0 \
+    batchgenerators==0.24 \
+    zenodo_get==1.3.4 \
+    git+https://github.com/DIAGNijmegen/picai_baseline \
+    git+https://github.com/DIAGNijmegen/picai_prep \
+    git+https://github.com/DIAGNijmegen/picai_eval \
+    KevinSR==0.1.19 \
+    dask==2022.6.0 \
+    intensity-normalization[ants] \
+    numba==0.55.2
+
 
 
 #for downloading Pi cai data
@@ -429,13 +511,12 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 
 #install unires properly
-#RUN /home/sliceruser/uniRes_elastix.sh
+
 
 
 # Install Slicer extensions
 USER root
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
-
+RUN /home/sliceruser/uniRes_elastix.sh
 COPY start-xorg.sh .
 COPY install.sh .
 RUN ./install.sh ${HOME}/Slicer/Slicer && \
