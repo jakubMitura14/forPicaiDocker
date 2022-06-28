@@ -521,7 +521,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 #RUN /home/sliceruser/uniRes_elastix.sh
 USER root
 RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-RUN ["chmod", "+x", ${HOME}+"/Slicer/Slicer"]
+RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 USER ${NB_USER}
 
