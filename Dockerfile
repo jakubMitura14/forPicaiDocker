@@ -381,10 +381,10 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 # RUN apt install -y gcc-7 g++-7
 
-COPY requirements-dev.txt /tmp/
+COPY requirements-dev.txt .
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir -r /tmp/requirements-dev.txt
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir requirements-dev.txt
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
