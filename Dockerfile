@@ -518,6 +518,7 @@ COPY start-xorg.sh .
 COPY install.sh .
 RUN ./install.sh ${HOME}/Slicer/Slicer && \
     rm ${HOME}/install.sh
+USER ${NB_USER}
 
 EXPOSE $VNCPORT $JUPYTERPORT
 COPY run.sh .
@@ -525,7 +526,6 @@ ENTRYPOINT ["/home/sliceruser/run.sh"]
 
 CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
-USER ${NB_USER}
 COPY .slicerrc.py .
 
 #login to github cli 
