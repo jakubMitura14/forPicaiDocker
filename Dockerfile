@@ -468,7 +468,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     git+https://github.com/DIAGNijmegen/picai_eval \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    intensity-normalization[ants] \
+    intensity-normalization[ants]==2.2.3 \
     numba==0.55.2
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
