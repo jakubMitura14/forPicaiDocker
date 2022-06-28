@@ -423,9 +423,9 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     recommonmark==0.6.0 \
     sphinx-autodoc-typehints==1.11.1 \
     sphinx-rtd-theme==0.5.2 \
-    cucim==22.2.1 \
-    imagecodecs \
-    tifffile; platform_system \
+    # cucim==22.2.1; platform_system == "Linux" \
+    # imagecodecs; platform_system == "Linux" \
+    # tifffile; platform_system == "Linux" \
     pandas==1.4.2 \
     requests==2.27.1 \
     einops==0.4.1 \
