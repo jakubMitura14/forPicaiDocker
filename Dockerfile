@@ -386,7 +386,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -r requirements-dev.txt
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
