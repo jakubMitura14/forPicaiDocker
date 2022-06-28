@@ -433,6 +433,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 
 # Install Slicer extensions
+USER root
 
 COPY start-xorg.sh .
 COPY install.sh .
