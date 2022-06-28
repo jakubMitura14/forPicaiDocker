@@ -472,7 +472,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     # intensity-normalization[ants] \
     # numba==0.55.2
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]
+RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
