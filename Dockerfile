@@ -318,7 +318,7 @@ RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 
 
 
-#USER ${NB_USER}
+USER ${NB_USER}
 RUN mkdir /tmp/runtime-sliceruser
 ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
@@ -386,7 +386,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -r requirements-dev.txt
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
@@ -457,13 +457,13 @@ RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
 
 
-#USER root
-# ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
-# ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
+# USER root
+# # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+# # ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
 
 
-# set PYTHONHOME=C:\Python33
-# set PYTHONPATH=C:\Python33\lib
+# # set PYTHONHOME=C:\Python33
+# # set PYTHONPATH=C:\Python33\lib
 
 # RUN update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 3
 # RUN add-apt-repository ppa:deadsnakes/ppa
