@@ -525,9 +525,8 @@ ENTRYPOINT ["/home/sliceruser/run.sh"]
 
 CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
-
+USER ${NB_USER}
 COPY .slicerrc.py .
-
 
 #login to github cli 
 COPY mytoken.txt .
