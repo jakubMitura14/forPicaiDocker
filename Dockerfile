@@ -314,6 +314,7 @@ COPY requirements-dev.txt .
 COPY start-xorg.sh .
 COPY install.sh .
 COPY run.sh .
+COPY .slicerrc.py .
 
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
@@ -321,6 +322,7 @@ RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
 
 
 
@@ -542,7 +544,6 @@ ENTRYPOINT ["/home/sliceruser/run.sh"]
 
 CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
-COPY .slicerrc.py .
 
 #login to github cli 
 # COPY mytoken.txt .
