@@ -525,8 +525,9 @@ RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
 RUN chmod ugo+rwx /home/sliceruser/run.sh
 
 #USER ${NB_USER}
-RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
-RUN chmod ugo+rwx ${HOME}
+RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+RUN chmod -R ugo+rwx ${HOME}
+
 USER ${NB_USER}
 
 RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
