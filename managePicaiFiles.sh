@@ -13,7 +13,18 @@ ${HOME}/build \
 ${HOME}/data/lightning_logs \
 ${HOME}/data/preprocess/standarizationModels \
 ${HOME}/data/preprocess/Bias_field_corrected \
-${HOME}/data/metadata
+${HOME}/data/metadata \
+${HOME}/data/for_host_whole_gland_segm \
+${HOME}/data/for_host_whole_gland_segm/nnunet \
+${HOME}/data/for_host_whole_gland_segm/nnunet/input \
+${HOME}/data/for_host_whole_gland_segm/nnunet/output \
+${HOME}/data/for_host_whole_gland_segm/algorithm \ 
+${HOME}/data/for_host_whole_gland_segm/algorithm/results \
+${HOME}/data/for_host_whole_gland_segm/nnunet/output/transverse-whole-prostate-mri \
+
+
+
+
 echo "downloading zenodo"
 /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 # #prepare  csv containing metadata and paths
