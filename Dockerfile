@@ -525,12 +525,13 @@ RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
 RUN chmod ugo+rwx /home/sliceruser/run.sh
 
 #USER ${NB_USER}
+RUN chown -R ${NB_USER}:${NB_USER} /home/${NB_USER}
+RUN chmod ugo+rwx ${HOME}
+USER ${NB_USER}
 
 RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
-RUN chmod ugo+rwx ${HOME}/Slicer/Slicer
 
-USER ${NB_USER}
 
 EXPOSE $VNCPORT $JUPYTERPORT
 COPY run.sh .
