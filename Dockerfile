@@ -522,10 +522,10 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
-USER root
-RUN chmod ugo+rwx /home/sliceruser/install.sh
-RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-RUN chmod ugo+rwx /home/sliceruser/run.sh
+# USER root
+# RUN chmod ugo+rwx /home/sliceruser/install.sh
+# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# RUN chmod ugo+rwx /home/sliceruser/run.sh
 
 #USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
