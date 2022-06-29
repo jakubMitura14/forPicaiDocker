@@ -525,8 +525,10 @@ RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
 RUN chmod ugo+rwx /home/sliceruser/run.sh
 
 #USER ${NB_USER}
-RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-RUN chmod -R ugo+rwx ${HOME}
+# RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+# RUN chmod -R ugo+rwx ${HOME}
+
+# chown -R $USER:$USER ${HOME}
 
 USER ${NB_USER}
 
@@ -535,7 +537,7 @@ RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer
 
 
 EXPOSE $VNCPORT $JUPYTERPORT
-COPY run.sh .
+
 ENTRYPOINT ["/home/sliceruser/run.sh"]
 
 CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
