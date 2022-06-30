@@ -12,8 +12,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Remove any third-party apt sources to avoid issues with expiring keys.
 RUN rm -f /etc/apt/sources.list.d/*.list
 
-RUN sudo apt update
-RUN sudo apt install gh
+RUN apt update
+RUN apt install -y gh
 RUN apt autoremove python3 -y 
 RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
