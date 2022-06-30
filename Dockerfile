@@ -12,6 +12,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Remove any third-party apt sources to avoid issues with expiring keys.
 RUN rm -f /etc/apt/sources.list.d/*.list
 
+RUN sudo apt update
+RUN sudo apt install gh
+RUN apt autoremove python3 -y 
+RUN apt install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
     curl \
@@ -28,6 +34,7 @@ RUN apt-get update && apt-get install -y \
     nodejs\
     libssl-dev\
     unzip\
+    python3.9\
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
@@ -37,12 +44,7 @@ RUN apt-get update && apt-get install -y \
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-RUN sudo apt update
-RUN sudo apt install gh
-RUN apt autoremove python3 -y 
-RUN apt install -y software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt install -y python3.9
+
 
 # RUN add-apt-repository ppa:jonathonf/gcc-7.1
 # RUN apt-get update
@@ -135,8 +137,8 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     git && \
+    python3-pip \
     apt-get install -q -y --reinstall ca-certificates
-
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
