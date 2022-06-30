@@ -522,74 +522,70 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
+USER root
+RUN chmod ugo+rwx /home/sliceruser/install.sh
+RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+RUN chmod ugo+rwx /home/sliceruser/run.sh
+
+USER ${NB_USER}
+RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+RUN chmod -R ugo+rwx ${HOME}
+
+#chown -R $USER:$USER ${HOME}
+
+
+
+
+
+USER ${NB_USER}
+
+RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+#RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
+
+
+EXPOSE $VNCPORT $JUPYTERPORT
+
+ENTRYPOINT ["/home/sliceruser/run.sh"]
+
+CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+
+#login to github cli 
+# COPY mytoken.txt .
+# RUN gh auth login --with-token < mytoken.txt
+RUN git config --global user.name "Jakub Mitura"
+RUN git config --global user.email "jakub.mitura14@gmail.com"
+RUN git config -l
+
+
 # USER root
-# RUN chmod ugo+rwx /home/sliceruser/install.sh
-# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-# RUN chmod ugo+rwx /home/sliceruser/run.sh
-
-#USER ${NB_USER}
-# RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-# RUN chmod -R ugo+rwx ${HOME}
-
-# chown -R $USER:$USER ${HOME}
+# # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+# # ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
 
 
+# # set PYTHONHOME=C:\Python33
+# # set PYTHONPATH=C:\Python33\lib
 
-
-
-
-
-
-
+# RUN update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 3
+# RUN add-apt-repository ppa:deadsnakes/ppa
+# RUN apt install -y python3.11
+# # RUN apt install -y python3.11-dev
+# # RUN apt install -y python3.11-gdbm
 # USER ${NB_USER}
 
-# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-# #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
-
-
-# EXPOSE $VNCPORT $JUPYTERPORT
-
-# ENTRYPOINT ["/home/sliceruser/run.sh"]
-
-# CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
-
-# #login to github cli 
-# # COPY mytoken.txt .
-# # RUN gh auth login --with-token < mytoken.txt
-# RUN git config --global user.name "Jakub Mitura"
-# RUN git config --global user.email "jakub.mitura14@gmail.com"
-# RUN git config -l
-
-
-# # USER root
-# # # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
-# # # ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
-
-
-# # # set PYTHONHOME=C:\Python33
-# # # set PYTHONPATH=C:\Python33\lib
-
-# # RUN update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 3
-# # RUN add-apt-repository ppa:deadsnakes/ppa
-# # RUN apt install -y python3.11
-# # # RUN apt install -y python3.11-dev
-# # # RUN apt install -y python3.11-gdbm
-# # USER ${NB_USER}
-
-# #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
 
 
 
-# ################################################################################
-# # Build-time metadata as defined at http://label-schema.org
-# ARG BUILD_DATE
-# ARG IMAGE
-# ARG VCS_REF
-# ARG VCS_URL
-# LABEL org.label-schema.build-date=$BUILD_DATE \
-#     org.label-schema.name=$IMAGE \
-#     org.label-schema.vcs-ref=$VCS_REF \
-#     org.label-schema.vcs-url=$VCS_URL \
-#     org.label-schema.schema-version="1.0"
+################################################################################
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG IMAGE
+ARG VCS_REF
+ARG VCS_URL
+LABEL org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.name=$IMAGE \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url=$VCS_URL \
+    org.label-schema.schema-version="1.0"
 
 
