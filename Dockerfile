@@ -33,12 +33,11 @@ RUN apt-get update && apt-get install -y \
     nodejs\
     libssl-dev\
     unzip\
-    python3.9\
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
 
-
+RUN apt-get install -y python3.9
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
