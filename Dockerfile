@@ -37,7 +37,8 @@ RUN apt-get update && apt-get install -y \
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y python3.9
+RUN apt install -y python3.9
+RUN apt install -y python3-pip
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -135,7 +136,6 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     git && \
-    python3-pip \
     apt-get install -q -y --reinstall ca-certificates
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
