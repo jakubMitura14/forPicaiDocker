@@ -40,9 +40,9 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/g
 RUN sudo apt update
 RUN sudo apt install gh
 RUN apt autoremove python3 -y 
-RUN apt install software-properties-common
+RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt install python3.9
+RUN apt install -y python3.9
 
 # RUN add-apt-repository ppa:jonathonf/gcc-7.1
 # RUN apt-get update
