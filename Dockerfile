@@ -523,34 +523,34 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
-USER root
-RUN chmod ugo+rwx /home/sliceruser/install.sh
-RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-RUN chmod ugo+rwx /home/sliceruser/run.sh
+# USER root
+# RUN chmod ugo+rwx /home/sliceruser/install.sh
+# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# RUN chmod ugo+rwx /home/sliceruser/run.sh
 
-USER ${NB_USER}
-# RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-# RUN chmod -R ugo+rwx ${HOME}
+# USER ${NB_USER}
+# # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+# # RUN chmod -R ugo+rwx ${HOME}
 
-#chown -R $USER:$USER ${HOME}
-
-
+# #chown -R $USER:$USER ${HOME}
 
 
 
-USER ${NB_USER}
-
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-#RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 
-EXPOSE $VNCPORT $JUPYTERPORT
+# USER ${NB_USER}
 
-ENTRYPOINT ["/home/sliceruser/run.sh"]
+# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+# #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
-CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
-#CMD ["/bin/bash"]
+# EXPOSE $VNCPORT $JUPYTERPORT
+
+# ENTRYPOINT ["/home/sliceruser/run.sh"]
+
+# CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+
+CMD ["/bin/bash"]
 
 #login to github cli 
 # COPY mytoken.txt .
