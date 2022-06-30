@@ -20,13 +20,13 @@ ${HOME}/data/for_host_whole_gland_segm/nnunet/input \
 ${HOME}/data/for_host_whole_gland_segm/nnunet/output \
 ${HOME}/data/for_host_whole_gland_segm/algorithm \ 
 ${HOME}/data/for_host_whole_gland_segm/algorithm/results \
-${HOME}/data/for_host_whole_gland_segm/nnunet/output/transverse-whole-prostate-mri \
+${HOME}/data/for_host_whole_gland_segm/nnunet/output/transverse-whole-prostate-mri 
 
 
 
 
 echo "downloading zenodo"
-/home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+#/home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 # #prepare  csv containing metadata and paths
 /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
 # # we already unpacked files now we can remove zips
@@ -38,3 +38,5 @@ echo "downloading zenodo"
 
 #standarization - it can take sth like 90h on 10 cores cpu
 #/home/sliceruser/Slicer/bin/PythonSlicer standardize.py
+
+

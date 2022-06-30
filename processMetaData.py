@@ -52,7 +52,7 @@ for subdir, dirs, files in os.walk(labelsRootDir):
 listOfDeficientStudyIds=[]
 
 
-targetDir= '/home/sliceruser/data/orig'
+targetDir= '/home/sliceruser/data'
 def unpackk(zipDir,targetDir):
     with ZipFile(zipDir, "r") as zip_ref:
         for name in zip_ref.namelist():
@@ -73,11 +73,11 @@ def unpackk(zipDir,targetDir):
 # unpackk( '/home/sliceruser/picai_public_images_fold3.zip', targetDir)      
 # unpackk( '/home/sliceruser/picai_public_images_fold4.zip', targetDir) 
 
-unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold0.zip', targetDir)      
-unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold1.zip', targetDir)      
-unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold2.zip', targetDir)      
-unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold3.zip', targetDir)      
-unpackk( '/home/sliceruser/data/zippedOrig/picai_public_images_fold4.zip', targetDir) 
+unpackk( '/home/sliceruser/data/picai_public_images_fold0.zip', targetDir)      
+unpackk( '/home/sliceruser/data/picai_public_images_fold1.zip', targetDir)      
+unpackk( '/home/sliceruser/data/picai_public_images_fold2.zip', targetDir)      
+unpackk( '/home/sliceruser/data/picai_public_images_fold3.zip', targetDir)      
+unpackk( '/home/sliceruser/data/picai_public_images_fold4.zip', targetDir) 
 
 
 #create a dictionary of directories where key is the patient_id
