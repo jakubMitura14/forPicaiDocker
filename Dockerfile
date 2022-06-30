@@ -36,7 +36,8 @@ RUN apt-get update && apt-get install -y \
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
-
+    
+RUN apt-get update
 RUN apt install -y python3.9
 RUN apt install -y python3-pip
 
