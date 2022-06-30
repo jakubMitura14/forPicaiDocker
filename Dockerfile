@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN rm -f /etc/apt/sources.list.d/*.list
 
 RUN apt update
-RUN apt install -y gh
+RUN apt install gh
 RUN apt autoremove python3 -y 
 RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
