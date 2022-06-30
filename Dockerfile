@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y \
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
-    
+
 RUN apt-get update
 RUN apt install -y python3.9
 RUN apt install -y python3-pip
@@ -334,8 +334,8 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip krowa
-RUN pip install -y --upgrade pip
-ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+RUN pip install --upgrade pip
+#ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 COPY processMetaData.py .
 COPY standardize.py .
 
