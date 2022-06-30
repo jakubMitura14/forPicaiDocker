@@ -474,7 +474,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     git+https://github.com/DIAGNijmegen/picai_baseline \
     git+https://github.com/DIAGNijmegen/picai_prep \
     git+https://github.com/DIAGNijmegen/picai_eval \
-    https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
+    #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
     intensity-normalization[ants]==2.2.3 \
