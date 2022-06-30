@@ -503,13 +503,14 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skim
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
 
 #copy main repository inside image using token - as the repository is private
-RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
 
 ##############3 code from picai hosts
 # #install prepared preprocessing and evaluation ready libraries
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
 #host segmentations and baselines
+RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
+
 RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.git ${HOME}/externalRepos/picaiHostSegmentation
 RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
 RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
