@@ -384,7 +384,7 @@ RUN pip install torch torchvision torchaudio --extra-index-url https://download.
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN pip install \
+RUN pip install -y \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -466,7 +466,7 @@ RUN pip install \
     intensity-normalization[ants]==2.2.3 \
     numba==0.55.2
 
-RUN pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN pip -y install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
