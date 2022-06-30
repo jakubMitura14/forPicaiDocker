@@ -39,9 +39,10 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
 RUN sudo apt update
 RUN sudo apt install gh
-RUN apt autoremove python3 -y
-
-
+RUN apt autoremove python3 -y krowa
+RUN apt install software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt install python3.9
 
 # RUN add-apt-repository ppa:jonathonf/gcc-7.1
 # RUN apt-get update
@@ -331,7 +332,8 @@ RUN mkdir /tmp/runtime-sliceruser
 ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip krowa
+RUN pip install --upgrade pip
 ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 COPY processMetaData.py .
 COPY standardize.py .
@@ -354,37 +356,21 @@ COPY standardize.py .
 #     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
 
 
+#krowa
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
+# # RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
+# # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
+# # Pin jedi; see https://github.com/ipython/ipython/issues/12740
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 
 
-
-# from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
-# # Options:
-# #   tensorflow
-# #   tensorflow-gpu
-# #   tf-nightly
-# #   tf-nightly-gpu
-# # Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
-# # Installs the latest version by default.
-# ARG TF_PACKAGE=tensorflow
-# ARG TF_PACKAGE_VERSION=
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
-
-
-
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
-# Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
-# Pin jedi; see https://github.com/ipython/ipython/issues/12740
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
-
-
-# Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
-    cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
-    git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
-    git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
+# # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
+# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
+#     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
+#     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
+#     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
+#     git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
+#     git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
 ####### ## { Mitura start} ading libraries through pip 
 
@@ -393,12 +379,12 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN apt install -y gcc-7 g++-7
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
-ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
+#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
+#ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
+RUN pip install \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -480,7 +466,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     intensity-normalization[ants]==2.2.3 \
     numba==0.55.2
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
