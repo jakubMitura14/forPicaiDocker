@@ -333,7 +333,7 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip krowa
-RUN pip install --upgrade pip
+RUN pip install -y --upgrade pip
 ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 COPY processMetaData.py .
 COPY standardize.py .
