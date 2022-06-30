@@ -517,38 +517,40 @@ RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRe
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
-#RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
+# #RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
 
-#install unires properly
+# #install unires properly
 
-# Install Slicer extensions
-#RUN /home/sliceruser/uniRes_elastix.sh
-USER root
-RUN chmod ugo+rwx /home/sliceruser/install.sh
-RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-RUN chmod ugo+rwx /home/sliceruser/run.sh
+# # Install Slicer extensions
+# #RUN /home/sliceruser/uniRes_elastix.sh
+# USER root
+# RUN chmod ugo+rwx /home/sliceruser/install.sh
+# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# RUN chmod ugo+rwx /home/sliceruser/run.sh
 
-USER ${NB_USER}
-# RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-# RUN chmod -R ugo+rwx ${HOME}
+# USER ${NB_USER}
+# # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+# # RUN chmod -R ugo+rwx ${HOME}
 
-#chown -R $USER:$USER ${HOME}
-
-
+# #chown -R $USER:$USER ${HOME}
 
 
 
-USER ${NB_USER}
-
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-#RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 
-EXPOSE $VNCPORT $JUPYTERPORT
+# USER ${NB_USER}
 
-ENTRYPOINT ["/home/sliceruser/run.sh"]
+# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+# #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
-CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+
+# EXPOSE $VNCPORT $JUPYTERPORT
+
+# ENTRYPOINT ["/home/sliceruser/run.sh"]
+
+# CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+
+CMD ["/bin/bash"]
 
 #login to github cli 
 # COPY mytoken.txt .
