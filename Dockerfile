@@ -464,7 +464,7 @@ RUN pip install \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    intensity-normalization[ants]==2.2.3 \
+    intensity-normalization[ants]==2.1.4 \
     numba==0.55.2
 
 RUN pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
