@@ -540,15 +540,15 @@ USER ${NB_USER}
 
 USER ${NB_USER}
 
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-#RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
+# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+# #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 
-EXPOSE $VNCPORT $JUPYTERPORT
+# EXPOSE $VNCPORT $JUPYTERPORT
 
-ENTRYPOINT ["/home/sliceruser/run.sh"]
+# ENTRYPOINT ["/home/sliceruser/run.sh"]
 
-CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+# CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
 #login to github cli 
 # COPY mytoken.txt .
@@ -576,7 +576,7 @@ RUN git config -l
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
 
 
-
+CMD ["/bin/bash"]
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
