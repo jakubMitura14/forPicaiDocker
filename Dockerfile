@@ -536,7 +536,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 # ENTRYPOINT ["/home/sliceruser/run.sh"]
 
 # CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
-
+ENTRYPOINT ["/home/sliceruser"]
 CMD ["/bin/bash"]
 
 #login to github cli 
