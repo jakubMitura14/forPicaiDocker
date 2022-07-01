@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update
-#RUN apt install -y python3.9
+RUN apt install -y python3.9
 RUN apt install -y python3-pip
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
@@ -334,7 +334,7 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # First upgrade pip
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip krowa
-RUN pip install --upgrade pip
+RUN python3.9 -m pip install --upgrade pip
 #ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 COPY processMetaData.py .
 COPY standardize.py .
@@ -380,12 +380,12 @@ COPY standardize.py .
 # RUN apt install -y gcc-7 g++-7
 
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
-RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+RUN python3.9 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN pip install \
+RUN python3.9 -m pip install \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -467,7 +467,7 @@ RUN pip install \
     intensity-normalization[ants]==2.1.4 \
     numba==0.55.2
 
-RUN pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN python3.9 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
