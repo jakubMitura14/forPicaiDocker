@@ -557,6 +557,8 @@ RUN git config --global user.name "Jakub Mitura"
 RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
 
+RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+RUN chmod -R ugo+rwx ${HOME}/data
 
 # USER root
 # # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
