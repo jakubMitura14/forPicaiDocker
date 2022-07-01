@@ -527,6 +527,8 @@ USER root
 RUN chmod ugo+rwx /home/sliceruser/install.sh
 RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
 RUN chmod ugo+rwx /home/sliceruser/run.sh
+RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+RUN chmod -R ugo+rwx ${HOME}/data
 
 USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
@@ -557,8 +559,6 @@ RUN git config --global user.name "Jakub Mitura"
 RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
 
-RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-RUN chmod -R ugo+rwx ${HOME}/data
 
 # USER root
 # # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
