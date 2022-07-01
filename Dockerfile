@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN rm -f /etc/apt/sources.list.d/*.list
 
 RUN apt update
-RUN apt autoremove python3 -y 
+#RUN apt autoremove python3 -y 
 RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
 
@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update
-RUN apt install -y python3.9
+#RUN apt install -y python3.9
 RUN apt install -y python3-pip
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
