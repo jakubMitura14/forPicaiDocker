@@ -576,7 +576,7 @@ RUN git config -l
 #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
 
 
-CMD ["/bin/bash"]
+#CMD ["/bin/bash"]
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -591,6 +591,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 
 
 
