@@ -24,7 +24,6 @@ ${HOME}/data/for_host_whole_gland_segm/nnunet/output/transverse-whole-prostate-m
 
 
 
-
 echo "downloading zenodo"
 #/home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
 # #prepare  csv containing metadata and paths
