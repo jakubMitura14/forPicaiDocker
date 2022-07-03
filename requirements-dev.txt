@@ -87,10 +87,9 @@ intensity-normalization[ants]
 # ipykernel
 # jupyter
 #setuptools
-
 numba==0.55.2
-#pyro-ppl==1.8.1
-
+pyro-ppl==1.8.1
+warp-lang==0.2.3
 #SimpleITK-SimpleElastix
 
 #pymedio[all]
