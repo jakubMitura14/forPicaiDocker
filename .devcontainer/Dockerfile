@@ -547,9 +547,9 @@ RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer
 
 EXPOSE $VNCPORT $JUPYTERPORT
 
-ENTRYPOINT ["/home/sliceruser/run.sh"]
+# ENTRYPOINT ["/home/sliceruser/run.sh"]
 
-CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
+# CMD ["sh", "-c", "./Slicer/bin/PythonSlicer -m jupyter notebook --port=$JUPYTERPORT --ip=0.0.0.0 --no-browser --NotebookApp.default_url=/lab/"]
 
 #login to github cli 
 # COPY mytoken.txt .
@@ -592,7 +592,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 
-#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 
 
 
