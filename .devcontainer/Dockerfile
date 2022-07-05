@@ -545,7 +545,6 @@ USER ${NB_USER}
 RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 # #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
-
 EXPOSE $VNCPORT $JUPYTERPORT
 
 ENTRYPOINT ["/home/sliceruser/run.sh"]
