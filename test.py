@@ -1,20 +1,106 @@
 import importlib.util
 import sys
-spec = importlib.util.spec_from_file_location("resampl", "/home/sliceruser/data/piCaiCode/preprocessing/Resampling.py")
-resampl = importlib.util.module_from_spec(spec)
-sys.modules["resampl"] = resampl
-spec.loader.exec_module(resampl)
-
+import SimpleITK as sitk
 from functools import partial
-
+import pandas as pd
 import importlib.util
 import sys
-spec = importlib.util.spec_from_file_location("Three_chan_baseline", "/home/sliceruser/data/piCaiCode/Three_chan_baseline.py")
-Three_chan_baseline = importlib.util.module_from_spec(spec)
-sys.modules["Three_chan_baseline"] = Three_chan_baseline
-spec.loader.exec_module(Three_chan_baseline)
 
 
+# spec = importlib.util.spec_from_file_location("ManageMetadata", "/home/sliceruser/data/piCaiCode/preprocessing/ManageMetadata.py")
+# ManageMetadata = importlib.util.module_from_spec(spec)
+# sys.modules["ManageMetadata"] = ManageMetadata
+# spec.loader.exec_module(ManageMetadata)
+
+
+
+
+spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
+Three_chan_baseline_hyperParam = importlib.util.module_from_spec(spec)
+sys.modules["Three_chan_baseline_hyperParam"] = Three_chan_baseline_hyperParam
+spec.loader.exec_module(Three_chan_baseline_hyperParam)
+
+
+
+
+spec = importlib.util.spec_from_file_location("warpPlayground", "/home/sliceruser/data/piCaiCode/supervoxel/warpPlayground.py")
+warpPlayground = importlib.util.module_from_spec(spec)
+sys.modules["warpPlayground"] = warpPlayground
+spec.loader.exec_module(warpPlayground)
+
+
+
+
+# xx=[1]
+# list(range(0,len(xx)))
+
+
+# # spec = importlib.util.spec_from_file_location("hyperParamTune", "/home/sliceruser/data/piCaiCode/hyperParamTune.py")
+# # hyperParamTune = importlib.util.module_from_spec(spec)
+# # sys.modules["hyperParamTune"] = hyperParamTune
+# # spec.loader.exec_module(hyperParamTune)
+
+
+# from comet_ml import Optimizer
+
+# # We only need to specify the algorithm and hyperparameters to use:
+# config = {
+#     # We pick the Bayes algorithm:
+#     "algorithm": "bayes",
+
+#     # Declare your hyperparameters in the Vizier-inspired format:
+#     "parameters": {
+#         "x": {"type": "integer", "min": 1, "max": 5},
+#     },
+
+#     # Declare what we will be optimizing, and how:
+#     "spec": {
+#     "metric": "loss",
+#         "objective": "minimize",
+#     },
+# }
+
+# Next, create an optimizer, passing in the config:
+# (You can leave out API_KEY if you already set it)
+opt = Optimizer(config)
+
+
+
+# keyWord = "t2w_med_spac"
+
+# df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData_current.csv')
+# df[]
+# ManageMetadata.addSizeMetaDataToDf("t2w_med_spac",df)
+# df.to_csv('/home/sliceruser/data/metadata/processedMetaData_current.csv') 
+
+
+# row=list(df.iterrows())[1]
+# row
+# import pandas as pd
+
+
+# def get_size_meta(row,colName):
+#     row=row[1]
+#     patId=str(row['patient_id'])
+#     path=str(row[colName])
+#     if(len(path)>1):
+#         image = sitk.ReadImage(path)
+#         sizz= image.GetSize()
+#         return list(sizz)
+#     return [-1,-1,-1]
+
+# row=list(df.iterrows(keyWord))[1]
+# get_size_meta(row,keyWord)
+
+# get_size_meta()
+# row
+
+# resList=[]
+# with mp.Pool(processes = mp.cpu_count()) as pool:
+#     resList=pool.map(partial(get_size_meta,colName=keyWord)  ,list(df.iterrows()))    
+# df[keyWord+'_sizz_x']= list(map(lambda arr:arr[0], resList))    
+# df[keyWord+'_sizz_y']= list(map(lambda arr:arr[1], resList))    
+# df[keyWord+'_sizz_z']= list(map(lambda arr:arr[2], resList))    
 
 
 

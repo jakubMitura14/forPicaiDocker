@@ -456,7 +456,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     PyTorchUtils==0.0.3 \
     optuna==2.10.0 \
     jupyterlab-git==0.37.1 \
-    comet-ml==3.31.3 \
+    comet-ml==3.31.5 \
     voxelmorph==0.2 \
     tensorflow==2.9.1 \
     tensorflow_addons==0.17.0 \
@@ -478,7 +478,9 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
     intensity-normalization[ants]==2.2.3 \
-    numba==0.55.2
+    numba==0.55.2 \
+    pyro-ppl==1.8.1 \
+    warp-lang==0.2.3    
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
@@ -527,8 +529,8 @@ USER root
 RUN chmod ugo+rwx /home/sliceruser/install.sh
 RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
 RUN chmod ugo+rwx /home/sliceruser/run.sh
-RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-RUN chmod -R ugo+rwx ${HOME}/data
+# RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+# RUN chmod -R ugo+rwx ${HOME}/data
 
 USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
