@@ -386,12 +386,12 @@ RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4
 
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-RUN pip install --upgrade websockify && \
-    cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
-       pip install notebook jupyterhub jupyterlab && \
-       pip install -e \
-    git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
-    git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
+# RUN pip install --upgrade websockify && \
+#     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
+#        pip install notebook jupyterhub jupyterlab && \
+#        pip install -e \
+#     git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
+#     git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
 ####### ## { Mitura start} ading libraries through pip 
 
@@ -402,7 +402,7 @@ RUN pip install --upgrade websockify && \
 #RUN    pip install pyradiomics
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 #RUN    pip install requirements-dev.txt
-RUN ipykernel install --user
+#RUN ipykernel install --user
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 RUN pip install \
