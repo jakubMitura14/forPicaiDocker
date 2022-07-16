@@ -281,8 +281,8 @@ RUN set -x && \
     cd .. && \
     rmdir src && \
     apt install -y python3.9 && \
-    #apt install -y python3-pip && \
-    easy_install -y pip && \
+    apt install -y python3-pip && \
+    #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
 
 
@@ -338,7 +338,7 @@ RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 
 
 # First upgrade pip
-RUN python -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip
 #ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 #COPY processMetaData.py .
 #COPY standardize.py .
