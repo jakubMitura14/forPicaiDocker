@@ -480,7 +480,8 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     intensity-normalization[ants]==2.2.3 \
     numba==0.55.2 \
     pyro-ppl==1.8.1 \
-    warp-lang==0.2.3    
+    warp-lang==0.2.3 \
+    report_guided_annotation    
 
 RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
