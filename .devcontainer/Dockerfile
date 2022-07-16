@@ -133,6 +133,7 @@ RUN apt-get update -q -y && \
     pkg-config\
     software-properties-common\
     libhdf5-serial-dev\
+    elastix=5.0.1 \
     git && \
     apt-get install -q -y --reinstall ca-certificates
 
@@ -403,6 +404,7 @@ RUN ipykernel install --user
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 RUN pip install \
+    itk ==5.2.1 \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
