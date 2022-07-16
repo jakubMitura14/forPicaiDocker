@@ -136,6 +136,7 @@ RUN apt-get update -q -y && \
     git && \
     apt-get install -q -y --reinstall ca-certificates
 
+RUN add-apt-repository ppa:deadsnakes/ppa
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
@@ -245,13 +246,13 @@ RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 # Current preview release (Slicer-4.13 2022-02-15, rev30607)
 
 ## Mitura modif to newer
-ARG SLICER_DOWNLOAD_URL=https://download.slicer.org/bitstream/6286ce04e8408647b39f803a
+#ARG SLICER_DOWNLOAD_URL=https://download.slicer.org/bitstream/6286ce04e8408647b39f803a
 
 # Use local package:
 #ADD $SLICER_ARCHIVE.tar.gz ${HOME}/
 
 # Download package:
-RUN curl -JL "$SLICER_DOWNLOAD_URL" | tar xz -C /tmp && mv /tmp/Slicer* Slicer
+#RUN curl -JL "$SLICER_DOWNLOAD_URL" | tar xz -C /tmp && mv /tmp/Slicer* Slicer
 
 ################################################################################
 # these go after installs to avoid trivial invalidation
@@ -278,6 +279,7 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
+    apt install python3.9 && \
     apt-get purge -y --auto-remove build-essential
 
 
@@ -311,10 +313,10 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 COPY managePicaiFiles.sh .
 COPY uniRes_elastix.sh .
 COPY requirements-dev.txt .
-COPY start-xorg.sh .
-COPY install.sh .
-COPY run.sh .
-COPY .slicerrc.py .
+# COPY start-xorg.sh .
+# COPY install.sh .
+# COPY run.sh .
+# COPY .slicerrc.py .
 
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
@@ -326,12 +328,14 @@ RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
 
 
 
-USER ${NB_USER}
-RUN mkdir /tmp/runtime-sliceruser
-ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
+# USER ${NB_USER}
+# RUN mkdir /tmp/runtime-sliceruser
+# ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
+
+
 
 # First upgrade pip
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
+RUN python -m pip install --upgrade pip
 ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 #COPY processMetaData.py .
 #COPY standardize.py .
@@ -346,11 +350,11 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 
 # # Extend the nnUNet installation with custom trainers
 # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
-# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 #     mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
 
 # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
-# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 #     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
 
 
@@ -367,22 +371,22 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 # # Installs the latest version by default.
 # ARG TF_PACKAGE=tensorflow
 # ARG TF_PACKAGE_VERSION=
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+# RUN    pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 
 
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
+RUN pip install --no-cache-dir jupyter matplotlib
+# RUN    pip install --no-cache-dir "intensity-normalization[ants]"
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
+RUN pip install --upgrade websockify && \
     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
+       pip install notebook jupyterhub jupyterlab && \
+       pip install -e \
     git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
     git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
@@ -392,13 +396,13 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 # RUN apt install -y gcc-7 g++-7
 
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
-ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
+#RUN    pip install pyradiomics
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+#RUN    pip install requirements-dev.txt
+RUN ipykernel install --user
+#ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
+RUN pip install \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -483,13 +487,13 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     warp-lang==0.2.3 \
     report_guided_annotation    
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
+#RUN    pip install zenodo_get==1.3.4
 #downloading from zenodo and preprocessing metadata
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+# RUN    zenodo_get --retry=8 10.5281/zenodo.6517397
 #         # #prepare  csv containing metadata and paths
 # RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
 #         # # we already unpacked files now we can remove zips
@@ -509,8 +513,8 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skim
 
 ##############3 code from picai hosts
 # #install prepared preprocessing and evaluation ready libraries
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+# RUN    pip install git+https://github.com/DIAGNijmegen/picai_prep
+# RUN    pip install git+https://github.com/DIAGNijmegen/picai_eval
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
 
@@ -577,7 +581,7 @@ RUN git config -l
 # # RUN apt install -y python3.11-gdbm
 # USER ${NB_USER}
 
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
+#RUN    pip install SimpleITK-SimpleElastix
 
 
 #CMD ["/bin/bash"]
@@ -942,7 +946,7 @@ ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 # ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
 
 # # First upgrade pip
-# #RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip krowa
+# #RUN    pip install --upgrade pip krowa
 # RUN python3.9 -m pip install --upgrade pip
 # #ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 # COPY processMetaData.py .
@@ -958,24 +962,24 @@ ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 
 # # # Extend the nnUNet installation with custom trainers
 # # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
-# # RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# # RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 # #     mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
 
 # # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
-# # RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# # RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 # #     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
 
 
 # #krowa
-# # RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
-# # # RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
+# # RUN    pip install --no-cache-dir jupyter matplotlib
+# # # RUN    pip install --no-cache-dir "intensity-normalization[ants]"
 # # # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # # # Pin jedi; see https://github.com/ipython/ipython/issues/12740
-# # RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+# # RUN    pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 
 
 # # # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-# # RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
+# # RUN    pip install --upgrade websockify && \
 # #     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
 # #     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
 # #     /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
