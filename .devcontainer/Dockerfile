@@ -261,7 +261,7 @@ ENV VNCPORT=49053
 ENV JUPYTERPORT=8888
 ENV DISPLAY=:10
 
-COPY xorg.conf .
+#COPY xorg.conf .
 
 ################################################################################
 # Set up remote desktop access - step 1/2
@@ -487,7 +487,8 @@ RUN pip install \
     numba==0.55.2 \
     pyro-ppl==1.8.1 \
     warp-lang==0.2.3 \
-    report_guided_annotation    
+    report_guided_annotation \
+    SimpleITK-SimpleElastix    
 
 RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
@@ -551,7 +552,7 @@ USER ${NB_USER}
 
 USER ${NB_USER}
 
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 # #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 EXPOSE $VNCPORT $JUPYTERPORT
