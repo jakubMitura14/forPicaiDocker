@@ -281,6 +281,7 @@ RUN set -x && \
     cd .. && \
     rmdir src && \
     apt install -y python3.9 && \
+    apt install -y python3-pip && \
     apt-get purge -y --auto-remove build-essential
 
 
