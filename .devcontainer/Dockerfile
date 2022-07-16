@@ -322,10 +322,10 @@ COPY requirements-dev.txt .
 RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
 RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
-RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
+# RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
 
 
 
