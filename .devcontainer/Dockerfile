@@ -281,7 +281,8 @@ RUN set -x && \
     cd .. && \
     rmdir src && \
     apt install -y python3.9 && \
-    apt install -y python3-pip && \
+    #apt install -y python3-pip && \
+    easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
 
 
@@ -337,8 +338,8 @@ RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 
 
 # First upgrade pip
-RUN python -m pip3 install --upgrade pip
-ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+RUN python -m pip install --upgrade pip
+#ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 #COPY processMetaData.py .
 #COPY standardize.py .
 
@@ -377,15 +378,15 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 
 
 
-RUN pip3 install --no-cache-dir jupyter matplotlib
+RUN pip install --no-cache-dir jupyter matplotlib
 # RUN    pip install --no-cache-dir "intensity-normalization[ants]"
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
-RUN pip3 install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-RUN pip3 install --upgrade websockify && \
+RUN pip install --upgrade websockify && \
     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
        pip install notebook jupyterhub jupyterlab && \
        pip install -e \
@@ -399,12 +400,12 @@ RUN pip3 install --upgrade websockify && \
 # RUN apt install -y gcc-7 g++-7
 
 #RUN    pip install pyradiomics
-RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 #RUN    pip install requirements-dev.txt
 RUN ipykernel install --user
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN pip3 install \
+RUN pip install \
     itk ==5.2.1 \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
@@ -491,7 +492,7 @@ RUN pip3 install \
     report_guided_annotation \
     SimpleITK-SimpleElastix    
 
-RUN    pip3 install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
 #for downloading Pi cai data
