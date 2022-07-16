@@ -6,30 +6,43 @@ import pandas as pd
 import importlib.util
 import sys
 
-
-# spec = importlib.util.spec_from_file_location("ManageMetadata", "/home/sliceruser/data/piCaiCode/preprocessing/ManageMetadata.py")
-# ManageMetadata = importlib.util.module_from_spec(spec)
-# sys.modules["ManageMetadata"] = ManageMetadata
-# spec.loader.exec_module(ManageMetadata)
-
+# spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
+# Three_chan_baseline_hyperParam = importlib.util.module_from_spec(spec)
+# sys.modules["Three_chan_baseline_hyperParam"] = Three_chan_baseline_hyperParam
+# spec.loader.exec_module(Three_chan_baseline_hyperParam)
 
 
 
-spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
-Three_chan_baseline_hyperParam = importlib.util.module_from_spec(spec)
-sys.modules["Three_chan_baseline_hyperParam"] = Three_chan_baseline_hyperParam
-spec.loader.exec_module(Three_chan_baseline_hyperParam)
+spec = importlib.util.spec_from_file_location("testPreprocessLabel", "/home/sliceruser/data/piCaiCode/preprocessing/testPreprocessLabel.py")
+testPreprocessLabel = importlib.util.module_from_spec(spec)
+sys.modules["testPreprocessLabel"] = testPreprocessLabel
+spec.loader.exec_module(testPreprocessLabel)
+
+
+# # spec = importlib.util.spec_from_file_location("ManageMetadata", "/home/sliceruser/data/piCaiCode/preprocessing/ManageMetadata.py")
+# # ManageMetadata = importlib.util.module_from_spec(spec)
+# # sys.modules["ManageMetadata"] = ManageMetadata
+# # spec.loader.exec_module(ManageMetadata)
+# import sys
+# print(sys.path)
+
+
+
+# spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
+# Three_chan_baseline_hyperParam = importlib.util.module_from_spec(spec)
+# sys.modules["Three_chan_baseline_hyperParam"] = Three_chan_baseline_hyperParam
+# spec.loader.exec_module(Three_chan_baseline_hyperParam)
 
 
 
 
-spec = importlib.util.spec_from_file_location("warpPlayground", "/home/sliceruser/data/piCaiCode/supervoxel/warpPlayground.py")
-warpPlayground = importlib.util.module_from_spec(spec)
-sys.modules["warpPlayground"] = warpPlayground
-spec.loader.exec_module(warpPlayground)
+# spec = importlib.util.spec_from_file_location("warpPlayground", "/home/sliceruser/data/piCaiCode/supervoxel/warpPlayground.py")
+# warpPlayground = importlib.util.module_from_spec(spec)
+# sys.modules["warpPlayground"] = warpPlayground
+# spec.loader.exec_module(warpPlayground)
 
 
-
+# /media/jakub/NewVolume/slicerData/piCaiCode/preprocessing/testPreprocessLabel.py
 
 # xx=[1]
 # list(range(0,len(xx)))

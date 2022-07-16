@@ -406,7 +406,7 @@ RUN pip install torch torchvision torchaudio --extra-index-url https://download.
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 RUN pip install \
-    itk ==5.2.1 \
+    itk \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -485,7 +485,7 @@ RUN pip install \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    intensity-normalization[ants]==2.2.3 \
+    intensity-normalization[ants] \
     numba==0.55.2 \
     pyro-ppl==1.8.1 \
     warp-lang==0.2.3 \
@@ -536,13 +536,15 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 # Install Slicer extensions
 #RUN /home/sliceruser/uniRes_elastix.sh
 USER root
-RUN chmod ugo+rwx /home/sliceruser/install.sh
-RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-RUN chmod ugo+rwx /home/sliceruser/run.sh
-# RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-# RUN chmod -R ugo+rwx ${HOME}/data
 
-USER ${NB_USER}
+RUN apt install -y python-is-python3
+# RUN chmod ugo+rwx /home/sliceruser/install.sh
+# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# RUN chmod ugo+rwx /home/sliceruser/run.sh
+# # RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+# # RUN chmod -R ugo+rwx ${HOME}/data
+
+ USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
 # RUN chmod -R ugo+rwx ${HOME}
 
