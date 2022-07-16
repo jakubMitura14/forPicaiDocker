@@ -133,7 +133,7 @@ RUN apt-get update -q -y && \
     pkg-config\
     software-properties-common\
     libhdf5-serial-dev\
-    elastix=5.0.1 \
+    elastix\
     git && \
     apt-get install -q -y --reinstall ca-certificates
 
