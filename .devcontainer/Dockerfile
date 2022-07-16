@@ -280,7 +280,7 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt install python3.9 && \
+    apt install -y python3.9 && \
     apt-get purge -y --auto-remove build-essential
 
 
