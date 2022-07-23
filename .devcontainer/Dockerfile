@@ -406,7 +406,7 @@ RUN pip install torch torchvision torchaudio --extra-index-url https://download.
 #ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 RUN pip install \
-    itk \
+    #itk \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -534,7 +534,7 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 #install unires properly
 
 # Install Slicer extensions
-RUN /home/sliceruser/uniRes_elastix.sh
+# RUN /home/sliceruser/uniRes_elastix.sh
 # USER root
 
 # RUN apt install -y python-is-python3
