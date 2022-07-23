@@ -1,6 +1,6 @@
-cd externalRepos/uniRes
-/home/sliceruser/Slicer/bin/PythonSlicer -m pip install .
-NI_COMPILED_BACKEND="C" /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-build-isolation .
+# cd externalRepos/uniRes
+# /home/sliceruser/Slicer/bin/PythonSlicer -m pip install .
+# NI_COMPILED_BACKEND="C" /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-build-isolation .
 
 cd ${HOME}/externalRepos/elastix
 mkdir buildd
@@ -30,15 +30,15 @@ make -j6
 
 # update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 1
 
-/home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt
+# /home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt
 
-/home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_hbv.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt
+# /home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_hbv.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt
 
- elastix -f fixedImage.ext -m movingImage.ext -out outputDirectory -p parameterFile.txt
+#  elastix -f fixedImage.ext -m movingImage.ext -out outputDirectory -p parameterFile.txt
 
- #rigid
- /home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_hbv.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parametersRigid.txt
-/home/sliceruser/data/orig/10019/10019_1000019_adc.mha
+#  #rigid
+#  /home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_hbv.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parametersRigid.txt
+# /home/sliceruser/data/orig/10019/10019_1000019_adc.mha
 
 
-/home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_adc.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt
+# /home/sliceruser/Slicer/NA-MIC/Extensions-30822/SlicerElastix/lib/Slicer-5.0/elastix -f /home/sliceruser/data/orig/10019/10019_1000019_t2w.mha -m /home/sliceruser/data/orig/10019/10019_1000019_adc.mha -out /home/sliceruser/data/exploration/ -p /home/sliceruser/data/piCaiCode/preprocessing/registration/parameters.txt

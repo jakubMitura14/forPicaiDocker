@@ -5,6 +5,34 @@ from functools import partial
 import pandas as pd
 import importlib.util
 import sys
+import numpy as np
+from os.path import isdir,join,exists,split,dirname,basename
+import numpy as np
+
+import multiprocessing as mp
+import math
+import SimpleITK as sitk
+import numpy as np
+import collections
+import numpy as np
+import functools
+from functools import partial
+
+df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData_current.csv')
+df.columns[-1]
+colName='label_one_spac_maxSize_'
+def priintSize(row):
+    row=row[1]
+    path = str(row[colName])
+    image=sitk.ReadImage(str(path))
+    dat=sitk.GetArrayFromImage(image)
+    uniquee=np.unique( dat)
+    summ= np.sum(dat)
+    print(f"uniquee {uniquee} summ {summ} ")
+
+
+with mp.Pool(processes = mp.cpu_count()) as pool:
+    pool.map(priintSize,list(df.iterrows()))
 
 # spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
 # Three_chan_baseline_hyperParam = importlib.util.module_from_spec(spec)
@@ -54,37 +82,6 @@ spec.loader.exec_module(testPreprocessLabel)
 # # spec.loader.exec_module(hyperParamTune)
 
 
-# from comet_ml import Optimizer
-
-# # We only need to specify the algorithm and hyperparameters to use:
-# config = {
-#     # We pick the Bayes algorithm:
-#     "algorithm": "bayes",
-
-#     # Declare your hyperparameters in the Vizier-inspired format:
-#     "parameters": {
-#         "x": {"type": "integer", "min": 1, "max": 5},
-#     },
-
-#     # Declare what we will be optimizing, and how:
-#     "spec": {
-#     "metric": "loss",
-#         "objective": "minimize",
-#     },
-# }
-
-# Next, create an optimizer, passing in the config:
-# (You can leave out API_KEY if you already set it)
-opt = Optimizer(config)
-
-
-
-# keyWord = "t2w_med_spac"
-
-# df = pd.read_csv('/home/sliceruser/data/metadata/processedMetaData_current.csv')
-# df[]
-# ManageMetadata.addSizeMetaDataToDf("t2w_med_spac",df)
-# df.to_csv('/home/sliceruser/data/metadata/processedMetaData_current.csv') 
 
 
 # row=list(df.iterrows())[1]

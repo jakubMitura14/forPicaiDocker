@@ -493,7 +493,7 @@ RUN pip install \
     SimpleITK-SimpleElastix    
 
 RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-
+RUN    pip install torch-optimizer
 
 #for downloading Pi cai data
 #RUN    pip install zenodo_get==1.3.4
@@ -534,17 +534,17 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 #install unires properly
 
 # Install Slicer extensions
-#RUN /home/sliceruser/uniRes_elastix.sh
-USER root
+RUN /home/sliceruser/uniRes_elastix.sh
+# USER root
 
-RUN apt install -y python-is-python3
-# RUN chmod ugo+rwx /home/sliceruser/install.sh
-# RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-# RUN chmod ugo+rwx /home/sliceruser/run.sh
-# # RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-# # RUN chmod -R ugo+rwx ${HOME}/data
+# RUN apt install -y python-is-python3
+# # RUN chmod ugo+rwx /home/sliceruser/install.sh
+# # RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# # RUN chmod ugo+rwx /home/sliceruser/run.sh
+# # # RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+# # # RUN chmod -R ugo+rwx ${HOME}/data
 
- USER ${NB_USER}
+#  USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
 # RUN chmod -R ugo+rwx ${HOME}
 
@@ -931,7 +931,7 @@ ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 
 
 # COPY managePicaiFiles.sh .
-# COPY uniRes_elastix.sh .
+COPY uniRes_elastix.sh .
 # COPY requirements-dev.txt .
 # COPY start-xorg.sh .
 # COPY install.sh .
@@ -939,7 +939,7 @@ ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 # COPY .slicerrc.py .
 
 # RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
+RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
 # RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
 # RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
 # RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
