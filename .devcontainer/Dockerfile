@@ -256,7 +256,7 @@ RUN chmod -R ugo+rwx /tmp/
 # RUN chmod -R ugo+rwx /dev/tty0
 
 #RUN chown ${NB_USER} ${HOME} ${HOME}/data
-USER ${NB_USER}
+#USER ${NB_USER}
 
 #login to github cli 
 # COPY mytoken.txt .
