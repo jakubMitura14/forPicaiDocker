@@ -6,13 +6,14 @@ from functools import partial
 import pandas as pd
 import importlib.util
 import sys
-import numpy as np
-import math       
 
 
+# spec = importlib.util.spec_from_file_location("ManageMetadata", "/home/sliceruser/data/piCaiCode/preprocessing/ManageMetadata.py")
+# ManageMetadata = importlib.util.module_from_spec(spec)
+# sys.modules["ManageMetadata"] = ManageMetadata
+# spec.loader.exec_module(ManageMetadata)
 
-df = pd.read_csv("/home/sliceruser/data/metadata/processedMetaData_current.csv")
-df.columns
+
 
 
 spec = importlib.util.spec_from_file_location("Three_chan_baseline_hyperParam", "/home/sliceruser/data/piCaiCode/Three_chan_baseline_hyperParam.py")
@@ -30,24 +31,6 @@ warpPlayground = importlib.util.module_from_spec(spec)
 sys.modules["warpPlayground"] = warpPlayground
 spec.loader.exec_module(warpPlayground)
 
-
-
-
-
-import tensorflow
-tensorflow.test.is_gpu_available()
-
-# logPath= '/home/sliceruser/data/orig/10021/10021_1000021_adctw_for_adcb_tw_/elastix.log'
-# fp= open(logPath, 'r')
-# content=   fp.read()
-# len(content)
-# lineWithRes= list(filter(lambda line: "Final metric value " in line ,content.split("\n")))
-# trimmed= lineWithRes[0].split("=")[1][1:-1]
-# float(trimmed)
-# # spec = importlib.util.spec_from_file_location("ManageMetadata", "/home/sliceruser/data/piCaiCode/preprocessing/ManageMetadata.py")
-# # ManageMetadata = importlib.util.module_from_spec(spec)
-# # sys.modules["ManageMetadata"] = ManageMetadata
-# # spec.loader.exec_module(ManageMetadata)
 
 
 
@@ -82,6 +65,7 @@ tensorflow.test.is_gpu_available()
 
 # Next, create an optimizer, passing in the config:
 # (You can leave out API_KEY if you already set it)
+opt = Optimizer(config)
 
 
 
