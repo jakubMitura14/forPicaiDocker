@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.234.0/containers/python-3
 {
-	"name": "forPicaiDocker",
+	"name": "forJuliaDocker",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": "",
@@ -41,10 +41,11 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python"
+		,"julialang.language-julia"
 		// "ms-python.vscode-pylance"
 	],
 	"mounts": [
-		"source=/media/jakub/NewVolume/slicerData,target=/home/sliceruser/data,type=bind,consistency=cached"
+		"source=/media/jakub/NewVolume/forJuliaData,target=/home/data,type=bind,consistency=cached"
 	  ],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
