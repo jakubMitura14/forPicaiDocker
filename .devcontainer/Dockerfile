@@ -515,7 +515,7 @@ ENV PATH="/opt/cmake/bin:${PATH}"
 
 RUN mkdir ${HOME}/scripts
 
-RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+#RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 RUN cd ${HOME}/externalRepos/elastix && \
     mkdir buildd && \
