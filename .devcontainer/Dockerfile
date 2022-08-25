@@ -523,7 +523,7 @@ RUN cd ${HOME}/externalRepos/elastix && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
     make -j6 && \
     cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
-    python Packaging/setup.py install
+    python3 Packaging/setup.py install
 COPY uniRes_elastix.sh ${HOME}/scripts
 
 
