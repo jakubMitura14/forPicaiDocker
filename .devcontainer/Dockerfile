@@ -133,6 +133,7 @@ RUN apt-get update -q -y && \
     pkg-config\
     software-properties-common\
     libhdf5-serial-dev\
+    libtbb2 \
     #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
@@ -289,7 +290,7 @@ RUN set -x && \
 # Set up launcher for websockify
 # (websockify must run in  Slicer's Python environment)
 # COPY websockify ./Slicer/bin/
-RUN chmod +x ${HOME}/Slicer/bin/websockify
+# RUN chmod +x ${HOME}/Slicer/bin/websockify
 
 ################################################################################
 # Need to run Slicer as non-root because
