@@ -72,7 +72,7 @@ RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 ################################################################################
 # Remove documentation to save hard drive space
 #  https://askubuntu.com/questions/129566/remove-documentation-to-save-hard-drive-space
-COPY etc/dpkg/dpkg.cfg.d/01_nodoc /etc/dpkg/dpkg.cfg.d/01_nodoc
+# COPY etc/dpkg/dpkg.cfg.d/01_nodoc /etc/dpkg/dpkg.cfg.d/01_nodoc
 
 ################################################################################
 # - update apt, set up certs, run netselect to get fast mirror
@@ -139,107 +139,65 @@ RUN apt-get update -q -y && \
 
 RUN add-apt-repository ppa:deadsnakes/ppa
 
+#from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
+
+# ARG CUDA=11.3
+# ARG CUDNN=8.1.0.77-1
+# ARG CUDNN_MAJOR_VERSION=8
+# ARG LIB_DIR_PREFIX=x86_64
+# ARG LIBNVINFER=7.2.2-1
+# ARG LIBNVINFER_MAJOR_VERSION=7
+
+# RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+# RUN apt-get update 
+# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-command-line-tools-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcublas-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-nvrtc-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcufft-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcurand-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcusolver-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libcusparse-11.3 
+# RUN  apt-get update && apt-get install -y --no-install-recommends curl 
+# #RUN  apt-get update && apt-get install -y --no-install-recommends libcudnn8  #=8.1.0.77-1+cuda11.3
+
+# RUN  apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libhdf5-serial-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev 
+# RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
+# RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
+# RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
 
 
 
+# Install TensorRT if not building for PowerPC
+# NOTE: libnvinfer uses cuda11.1 versions
+# RUN  apt-get update && \
+#         apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
+#         echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
+#         apt-get update && \
+#         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+#         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
+#         && apt-get clean \
+#         && rm -rf /var/lib/apt/lists/*; 
+
+# For CUDA profiling, TensorFlow requires CUPTI.
+ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+# Link the libcuda stub to the location where tensorflow is searching for it and reconfigure
+# dynamic linker run-time bindings
+RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
+    && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
+    && ldconfig
+
+# See http://bugs.python.org/issue19846
+ENV LANG C.UTF-8
 
 
-
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		ca-certificates \
-# ERROR: no download agent available; install curl, wget, or fetch
-		curl \
-	; \
-	rm -rf /var/lib/apt/lists/*
-
-ENV JULIA_PATH /usr/local/julia
-ENV PATH $JULIA_PATH/bin:$PATH
-
-# https://julialang.org/juliareleases.asc
-# Julia (Binary signing key) <buildbot@julialang.org>
-ENV JULIA_GPG 3673DF529D9049477F76B37566E3C7DC03D6E495
-
-# https://julialang.org/downloads/
-ENV JULIA_VERSION 1.7.3
-
-RUN set -eux; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	if ! command -v gpg > /dev/null; then \
-		apt-get update; \
-		apt-get install -y --no-install-recommends \
-			gnupg \
-			dirmngr \
-		; \
-		rm -rf /var/lib/apt/lists/*; \
-	fi; \
-	\
-# https://julialang.org/downloads/#julia-command-line-version
-# https://julialang-s3.julialang.org/bin/checksums/julia-1.7.3.sha256
-	arch="$(dpkg --print-architecture)"; \
-	case "$arch" in \
-		'amd64') \
-			url='https://julialang-s3.julialang.org/bin/linux/x64/1.7/julia-1.7.3-linux-x86_64.tar.gz'; \
-			sha256='9b2f4fa12d92b4dcc5d11dc66fb118c47681a76d3df8da064cc97573f2f5c739'; \
-			;; \
-		'armhf') \
-			url='https://julialang-s3.julialang.org/bin/linux/armv7l/1.7/julia-1.7.3-linux-armv7l.tar.gz'; \
-			sha256='e9de15c56b9b62727c69d10da4b8e90fa6609d2e94e9cfb9f99128dfb59a8677'; \
-			;; \
-		'arm64') \
-			url='https://julialang-s3.julialang.org/bin/linux/aarch64/1.7/julia-1.7.3-linux-aarch64.tar.gz'; \
-			sha256='d9e8b342c80ad1371520ed6d11f55b78aa60746737fbf57ecafd6a23b52dd71d'; \
-			;; \
-		'i386') \
-			url='https://julialang-s3.julialang.org/bin/linux/x86/1.7/julia-1.7.3-linux-i686.tar.gz'; \
-			sha256='c1e1a4f9a53affee269c7e740cb8bd46740f9021414459c3ab3bb2c540d9d499'; \
-			;; \
-		*) \
-			echo >&2 "error: current architecture ($arch) does not have a corresponding Julia binary release"; \
-			exit 1; \
-			;; \
-	esac; \
-	\
-	curl -fL -o julia.tar.gz.asc "$url.asc"; \
-	curl -fL -o julia.tar.gz "$url"; \
-	\
-	echo "$sha256 *julia.tar.gz" | sha256sum --strict --check -; \
-	\
-	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$JULIA_GPG"; \
-	gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
-	command -v gpgconf > /dev/null && gpgconf --kill all; \
-	rm -rf "$GNUPGHOME" julia.tar.gz.asc; \
-	\
-	mkdir "$JULIA_PATH"; \
-	tar -xzf julia.tar.gz -C "$JULIA_PATH" --strip-components 1; \
-	rm julia.tar.gz; \
-	\
-	apt-mark auto '.*' > /dev/null; \
-	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	\
-# smoke test
-	julia --version
-
-#RUN mkdir ${HOME}/data
-#RUN mkdir "/home/sliceruser/data"
-# RUN apt-get dist-upgrade
-
-
-# RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-# RUN apt-get update
-# RUN apt-get install -y  gcc --fix-missing
-# RUN apt-get upgrade -y libstdc++6 --fix-missing
-
+################################################################################
 # set up user
 ENV NB_USER sliceruser
 ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
-
-
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -289,13 +247,13 @@ RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 # Current preview release (Slicer-4.13 2022-02-15, rev30607)
 
 ## Mitura modif to newer
-ARG SLICER_DOWNLOAD_URL=https://download.slicer.org/bitstream/6286ce04e8408647b39f803a
+#ARG SLICER_DOWNLOAD_URL=https://download.slicer.org/bitstream/6286ce04e8408647b39f803a
 
 # Use local package:
 #ADD $SLICER_ARCHIVE.tar.gz ${HOME}/
 
 # Download package:
-RUN curl -JL "$SLICER_DOWNLOAD_URL" | tar xz -C /tmp && mv /tmp/Slicer* Slicer
+#RUN curl -JL "$SLICER_DOWNLOAD_URL" | tar xz -C /tmp && mv /tmp/Slicer* Slicer
 
 ################################################################################
 # these go after installs to avoid trivial invalidation
@@ -303,7 +261,7 @@ ENV VNCPORT=49053
 ENV JUPYTERPORT=8888
 ENV DISPLAY=:10
 
-COPY xorg.conf .
+#COPY xorg.conf .
 
 ################################################################################
 # Set up remote desktop access - step 1/2
@@ -322,12 +280,15 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
+    apt install -y python3.9 && \
+    apt install -y python3-pip && \
+    #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
 
 
 # Set up launcher for websockify
 # (websockify must run in  Slicer's Python environment)
-COPY websockify ./Slicer/bin/
+# COPY websockify ./Slicer/bin/
 RUN chmod +x ${HOME}/Slicer/bin/websockify
 
 ################################################################################
@@ -352,31 +313,33 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
 
-COPY managePicaiFiles.sh .
-COPY uniRes_elastix.sh .
-COPY requirements-dev.txt .
-COPY start-xorg.sh .
-COPY install.sh .
-COPY run.sh .
-COPY .slicerrc.py .
+# COPY managePicaiFiles.sh .
+# COPY uniRes_elastix.sh .
+# COPY requirements-dev.txt .
+# COPY start-xorg.sh .
+# COPY install.sh .
+# COPY run.sh .
+# COPY .slicerrc.py .
 
-RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
-RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
-RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
+# RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
+# RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
+# RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
 
 
 
-USER ${NB_USER}
-RUN mkdir /tmp/runtime-sliceruser
-ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
+# USER ${NB_USER}
+# RUN mkdir /tmp/runtime-sliceruser
+# ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
+
+
 
 # First upgrade pip
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade pip
-ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
+RUN python3 -m pip install --upgrade pip
+#ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 #COPY processMetaData.py .
 #COPY standardize.py .
 
@@ -390,11 +353,11 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 
 # # Extend the nnUNet installation with custom trainers
 # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
-# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 #     mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
 
 # COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
-# RUN SITE_PKG=`/home/sliceruser/Slicer/bin/PythonSlicer -m pip show nnunet | grep "Location:" | awk '{print $2}'` && \
+# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
 #     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
 
 
@@ -411,24 +374,24 @@ ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
 # # Installs the latest version by default.
 # ARG TF_PACKAGE=tensorflow
 # ARG TF_PACKAGE_VERSION=
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+# RUN    pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
 
 
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter matplotlib
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir "intensity-normalization[ants]"
+RUN pip install --no-cache-dir jupyter matplotlib
+# RUN    pip install --no-cache-dir "intensity-normalization[ants]"
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 
 
 # Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify && \
-    cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install notebook jupyterhub jupyterlab && \
-    /home/sliceruser/Slicer/bin/PythonSlicer -m pip install -e \
-    git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
-    git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
+# RUN pip install --upgrade websockify && \
+#     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
+#        pip install notebook jupyterhub jupyterlab && \
+#        pip install -e \
+#     git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
+#     git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
 
 ####### ## { Mitura start} ading libraries through pip 
 
@@ -436,13 +399,14 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install --upgrade websockify
 # RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 # RUN apt install -y gcc-7 g++-7
 
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install pyradiomics
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install requirements-dev.txt
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m ipykernel install --user
-ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
+#RUN    pip install pyradiomics
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+#RUN    pip install requirements-dev.txt
+#RUN ipykernel install --user
+#ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
+RUN pip install \
+    #itk \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
@@ -510,7 +474,7 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     zenodopy==0.2.0 \
     evalutils==0.3.0 \
     nnunet==1.7.0 \
-    SimpleITK>=2.1.1.2 \
+    SimpleITK \
     git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
     threadpoolctl==3.1.0 \
     batchgenerators==0.24 \
@@ -521,18 +485,21 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    intensity-normalization[ants]==2.2.3 \
+    intensity-normalization[ants] \
     numba==0.55.2 \
     pyro-ppl==1.8.1 \
-    warp-lang==0.2.3    
+    warp-lang==0.2.3 \
+    report_guided_annotation \
+    SimpleITK-SimpleElastix \
+    geomloss[full]    
 
-RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-
+RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN    pip install torch-optimizer
 
 #for downloading Pi cai data
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install zenodo_get==1.3.4
+#RUN    pip install zenodo_get==1.3.4
 #downloading from zenodo and preprocessing metadata
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m zenodo_get --retry=8 10.5281/zenodo.6517397
+# RUN    zenodo_get --retry=8 10.5281/zenodo.6517397
 #         # #prepare  csv containing metadata and paths
 # RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
 #         # # we already unpacked files now we can remove zips
@@ -552,8 +519,8 @@ RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install 'monai[nibabel, skim
 
 ##############3 code from picai hosts
 # #install prepared preprocessing and evaluation ready libraries
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_prep
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install git+https://github.com/DIAGNijmegen/picai_eval
+# RUN    pip install git+https://github.com/DIAGNijmegen/picai_prep
+# RUN    pip install git+https://github.com/DIAGNijmegen/picai_eval
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
 
@@ -568,15 +535,17 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 #install unires properly
 
 # Install Slicer extensions
-#RUN /home/sliceruser/uniRes_elastix.sh
-USER root
-RUN chmod ugo+rwx /home/sliceruser/install.sh
-RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-RUN chmod ugo+rwx /home/sliceruser/run.sh
-# RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-# RUN chmod -R ugo+rwx ${HOME}/data
+# RUN /home/sliceruser/uniRes_elastix.sh
+# USER root
 
-USER ${NB_USER}
+# RUN apt install -y python-is-python3
+# # RUN chmod ugo+rwx /home/sliceruser/install.sh
+# # RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
+# # RUN chmod ugo+rwx /home/sliceruser/run.sh
+# # # RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
+# # # RUN chmod -R ugo+rwx ${HOME}/data
+
+#  USER ${NB_USER}
 # RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
 # RUN chmod -R ugo+rwx ${HOME}
 
@@ -588,7 +557,7 @@ USER ${NB_USER}
 
 USER ${NB_USER}
 
-RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
+# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 # #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 EXPOSE $VNCPORT $JUPYTERPORT
@@ -620,7 +589,7 @@ RUN git config -l
 # # RUN apt install -y python3.11-gdbm
 # USER ${NB_USER}
 
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer -m pip install SimpleITK-SimpleElastix
+#RUN    pip install SimpleITK-SimpleElastix
 
 
 #CMD ["/bin/bash"]
@@ -639,6 +608,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+
 
 
 
