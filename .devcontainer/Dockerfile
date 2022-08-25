@@ -142,45 +142,6 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
-# ARG CUDA=11.3
-# ARG CUDNN=8.1.0.77-1
-# ARG CUDNN_MAJOR_VERSION=8
-# ARG LIB_DIR_PREFIX=x86_64
-# ARG LIBNVINFER=7.2.2-1
-# ARG LIBNVINFER_MAJOR_VERSION=7
-
-# RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-# RUN apt-get update 
-# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-command-line-tools-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libcublas-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends cuda-nvrtc-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libcufft-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libcurand-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libcusolver-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libcusparse-11.3 
-# RUN  apt-get update && apt-get install -y --no-install-recommends curl 
-# #RUN  apt-get update && apt-get install -y --no-install-recommends libcudnn8  #=8.1.0.77-1+cuda11.3
-
-# RUN  apt-get update && apt-get install -y --no-install-recommends libfreetype6-dev 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libhdf5-serial-dev 
-# RUN  apt-get update && apt-get install -y --no-install-recommends libzmq3-dev 
-# RUN  apt-get update && apt-get install -y --no-install-recommends pkg-config 
-# RUN  apt-get update && apt-get install -y --no-install-recommends software-properties-common 
-# RUN  apt-get update && apt-get install -y --no-install-recommends  unzip
-
-
-
-# Install TensorRT if not building for PowerPC
-# NOTE: libnvinfer uses cuda11.1 versions
-# RUN  apt-get update && \
-#         apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
-#         echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /"  > /etc/apt/sources.list.d/tensorRT.list && \
-#         apt-get update && \
-#         apt-get install -y --no-install-recommends libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
-#         libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda11.0 \
-#         && apt-get clean \
-#         && rm -rf /var/lib/apt/lists/*; 
-
 # For CUDA profiling, TensorFlow requires CUPTI.
 ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
@@ -207,13 +168,6 @@ RUN adduser --disabled-password \
 
 WORKDIR ${HOME}
 
-##picai specific
-# RUN mkdir {${HOME}/data, ${HOME}/labels,${HOME}/data/preprocess, ${HOME}/data/orig
-# , ${HOME}/data/preprocess/monai_persistent_Dataset, ${HOME}/output,${HOME}/data/piCaiCode,${HOME}/build
-# , ${HOME}/data/lightning_logs, ${HOME}/data/preprocess/standarizationModels
-# , ${HOME}/data/preprocess/Bias_field_corrected, ${HOME}/data/metadata}
-
-
 
 # Install some basic utilities
 RUN mkdir \
@@ -229,13 +183,6 @@ RUN mkdir \
     ${HOME}/data/preprocess/standarizationModels \
     ${HOME}/data/preprocess/Bias_field_corrected \
     ${HOME}/data/metadata
-
-
-
-# COPY bashrc .
-# COPY bashrc /etc/bash.bashrc
-# RUN chown ${NB_USER} /etc/bash.bashrc
-#RUN chmod a+rwx /etc/bash.bashrc
 
 
 
@@ -287,16 +234,11 @@ RUN set -x && \
     apt-get purge -y --auto-remove build-essential
 
 
-# Set up launcher for websockify
-# (websockify must run in  Slicer's Python environment)
-# COPY websockify ./Slicer/bin/
-# RUN chmod +x ${HOME}/Slicer/bin/websockify
-
 ################################################################################
 # Need to run Slicer as non-root because
 # - mybinder requirement
 # - chrome sandbox inside QtWebEngine does not support root.
-RUN chown ${NB_USER} ${HOME} ${HOME}/Slicer
+# RUN chown ${NB_USER} ${HOME} ${HOME}/Slicer
 RUN chown ${NB_USER} ${HOME} ${HOME}/labels
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess
 RUN chown ${NB_USER} ${HOME} ${HOME}/data/orig
