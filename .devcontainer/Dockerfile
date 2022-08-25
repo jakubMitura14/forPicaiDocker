@@ -39,7 +39,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
 RUN sudo apt update
 RUN sudo apt install gh
-RUN apt autoremove python3 -y
+#RUN apt autoremove python3 -y
 
 
 
@@ -497,6 +497,42 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 USER root
 RUN /sbin/ldconfig -v
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
+ # Spicy build and test dependencies.
+ && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
+ # Spicy doc dependencies.
+ && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
+ && pip3 install "btest>=0.66" pre-commit \
+ # Install a recent CMake.
+ && mkdir -p /opt/cmake \
+ && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/opt/cmake/bin:${PATH}"
+
+
+RUN mkdir ${HOME}/scripts
+
+RUN mkdir ${HOME}/externalRepos
+RUN mkdir ${HOME}/externalRepos/elastix
+RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+
+RUN cd ${HOME}/externalRepos/elastix && \
+    mkdir buildd && \
+    cd buildd && \
+    cmake ${HOME}/externalRepos/elastix/SuperBuild && \
+    make -j6 && \
+    cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
+    python Packaging/setup.py install
+COPY uniRes_elastix.sh ${HOME}/scripts
+
+
+RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
+
+RUN ${HOME}/scripts/uniRes_elastix.sh
+
 
 
 USER ${NB_USER}
