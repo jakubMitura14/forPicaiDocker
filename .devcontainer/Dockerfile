@@ -527,13 +527,30 @@ RUN cd ${HOME}/externalRepos/elastix && \
 COPY uniRes_elastix.sh ${HOME}/scripts
 
 
+
+# git clone https://github.com/SuperElastix/elastix.git ${HOME}/externalRepos/elastixBase
+# cd ${HOME}/externalRepos/elastixBase
+
+# https://github.com/SuperElastix/elastix.git
+
+
+
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
 
 RUN ${HOME}/scripts/uniRes_elastix.sh
 
+RUN mkdir ${HOME}/elastixBase && \
+cd ${HOME}/elastixBase && \
+wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
+tar -xf archive.tar.gz elastix-5.0.1-linux.tar.bz2 
+
+RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastixBase"]
 
 
 USER ${NB_USER}
+
+
+
 
 # RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 # #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
