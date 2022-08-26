@@ -101,7 +101,7 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     libtbb2 \
-    elastix=4.9.0-1\
+    #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
 
