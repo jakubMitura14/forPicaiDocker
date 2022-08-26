@@ -541,7 +541,7 @@ RUN ${HOME}/scripts/uniRes_elastix.sh
 RUN apt update
 RUN apt install libtbb-dev
 #from https://askubuntu.com/questions/409310/error-while-loading-shared-libraries-cannot-open-shared-object-file-no-such-fi
-RUN apt-get install libgtk
+RUN apt-get install libgtk-3-0-udeb
 RUN apt-get install libidn
 RUN apt-get install libglu1-mesa
 RUN apt-get install libpangox
