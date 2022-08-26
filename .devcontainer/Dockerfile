@@ -552,7 +552,7 @@ RUN apt-get -y install libpangoxft-1.0-0
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
 wget https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-linux.tar.bz2&& \
-tar -xf elastix-4.0.0-linux.tar.bz2 
+tar -xf elastix-4.9.0-linux.tar.bz2
 
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 
