@@ -287,7 +287,7 @@ RUN pip install \
     zenodopy==0.2.0 \
     evalutils==0.3.0 \
     nnunet==1.7.0 \
-    #SimpleITK \
+    SimpleITK \
     git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
     threadpoolctl==3.1.0 \
     batchgenerators==0.24 \
@@ -355,8 +355,11 @@ RUN cd ${HOME}/externalRepos/elastix && \
     cd buildd && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
     make -j10 
-RUN cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
-    python3 Packaging/setup.py install
+
+RUN pip install itk
+
+# RUN cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
+#     python3 Packaging/setup.py install
 
 
 
