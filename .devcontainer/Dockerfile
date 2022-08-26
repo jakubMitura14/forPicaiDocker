@@ -341,8 +341,8 @@ RUN apt-get update \
 ENV PATH="/opt/cmake/bin:${PATH}"
 ENV PATH="/usr/lib/python3.8:${PATH}"
 # ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
-ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
-ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
+# ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
+# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
 # ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
 
 
