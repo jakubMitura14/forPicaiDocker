@@ -538,7 +538,7 @@ COPY uniRes_elastix.sh ${HOME}/scripts
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
 
 RUN ${HOME}/scripts/uniRes_elastix.sh
-RUN apt-get libtbb
+RUN apt install libtbb-dev
 
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
