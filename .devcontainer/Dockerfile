@@ -542,7 +542,9 @@ RUN apt update
 RUN apt install libtbb-dev
 #from https://askubuntu.com/questions/409310/error-while-loading-shared-libraries-cannot-open-shared-object-file-no-such-fi
 RUN apt -y install libgtk-3-dev
-RUN apt-get -y install libidn-dev
+RUN apt update
+
+RUN apt-get -y install libidn11-dev
 RUN apt-get -y install libglu1-mesa-dev
 RUN apt-get -y install libpangox-1.0-dev
 RUN apt-get -y install libpangoxft-1.0-0
