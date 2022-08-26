@@ -541,8 +541,11 @@ RUN ${HOME}/scripts/uniRes_elastix.sh
 RUN apt update
 RUN apt install libtbb-dev
 #from https://askubuntu.com/questions/409310/error-while-loading-shared-libraries-cannot-open-shared-object-file-no-such-fi
-RUN apt-get install libgtk2.0-0:i386 libidn11:i386 libglu1-mesa:i386
-RUN apt-get install libpangox-1.0-0:i386 libpangoxft-1.0-0:i386
+RUN apt-get install libgtk2
+RUN apt-get install libidn11
+RUN apt-get install libglu1-mesa
+RUN apt-get install libpangox
+RUN apt-get install libpangoxft
 
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
