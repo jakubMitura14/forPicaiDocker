@@ -413,7 +413,7 @@ RUN pip install \
     tensorflow_addons==0.17.0 \
     ipywidgets==7.7.0 \
     h5py==3.7.0 \
-    itk-elastix==0.14.1 \
+    #itk-elastix==0.14.1 \
     zenodopy==0.2.0 \
     evalutils==0.3.0 \
     nnunet==1.7.0 \
@@ -433,7 +433,7 @@ RUN pip install \
     pyro-ppl==1.8.1 \
     warp-lang==0.2.3 \
     report_guided_annotation \
-    SimpleITK-SimpleElastix \
+    #SimpleITK-SimpleElastix \
     geomloss[full]    
 
 RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
@@ -511,7 +511,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 ENV PATH="/opt/cmake/bin:${PATH}"
-
+ENV PATH="/usr/lib/python3.8:${PATH}"
+ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
+ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
 
 RUN mkdir ${HOME}/scripts
 
