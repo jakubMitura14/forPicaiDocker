@@ -42,18 +42,6 @@ RUN sudo apt install gh
 #RUN apt autoremove python3 -y
 
 
-
-# RUN add-apt-repository ppa:jonathonf/gcc-7.1
-# RUN apt-get update
-# RUN apt-get install gcc-7 g++-7
-
-
-# RUN apt-get install -y software-properties-common
-# RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-# RUN apt install -y gcc-7 g++-7
-
-
-
 RUN mkdir /app
 WORKDIR /app
 
@@ -65,32 +53,11 @@ RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 RUN apt-get update
 RUN apt-get -y install cuda-11.3
 RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-## { Mitura end}
-
-
-
-################################################################################
-# Remove documentation to save hard drive space
-#  https://askubuntu.com/questions/129566/remove-documentation-to-save-hard-drive-space
-# COPY etc/dpkg/dpkg.cfg.d/01_nodoc /etc/dpkg/dpkg.cfg.d/01_nodoc
-
-################################################################################
-# - update apt, set up certs, run netselect to get fast mirror
-# - reduce apt gravity
-# - and disable caching
-#   from https://blog.sleeplessbeastie.eu/2017/10/02/how-to-disable-the-apt-cache/
-# Note: in each RUN command "apt-get update" must be called before apt-get is used.
 RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
     echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
 
-################################################################################
-# get packages
-# - update (without update, old cached server addresses may be used and apt-get install may fail)
-# - install things
-#   - basic  tools
-#   - slicer dependencies
-#   - awesome window manager
-#   - install ca-certs to prevent - fatal: unable to access 'https://github.com/novnc/websockify/': server certificate verification failed. CAfile: none CRLfile: none
+
+
 RUN apt-get update -q -y && \
     apt-get install -q -y \
     vim net-tools curl \
@@ -134,7 +101,7 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     libtbb2 \
-    #elastix=4.9.0-1\
+    elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
 
@@ -188,20 +155,6 @@ RUN mkdir \
 
 RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 
-##picai specific end
-################################################################################
-# Download and unpack Slicer
-
-# Current preview release (Slicer-4.13 2022-02-15, rev30607)
-
-## Mitura modif to newer
-#ARG SLICER_DOWNLOAD_URL=https://download.slicer.org/bitstream/6286ce04e8408647b39f803a
-
-# Use local package:
-#ADD $SLICER_ARCHIVE.tar.gz ${HOME}/
-
-# Download package:
-#RUN curl -JL "$SLICER_DOWNLOAD_URL" | tar xz -C /tmp && mv /tmp/Slicer* Slicer
 
 ################################################################################
 # these go after installs to avoid trivial invalidation
@@ -256,97 +209,14 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
 
-# COPY managePicaiFiles.sh .
-# COPY uniRes_elastix.sh .
-# COPY requirements-dev.txt .
-# COPY start-xorg.sh .
-# COPY install.sh .
-# COPY run.sh .
-# COPY .slicerrc.py .
-
-# RUN ["chmod", "+x", "/home/sliceruser/managePicaiFiles.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/uniRes_elastix.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/requirements-dev.txt"]
-# RUN ["chmod", "+x", "/home/sliceruser/start-xorg.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/install.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/run.sh"]
-# RUN ["chmod", "+x", "/home/sliceruser/.slicerrc.py"]
-
-
-
-# USER ${NB_USER}
-# RUN mkdir /tmp/runtime-sliceruser
-# ENV XDG_RUNTIME_DIR=/tmp/runtime-sliceruser
-
-
 
 # First upgrade pip
 RUN python3 -m pip install --upgrade pip
-#ENV PATH=$PATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
-#COPY processMetaData.py .
-#COPY standardize.py .
-
-
-## needed for picai host prostate segmentation algorithm
-#### from https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation/blob/main/Dockerfile
-
-#RUN cd ${HOME}/externalRepos
-
-
-
-# # Extend the nnUNet installation with custom trainers
-# COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_focalLoss.py /tmp/nnUNetTrainerV2_focalLoss.py
-# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
-#     mv /tmp/nnUNetTrainerV2_focalLoss.py "$SITE_PKG/nnunet/training/network_training/nnUNet_variants/loss_function/nnUNetTrainerV2_focalLoss.py"
-
-# COPY --chown=${NB_USER}:${NB_USER} nnUNetTrainerV2_Loss_FL_and_CE.py /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py
-# RUN SITE_PKG=`   pip show nnunet | grep "Location:" | awk '{print $2}'` && \
-#     mv /tmp/nnUNetTrainerV2_Loss_FL_and_CE.py "$SITE_PKG/nnunet/training/network_training/nnUNetTrainerV2_Loss_FL_and_CE.py"
-
-
-
-
-
-# from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
-# # Options:
-# #   tensorflow
-# #   tensorflow-gpu
-# #   tf-nightly
-# #   tf-nightly-gpu
-# # Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
-# # Installs the latest version by default.
-# ARG TF_PACKAGE=tensorflow
-# ARG TF_PACKAGE_VERSION=
-# RUN    pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
-
 
 
 RUN pip install --no-cache-dir jupyter matplotlib
-# RUN    pip install --no-cache-dir "intensity-normalization[ants]"
-# Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
-# Pin jedi; see https://github.com/ipython/ipython/issues/12740
 RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
-
-
-# Now install websockify and jupyter-server-proxy (fixed at tag v1.6.0)
-# RUN pip install --upgrade websockify && \
-#     cp /usr/lib/rebind.so /home/sliceruser/Slicer/lib/Python/lib/python3.9/site-packages/websockify/ && \
-#        pip install notebook jupyterhub jupyterlab && \
-#        pip install -e \
-#     git+https://github.com/lassoan/jupyter-desktop-server#egg=jupyter-desktop-server \
-#     git+https://github.com/jupyterhub/jupyter-server-proxy@v1.6.0#egg=jupyter-server-proxy
-
-####### ## { Mitura start} ading libraries through pip 
-
-# RUN apt-get install -y software-properties-common
-# RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-# RUN apt install -y gcc-7 g++-7
-
-#RUN    pip install pyradiomics
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-#RUN    pip install requirements-dev.txt
-#RUN ipykernel install --user
-#ENV PYTHONPATH "${PYTHONPATH}:/home/sliceruser/Slicer/bin/PythonSlicer"
 
 RUN pip install \
     #itk \
@@ -439,31 +309,8 @@ RUN pip install \
 RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 RUN    pip install torch-optimizer
 
-#for downloading Pi cai data
-#RUN    pip install zenodo_get==1.3.4
-#downloading from zenodo and preprocessing metadata
-# RUN    zenodo_get --retry=8 10.5281/zenodo.6517397
-#         # #prepare  csv containing metadata and paths
-# RUN /home/sliceruser/Slicer/bin/PythonSlicer processMetaData.py
-#         # # we already unpacked files now we can remove zips
-# RUN rm /home/sliceruser/picai_public_images_fold0.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold1.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold2.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold3.zip 
-# RUN rm /home/sliceruser/picai_public_images_fold4.zip
-        #standarization - it can take sth like 90h on 10 cores cpu
-        # /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
-#RUN /home/sliceruser/managePicaiFiles.sh
-#standarization
- 
-#RUN /home/sliceruser/Slicer/bin/PythonSlicer standardize.py
 
-#copy main repository inside image using token - as the repository is private
 
-##############3 code from picai hosts
-# #install prepared preprocessing and evaluation ready libraries
-# RUN    pip install git+https://github.com/DIAGNijmegen/picai_prep
-# RUN    pip install git+https://github.com/DIAGNijmegen/picai_eval
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
 
@@ -473,26 +320,7 @@ RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRe
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
-#RUN git clone https://github.com/junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration.git ${HOME}/externalRepos
 
-#install unires properly
-
-# Install Slicer extensions
-# RUN /home/sliceruser/uniRes_elastix.sh
-# USER root
-
-# RUN apt install -y python-is-python3
-# # RUN chmod ugo+rwx /home/sliceruser/install.sh
-# # RUN chmod ugo+rwx /home/sliceruser/start-xorg.sh
-# # RUN chmod ugo+rwx /home/sliceruser/run.sh
-# # # RUN chown -R ${NB_USER} ${HOME} ${HOME}/data
-# # # RUN chmod -R ugo+rwx ${HOME}/data
-
-#  USER ${NB_USER}
-# RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-# RUN chmod -R ugo+rwx ${HOME}
-
-#chown -R $USER:$USER ${HOME}
 
 
 USER root
@@ -514,6 +342,9 @@ ENV PATH="/opt/cmake/bin:${PATH}"
 ENV PATH="/usr/lib/python3.8:${PATH}"
 ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
 ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
+ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
+ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+
 
 RUN mkdir ${HOME}/scripts
 
