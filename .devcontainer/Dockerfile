@@ -568,7 +568,7 @@ RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
 
 
-#USER ${NB_USER}
+USER ${NB_USER}
 
 
 
