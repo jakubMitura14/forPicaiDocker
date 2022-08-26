@@ -56,7 +56,7 @@ RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
     echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
 
-
+#consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 
 RUN apt-get update -q -y && \
     apt-get install -q -y \
@@ -340,10 +340,10 @@ RUN apt-get update \
 
 ENV PATH="/opt/cmake/bin:${PATH}"
 ENV PATH="/usr/lib/python3.8:${PATH}"
-ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
+# ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
 ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
 ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
-ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
 
 
 RUN mkdir ${HOME}/scripts
@@ -354,8 +354,8 @@ RUN cd ${HOME}/externalRepos/elastix && \
     mkdir buildd && \
     cd buildd && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
-    make -j10 && \
-    cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
+    make -j10 
+RUN cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
     python3 Packaging/setup.py install
 
 
