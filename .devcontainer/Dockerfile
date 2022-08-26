@@ -554,7 +554,7 @@ cd ${HOME}/elastixBase && \
 wget https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-linux.tar.bz2&& \
 tar -xf elastix-4.9.0-linux.tar.bz2
 
-ENV LD_LIBRARY_PATH=${HOME}/elastixBase/liv/libANNlib-4.9.so
+ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-4.9.so
 
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 
