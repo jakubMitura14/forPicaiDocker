@@ -526,7 +526,6 @@ RUN cd ${HOME}/externalRepos/elastix && \
     make -j10 && \
     cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
     python3 Packaging/setup.py install
-COPY uniRes_elastix.sh ${HOME}/scripts
 
 
 
