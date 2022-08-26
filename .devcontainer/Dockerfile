@@ -538,6 +538,7 @@ COPY uniRes_elastix.sh ${HOME}/scripts
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
 
 RUN ${HOME}/scripts/uniRes_elastix.sh
+RUN apt-get update -q -y libtbb-dev
 
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
@@ -545,6 +546,8 @@ wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0
 tar -xf elastix-5.0.1-linux.tar.bz2 
 
 RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
+
+
 
 
 USER ${NB_USER}
