@@ -394,7 +394,7 @@ RUN apt-get -y install libpangoxft-1.0-0
 
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 
-RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
+#RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
 
 
