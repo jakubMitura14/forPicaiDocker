@@ -544,7 +544,7 @@ cd ${HOME}/elastixBase && \
 wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 tar -xf elastix-5.0.1-linux.tar.bz2 
 
-RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastixBase"]
+RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
 
 USER ${NB_USER}
