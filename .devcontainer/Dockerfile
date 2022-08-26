@@ -542,7 +542,7 @@ RUN ${HOME}/scripts/uniRes_elastix.sh
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
 wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
-tar -xf archive.tar.gz elastix-5.0.1-linux.tar.bz2 
+tar -xf elastix-5.0.1-linux.tar.bz2 
 
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastixBase"]
 
