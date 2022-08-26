@@ -557,6 +557,10 @@ tar -xf elastix-4.9.0-linux.tar.bz2
 ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-4.9.so
 ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-4.9.so.1
 
+ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so:${PATH}" 
+ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so.1:${PATH}" 
+
+
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 
 RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
