@@ -365,7 +365,8 @@ RUN python3.8 -m pip install SimpleITK
 
 
 
-RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
+#RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
+
 # git clone https://github.com/SuperElastix/elastix.git ${HOME}/externalRepos/elastixBase
 # cd ${HOME}/externalRepos/elastixBase
 
