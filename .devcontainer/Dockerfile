@@ -211,14 +211,14 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
 # First upgrade pip
-RUN python3 -m pip install --upgrade pip
+RUN python3.8 -m pip install --upgrade pip
 
 
-RUN pip install --no-cache-dir jupyter matplotlib
-RUN pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
-RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+RUN python3.8 -m pip install --no-cache-dir jupyter matplotlib
+RUN python3.8 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 
-RUN pip install \
+RUN python3.8 -m pip install \
     #itk \
     pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
@@ -306,8 +306,8 @@ RUN pip install \
     #SimpleITK-SimpleElastix \
     geomloss[full]    
 
-RUN    pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN    pip install torch-optimizer
+RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN python3.8 -m pip install torch-optimizer
 
 
 
@@ -356,7 +356,8 @@ RUN cd ${HOME}/externalRepos/elastix && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
     make -j10 
 
-RUN pip install itk
+RUN python3.8 -m pip install itk
+RUN python3.8 -m pip install SimpleITK
 
 # RUN cd ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python && \
 #     python3 Packaging/setup.py install
