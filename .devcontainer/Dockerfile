@@ -287,7 +287,7 @@ RUN python3.8 -m pip install \
     zenodopy==0.2.0 \
     evalutils==0.3.0 \
     nnunet==1.7.0 \
-    SimpleITK \
+    #SimpleITK \
     git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
     threadpoolctl==3.1.0 \
     batchgenerators==0.24 \
@@ -356,8 +356,8 @@ RUN cd ${HOME}/externalRepos/elastix && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
     make -j10 
 
-RUN python3.8 -m pip install itk
-RUN python3.8 -m pip install SimpleITK
+# RUN python3.8 -m pip install itk
+# RUN python3.8 -m pip install SimpleITK
 
 RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
 RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
