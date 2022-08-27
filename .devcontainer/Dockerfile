@@ -364,7 +364,7 @@ RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_Sim
 
 RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
 
-RUN python3.8 -m pip SimpleITK-SimpleElastix
+RUN python3.8 -m pip install SimpleITK-SimpleElastix
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
