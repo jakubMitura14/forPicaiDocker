@@ -406,7 +406,7 @@ RUN apt-get -y install libpangoxft-1.0-0
 
 
 
-USER ${NB_USER}
+#USER ${NB_USER}
 
 
 
