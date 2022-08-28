@@ -136,6 +136,9 @@ RUN adduser --disabled-password \
 WORKDIR ${HOME}
 
 
+
+
+
 # Install some basic utilities
 RUN mkdir \
     ${HOME}/data \
@@ -185,6 +188,26 @@ RUN set -x && \
     apt install -y python3-pip && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
+
+
+
+
+RUN /sbin/ldconfig -v
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
+ # Spicy build and test dependencies.
+ && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
+ # Spicy doc dependencies.
+ && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
+ && pip3 install "btest>=0.66" pre-commit \
+ # Install a recent CMake.
+ && mkdir -p /opt/cmake \
+ && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/opt/cmake/bin:${PATH}"
+ENV PATH="/usr/lib/python3.8:${PATH}"
 
 
 ################################################################################
@@ -323,23 +346,8 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 
 
-USER root
-RUN /sbin/ldconfig -v
-RUN apt-get update \
- && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
- # Spicy build and test dependencies.
- && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
- # Spicy doc dependencies.
- && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
- && pip3 install "btest>=0.66" pre-commit \
- # Install a recent CMake.
- && mkdir -p /opt/cmake \
- && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+#USER root
 
-ENV PATH="/opt/cmake/bin:${PATH}"
-ENV PATH="/usr/lib/python3.8:${PATH}"
 # ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
 # ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
 # ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
