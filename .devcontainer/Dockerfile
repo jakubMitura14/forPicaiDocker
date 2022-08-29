@@ -364,8 +364,6 @@ RUN cd ${HOME}/externalRepos/elastix && \
     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
     make -j10 
 
-# RUN python3.8 -m pip install itk
-# RUN python3.8 -m pip install SimpleITK
 
 RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
 RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
@@ -373,6 +371,10 @@ RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_Sim
 RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
 
 RUN python3.8 -m pip install SimpleITK-SimpleElastix
+
+#maybe remove if registering?
+RUN python3.8 -m pip install itk
+RUN python3.8 -m pip install SimpleITK
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
