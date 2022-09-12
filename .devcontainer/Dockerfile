@@ -356,16 +356,16 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 RUN mkdir ${HOME}/scripts
 
-#RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
-#################################### simple elastix
-# RUN cd ${HOME}/externalRepos/elastix && \
-#     mkdir buildd && \
-#     cd buildd && \
-#     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
-#     make -j10 
+################################### simple elastix
+RUN cd ${HOME}/externalRepos/elastix && \
+    mkdir buildd && \
+    cd buildd && \
+    cmake ${HOME}/externalRepos/elastix/SuperBuild && \
+    make -j10 
 
-USER root
+# USER root
 
 
 RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
