@@ -378,11 +378,13 @@ RUN cd ${HOME}/externalRepos/simpleITKelastix && \
     cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
     make -j8 
 
+RUN mkdir ${HOME}/aa
 
-RUN wget https://pypi.python.org/packages/48/69/d87c60746b393309ca30761f8e2b49473d43450b150cb08f3c6df5c11be5/appdirs-1.4.3.tar.gz  && \ 
-tar -xvf appdirs-1.4.3.tar  && \ 
+
+RUN wget https://pypi.python.org/packages/48/69/d87c60746b393309ca30761f8e2b49473d43450b150cb08f3c6df5c11be5/appdirs-1.4.3.tar.gz  ${HOME}/aa && \ 
+tar -xvf ${HOME}/aa/appdirs-1.4.3.tar  && \ 
 cd appdirs-1.4.3  && \ 
-python3.8 setup.py install
+python3.8 ${HOME}/aa/setup.py install
 
 RUN python3.8 -m pip install --upgrade pip
 
