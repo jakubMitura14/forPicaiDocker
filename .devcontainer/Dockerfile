@@ -350,8 +350,8 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 
 # ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
 # ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
-# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
-# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
+ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
 
 
 RUN mkdir ${HOME}/scripts
@@ -368,21 +368,21 @@ RUN cd ${HOME}/externalRepos/elastix && \
 # USER root
 
 
-RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
-RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
-    mkdir SimpleITK-build  && \
-    cd SimpleITK-build&& \
-    cmake -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
-    make 
+# RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
+# RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
+#     mkdir SimpleITK-build  && \
+#     cd SimpleITK-build&& \
+#     cmake -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
+#     make 
 
 RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
-# RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
-# RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
+RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
+RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
 
-# RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
+RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
 
-# RUN python3.8 -m pip install SimpleITK-SimpleElastix
+RUN python3.8 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
 
@@ -390,7 +390,7 @@ RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-bu
 ###########################################
 
 # RUN python3.8 -m pip install itk
-# RUN python3.8 -m pip install SimpleITK
+RUN python3.8 -m pip install SimpleITK
 
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
