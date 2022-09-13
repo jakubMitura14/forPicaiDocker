@@ -85,8 +85,6 @@ RUN apt-get update -q -y && \
     kmod\
     zlib1g\
     python-dev\
-    python3-packaging \
-    python3-retrying \
     bzip2\
     cmake\
     cuda-command-line-tools-11.3 \
@@ -103,9 +101,6 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     libtbb2 \
-    python3-setuptools  \
-    python3-wheel  \
-    doxygen \
     #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
@@ -132,34 +127,6 @@ ENV LANG C.UTF-8
 ENV NB_USER sliceruser
 ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
-
-
-# RUN /sbin/ldconfig -v
-# RUN apt-get update \
-#  && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
-#  # Spicy build and test dependencies.
-#  && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
-#  # Spicy doc dependencies.
-#  && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
-#  && pip3 install "btest>=0.66" pre-commit \
-#  # Install a recent CMake.
-#  && mkdir -p /opt/cmake \
-#  && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/opt/cmake/bin:${PATH}"
-ENV PATH="/usr/lib/python3.8:${PATH}"
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
-
-
-RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
-RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
-    mkdir SimpleITK-build  && \
-    cd SimpleITK-build&& \
-    cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
-    make -j8 
-
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -217,7 +184,7 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt install -y python3.8 && \
+    apt install -y python3.9 && \
     apt install -y python3-pip && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
@@ -225,6 +192,22 @@ RUN set -x && \
 
 
 
+RUN /sbin/ldconfig -v
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
+ # Spicy build and test dependencies.
+ && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
+ # Spicy doc dependencies.
+ && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
+ && pip3 install "btest>=0.66" pre-commit \
+ # Install a recent CMake.
+ && mkdir -p /opt/cmake \
+ && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/opt/cmake/bin:${PATH}"
+ENV PATH="/usr/lib/python3.8:${PATH}"
 
 
 ################################################################################
@@ -348,7 +331,6 @@ RUN python3.8 -m pip install \
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 RUN python3.8 -m pip install torch-optimizer
-# RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
 
 
@@ -359,7 +341,7 @@ RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.
 RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
 RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
-# RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 
 
@@ -368,44 +350,31 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 
 # ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
 # ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
-ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
-ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
+# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
 
 
 RUN mkdir ${HOME}/scripts
 
-RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+#RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
-################################### simple elastix
-# RUN cd ${HOME}/externalRepos/elastix && \
-#     mkdir buildd && \
-#     cd buildd && \
-#     cmake ${HOME}/externalRepos/elastix/SuperBuild && \
-#     make -j10 
-
-# USER root
+RUN cd ${HOME}/externalRepos/elastix && \
+    mkdir buildd && \
+    cd buildd && \
+    cmake ${HOME}/externalRepos/elastix/SuperBuild && \
+    make -j10 
 
 
+RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
+RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
 
+RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
 
-# RUN python3.8 -m pip install --upgrade pip
-
-
-# RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
-# RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
-
-# RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
-
-# RUN python3.8 -m pip install SimpleITK-SimpleElastix
+RUN python3.8 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
-
-
-###########################################
-
-# RUN python3.8 -m pip install itk
-# RUN python3.8 -m pip install SimpleITK
-
+RUN python3.8 -m pip install itk
+RUN python3.8 -m pip install SimpleITK
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
