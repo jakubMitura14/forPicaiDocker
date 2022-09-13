@@ -381,12 +381,12 @@ RUN cd ${HOME}/externalRepos/simpleITKelastix && \
 RUN mkdir ${HOME}/aa
 
 
-RUN wget https://pypi.python.org/packages/48/69/d87c60746b393309ca30761f8e2b49473d43450b150cb08f3c6df5c11be5/appdirs-1.4.3.tar.gz  ${HOME}/aa && \ 
-tar -xvf ${HOME}/aa/appdirs-1.4.3.tar  && \ 
-cd appdirs-1.4.3  && \ 
-python3.8 ${HOME}/aa/setup.py install
+# RUN wget https://pypi.python.org/packages/48/69/d87c60746b393309ca30761f8e2b49473d43450b150cb08f3c6df5c11be5/appdirs-1.4.3.tar.gz  ${HOME}/aa && \ 
+# tar -xvf ${HOME}/aa/appdirs-1.4.3.tar  && \ 
+# cd appdirs-1.4.3  && \ 
+# python3.8 ${HOME}/aa/setup.py install
 
-RUN python3.8 -m pip install --upgrade pip
+# RUN python3.8 -m pip install --upgrade pip
 
 RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
