@@ -85,6 +85,8 @@ RUN apt-get update -q -y && \
     kmod\
     zlib1g\
     python-dev\
+    python3-packaging \
+    python3-retrying \
     bzip2\
     cmake\
     cuda-command-line-tools-11.3 \
@@ -184,7 +186,7 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt install -y python3.9 && \
+    apt install -y python3.8 && \
     apt install -y python3-pip && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
