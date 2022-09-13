@@ -130,6 +130,34 @@ ENV NB_USER sliceruser
 ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
 
+
+# RUN /sbin/ldconfig -v
+# RUN apt-get update \
+#  && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
+#  # Spicy build and test dependencies.
+#  && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
+#  # Spicy doc dependencies.
+#  && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
+#  && pip3 install "btest>=0.66" pre-commit \
+#  # Install a recent CMake.
+#  && mkdir -p /opt/cmake \
+#  && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
+#  && apt-get clean \
+#  && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/opt/cmake/bin:${PATH}"
+ENV PATH="/usr/lib/python3.8:${PATH}"
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+
+
+RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
+RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
+    mkdir SimpleITK-build  && \
+    cd SimpleITK-build&& \
+    cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
+    make -j8 
+
+
 RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
@@ -194,23 +222,6 @@ RUN set -x && \
 
 
 
-RUN /sbin/ldconfig -v
-RUN apt-get update \
- && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
- # Spicy build and test dependencies.
- && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
- # Spicy doc dependencies.
- && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
- && pip3 install "btest>=0.66" pre-commit \
- # Install a recent CMake.
- && mkdir -p /opt/cmake \
- && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/opt/cmake/bin:${PATH}"
-ENV PATH="/usr/lib/python3.8:${PATH}"
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
 
 
 ################################################################################
@@ -371,14 +382,8 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 # USER root
 
 
-RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/simpleITKelastix
-RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
-    mkdir SimpleITK-build  && \
-    cd SimpleITK-build&& \
-    cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
-    make -j8 
 
-RUN mkdir ${HOME}/aa
+
 
 
 # RUN wget https://pypi.python.org/packages/48/69/d87c60746b393309ca30761f8e2b49473d43450b150cb08f3c6df5c11be5/appdirs-1.4.3.tar.gz  ${HOME}/aa && \ 
