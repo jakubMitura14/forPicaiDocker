@@ -375,6 +375,8 @@ RUN cd ${HOME}/externalRepos/simpleITKelastix && \
     cd SimpleITK-build&& \
     cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
     make -j8 
+    
+RUN python3.8 -m pip install --upgrade pip
 
 RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
