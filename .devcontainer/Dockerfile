@@ -348,6 +348,7 @@ RUN python3.8 -m pip install \
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 RUN python3.8 -m pip install torch-optimizer
+# RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
 
 
@@ -396,7 +397,6 @@ RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepo
 
 # RUN python3.8 -m pip install --upgrade pip
 
-RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
 
 # RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
 # RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
