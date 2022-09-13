@@ -352,6 +352,7 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 # ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
 ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
 ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 
 RUN mkdir ${HOME}/scripts
