@@ -372,7 +372,7 @@ RUN git clone https://github.com/SimpleITK/SimpleITK.git ${HOME}/externalRepos/s
 RUN cd ${HOME}/externalRepos/simpleITKelastix && \ 
     mkdir SimpleITK-build  && \
     cd SimpleITK-build&& \
-    cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON -G Ninja ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
+    cmake -DBUILD_TESTING:BOOL=FALSE -DBUILD_EXAMPLES:BOOL=FALSE -SimpleITK_USE_ELASTIX=ON ${HOME}/externalRepos/simpleITKelastix/SuperBuild && \
     make -j8 
 
 RUN python3.8 -m pip install ${HOME}/externalRepos/simpleITKelastix/SimpleITK-build/Wrapping/Python
