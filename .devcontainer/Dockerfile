@@ -232,7 +232,6 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 
 
-
 # First upgrade pip
 RUN python3.8 -m pip install --upgrade pip
 
@@ -420,8 +419,11 @@ RUN apt-get -y install libpangoxft-1.0-0
 #RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
 
+#  RUN      python3.8 -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
-
+USER root
+RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
+RUN ["chmod", "+x", "/home/sliceruser/data/metadata"]
 USER ${NB_USER}
 
 
