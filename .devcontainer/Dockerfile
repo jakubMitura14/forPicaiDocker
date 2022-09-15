@@ -106,6 +106,7 @@ RUN apt-get update -q -y && \
     apt-get install -q -y --reinstall ca-certificates
 
 RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get install -q -y vim nano 
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
@@ -185,7 +186,7 @@ RUN set -x && \
     rm -rf websockify && \
     cd .. && \
     rmdir src && \
-    apt install -y python3.9 && \
+    apt install -y python3.8 && \
     apt install -y python3-pip && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
@@ -327,10 +328,10 @@ RUN python3.8 -m pip install \
     warp-lang==0.2.3 \
     report_guided_annotation \
     #SimpleITK-SimpleElastix \
-    geomloss[full]    
+    geomloss[full] \
+    torch-optimizer
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN python3.8 -m pip install torch-optimizer
 
 
 
@@ -408,24 +409,39 @@ cd ${HOME}/elastixBase && \
 wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2&& \
 tar -xf elastix-5.0.1-linux.tar.bz2
 
-ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so
-ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so ${HOME}/elastixBase/elastix-5.0.1-linux/bin/libANNlib-5.0.so
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 ${HOME}/elastixBase/elastix-5.0.1-linux/bin/libANNlib-5.0.so.1
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so ${HOME}/elastixBase/elastix-5.0.1-linux/libANNlib-5.0.so
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 ${HOME}/elastixBase/elastix-5.0.1-linux/libANNlib-5.0.so.1
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so /usr/local/lib/libANNlib-5.0.so
+RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 /usr/local/lib/libANNlib-5.0.so.1
 
-ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so:${PATH}" 
-ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so.1:${PATH}" 
+RUN ldconfig
 
+
+# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so
+# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1
+
+# ENV PATH="${HOME}/elastixBase/lib/libANNlib-5.0.so:${PATH}" 
+# ENV PATH="${HOME}/elastixBase/lib/libANNlib-5.0.so.1:${PATH}" 
+
+
+# cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so ${HOME}/libANNlib-5.0.so
+# cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 ${HOME}/libANNlib-5.0.so.1
+
+# ${HOME}/elastixBase/elastix-5.0.1-linux/bin/elastix
 
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
 
 #RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
-
+# LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1 ${HOME}/elastixBase/elastix-5.0.1-linux/bin/elastix
 #  RUN      python3.8 -m zenodo_get --retry=8 10.5281/zenodo.6517397
 
-USER root
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
-RUN ["chmod", "+x", "/home/sliceruser/data/metadata"]
-USER ${NB_USER}
+# USER root
+# RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
+# RUN ["chmod", "+x", "/home/sliceruser/data/metadata"]
+# USER ${NB_USER}
 
 
 

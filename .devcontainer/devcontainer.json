@@ -45,7 +45,7 @@
 		// "ms-python.vscode-pylance"
 	],
 	"mounts": [
-		"source=/media/jakub/NewVolume/forJuliaData,target=/home/data,type=bind,consistency=cached"
+		"source=/media/jakub/NewVolume/slicerData,target=/home/data,type=bind,consistency=cached"
 	  ],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
