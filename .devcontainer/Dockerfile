@@ -152,7 +152,8 @@ RUN mkdir \
     ${HOME}/data/lightning_logs \
     ${HOME}/data/preprocess/standarizationModels \
     ${HOME}/data/preprocess/Bias_field_corrected \
-    ${HOME}/data/metadata
+    ${HOME}/data/metadata \
+    ${HOME}/data/dummyData
 
 
 
@@ -402,16 +403,16 @@ RUN apt-get -y install libglu1-mesa-dev
 RUN apt-get -y install libpangox-1.0-dev
 RUN apt-get -y install libpangoxft-1.0-0
 
-# RUN mkdir ${HOME}/elastixBase && \
-# cd ${HOME}/elastixBase && \
-# wget https://github.com/SuperElastix/elastix/releases/download/4.9.0/elastix-4.9.0-linux.tar.bz2&& \
-# tar -xf elastix-4.9.0-linux.tar.bz2
+RUN mkdir ${HOME}/elastixBase && \
+cd ${HOME}/elastixBase && \
+wget https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2&& \
+tar -xf elastix-5.0.1-linux.tar.bz2
 
-# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-4.9.so
-# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-4.9.so.1
+ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so
+ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1
 
-# ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so:${PATH}" 
-# ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so.1:${PATH}" 
+ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so:${PATH}" 
+ENV PATH="${HOME}/elastixBase/lib/libANNlib-4.9.so.1:${PATH}" 
 
 
 #https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
