@@ -35,26 +35,26 @@ RUN apt-get update && apt-get install -y \
 
 
 ## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-RUN sudo apt update
-RUN sudo apt install gh
+# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+# RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+# RUN sudo apt update
+# RUN sudo apt install gh
 #RUN apt autoremove python3 -y
 
 
 RUN mkdir /app
 WORKDIR /app
 
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-RUN apt-get update
-RUN apt-get -y install cuda-11.3
-RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
-    echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
+# RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+# RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+# RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+# RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+# RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+# RUN apt-get update
+# RUN apt-get -y install cuda-11.3
+# RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+# RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
+#     echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
 
 #consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 
@@ -106,7 +106,6 @@ RUN apt-get update -q -y && \
     apt-get install -q -y --reinstall ca-certificates
 
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get install -q -y vim nano 
 
 #from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
 
@@ -417,6 +416,7 @@ RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so /usr/local/l
 RUN cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 /usr/local/lib/libANNlib-5.0.so.1
 
 RUN ldconfig
+RUN apt-get install -q -y vim nano 
 
 
 # ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so
