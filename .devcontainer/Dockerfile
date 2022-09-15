@@ -444,7 +444,7 @@ RUN apt-get install -q -y vim nano
 # USER ${NB_USER}
 
 
-
+USER ${NB_USER}
 
 # RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
 # #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
