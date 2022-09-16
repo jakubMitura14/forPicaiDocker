@@ -328,7 +328,8 @@ RUN python3.8 -m pip install \
     report_guided_annotation \
     #SimpleITK-SimpleElastix \
     geomloss[full] \
-    torch-optimizer
+    torch-optimizer \
+    horovod[pytorch]
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
