@@ -329,7 +329,8 @@ RUN python3.8 -m pip install \
     #SimpleITK-SimpleElastix \
     geomloss[full] \
     torch-optimizer \
-    horovod[pytorch]
+    horovod[pytorch] \
+    gspread
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
@@ -498,8 +499,9 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 
-ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
-
+#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+COPY start.sh .
+CMD /bin/bash start.sh
 
 
 
