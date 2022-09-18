@@ -499,9 +499,14 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.schema-version="1.0"
 
 
+USER root 
+RUN ["chmod", "+x", "start.sh"]
 COPY start.sh .
+USER ${NB_USER}
+
+
 # CMD /bin/bash start.sh
-ENTRYPOINT [ "/bin/bash", "sudo start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
