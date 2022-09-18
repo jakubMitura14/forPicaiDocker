@@ -501,7 +501,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 COPY start.sh .
 # CMD /bin/bash start.sh
-ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "sudo start.sh","-l", "-c" ]
 
 
 
