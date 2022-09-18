@@ -499,10 +499,10 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.schema-version="1.0"
 
 
-
-ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 COPY start.sh .
-CMD /bin/bash start.sh
+# CMD /bin/bash start.sh
+ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+
 
 
 
