@@ -500,7 +500,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 
-#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 COPY start.sh .
 CMD /bin/bash start.sh
 
