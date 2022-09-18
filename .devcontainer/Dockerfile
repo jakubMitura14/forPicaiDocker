@@ -330,7 +330,8 @@ RUN python3.8 -m pip install \
     geomloss[full] \
     torch-optimizer \
     horovod[pytorch] \
-    gspread
+    gspread \
+    torchmetrics
 
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
