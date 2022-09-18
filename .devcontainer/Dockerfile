@@ -500,8 +500,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 
 USER root 
-RUN ["chmod", "+x", "start.sh"]
 COPY start.sh .
+RUN ["chmod", "+x", "start.sh"]
 USER ${NB_USER}
 
 
