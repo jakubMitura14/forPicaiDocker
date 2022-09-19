@@ -248,7 +248,7 @@ RUN python3.8 -m pip install \
     scipy==1.8.1 \
     nibabel==3.2.2 \
     pillow!=8.3.0 \  
-    tensorboard==2.9.0 \
+    #tensorboard==2.9.0 \
     scikit-image==0.19.2 \
     tqdm>=4.47.0 \
     lmdb==1.3.0 \
@@ -329,10 +329,10 @@ RUN python3.8 -m pip install \
     #SimpleITK-SimpleElastix \
     geomloss[full] \
     torch-optimizer \
-    horovod[pytorch] \
     gspread \
     torchmetrics
-
+    
+RUN python3.8 -m pip install horovod[pytorch]
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
