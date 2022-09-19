@@ -332,9 +332,10 @@ RUN python3.8 -m pip install \
     gspread \
     torchmetrics
 
+USER root
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3    
 RUN apt-get install python-dev -y
-RUN apt-get install python3.8-dev -y
+# RUN apt-get install python3.8-dev -y
 
 RUN python3.8 -m pip install horovod[pytorch]
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
