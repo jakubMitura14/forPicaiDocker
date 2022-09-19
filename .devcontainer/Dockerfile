@@ -45,16 +45,16 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /app
 WORKDIR /app
 
-# RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-# RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-# RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-# RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-# RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-# RUN apt-get update
-# RUN apt-get -y install cuda-11.3
-# RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-# RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
-#     echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+RUN apt-get update
+RUN apt-get -y install cuda-11.3
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
+    echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
 
 #consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 
@@ -331,7 +331,8 @@ RUN python3.8 -m pip install \
     torch-optimizer \
     gspread \
     torchmetrics
-    
+
+#ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3    
 RUN python3.8 -m pip install horovod[pytorch]
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
