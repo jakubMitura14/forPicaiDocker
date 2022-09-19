@@ -329,7 +329,7 @@ RUN python3.8 -m pip install \
     #SimpleITK-SimpleElastix \
     geomloss[full] \
     torch-optimizer \
-    #horovod[pytorch] \
+    horovod[pytorch] \
     gspread \
     torchmetrics
 
