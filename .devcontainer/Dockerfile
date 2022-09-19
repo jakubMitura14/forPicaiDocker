@@ -333,7 +333,8 @@ RUN python3.8 -m pip install \
     torchmetrics
 
 USER root
-#ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3    
+#ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
+RUN apt-get update  
 RUN apt-get install python3-dev -y
 
 # RUN apt-get install python3.8-dev -y
