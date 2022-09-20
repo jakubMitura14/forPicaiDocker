@@ -327,7 +327,6 @@ RUN python3.8 -m pip install \
     pyro-ppl==1.8.1 \
     warp-lang==0.2.3 \
     report_guided_annotation \
-    #SimpleITK-SimpleElastix \
     geomloss[full] \
     torch-optimizer \
     gspread \
