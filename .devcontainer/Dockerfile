@@ -335,14 +335,15 @@ RUN python3.8 -m pip install \
     ray[tune] \
     ray[air]\
     horovod[pytorch] \
-    GPy sklearn \
-    git+https://github.com/ray-project/ray_lightning
+    GPy \
+    sklearn 
+    # git+https://github.com/ray-project/ray_lightning
 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
 
 
 # RUN apt-get install python3.8-dev -y
-# RUN python3.8 -m pip install git+https://github.com/ray-project/ray_lightning
+RUN python3.8 -m pip install git+https://github.com/ray-project/ray_lightning
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
