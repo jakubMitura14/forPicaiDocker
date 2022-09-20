@@ -333,6 +333,7 @@ RUN python3.8 -m pip install \
     gspread \
     torchmetrics \
     ray[tune] \
+    ray[air]\
     horovod[pytorch]
 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
