@@ -344,7 +344,7 @@ RUN python3.8 -m pip install \
 # RUN apt-get install python3.8-dev -y
 RUN python3.8 -m pip install git+https://github.com/ray-project/ray_lightning
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-
+RUN python3.8 -m pip install fairscale
 
 
 #host segmentations and baselines
