@@ -235,7 +235,8 @@ RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 
 # First upgrade pip
 RUN python3.8 -m pip install --upgrade pip
-
+RUN apt-get update  
+RUN apt-get install python3-dev -y
 
 RUN python3.8 -m pip install --no-cache-dir jupyter matplotlib
 RUN python3.8 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
@@ -330,16 +331,15 @@ RUN python3.8 -m pip install \
     geomloss[full] \
     torch-optimizer \
     gspread \
-    torchmetrics
+    torchmetrics \
+    ray[tune] \
+    horovod[pytorch]
 
-USER root
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
-RUN apt-get update  
-RUN apt-get install python3-dev -y
+
 
 # RUN apt-get install python3.8-dev -y
 
-RUN python3.8 -m pip install horovod[pytorch]
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 
