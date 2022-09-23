@@ -244,7 +244,7 @@ RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url http
 
 RUN python3.8 -m pip install \
     #itk \
-    pytorch-ignite==0.4.8 \
+    #pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
     nibabel==3.2.2 \
@@ -294,7 +294,7 @@ RUN python3.8 -m pip install \
     juliacall==0.8.0 \
     jupyterlab_github==3.0.1 \
     torchio==0.18.77 \
-    pytorch-lightning==1.7.6 \
+    pytorch-lightning==\
     git+https://github.com/sat28/githubcommit.git \
     gdown==4.4.0 \
     seaborn==0.11.2 \
