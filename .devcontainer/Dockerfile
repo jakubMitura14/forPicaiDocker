@@ -336,11 +336,12 @@ RUN python3.8 -m pip install \
     horovod[pytorch] \
     GPy \
     sklearn \
-    pytorch-lightning-bolts \
     git+https://github.com/ray-project/ray_lightning \
-    fairscale
+    fairscale \
+    lightning-bolts
     # git+https://github.com/ray-project/ray_lightning
 
+# RUN python3.8 -m pip install pytorch-lightning-bolts 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
 
 
