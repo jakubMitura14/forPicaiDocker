@@ -335,17 +335,17 @@ RUN python3.8 -m pip install \
     ray[air]\
     horovod[pytorch] \
     GPy \
-    sklearn 
+    sklearn \
+    pytorch-lightning-bolts \
+    git+https://github.com/ray-project/ray_lightning \
+    fairscale
     # git+https://github.com/ray-project/ray_lightning
 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
 
 
 # RUN apt-get install python3.8-dev -y
-RUN python3.8 -m pip install git+https://github.com/ray-project/ray_lightning
 RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN python3.8 -m pip install fairscale
-
 
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
