@@ -529,8 +529,9 @@ RUN chown ${NB_USER} start.sh
 # RUN apt-get update -q -y && \
 #     apt-get install -q -y \
 #     mysql-client-core-8.0
+RUN git config --global --add safe.directory /home/sliceruser/data/piCaiCode
 
-#USER ${NB_USER}
+USER ${NB_USER}
 
 
 # CMD /bin/bash start.sh
