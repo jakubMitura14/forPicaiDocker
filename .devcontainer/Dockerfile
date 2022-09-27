@@ -294,7 +294,7 @@ RUN python3.8 -m pip install \
     juliacall==0.8.0 \
     jupyterlab_github==3.0.1 \
     torchio==0.18.77 \
-    pytorch-lightning\
+    pytorch-lightning==1.7.7\
     git+https://github.com/sat28/githubcommit.git \
     gdown==4.4.0 \
     seaborn==0.11.2 \
