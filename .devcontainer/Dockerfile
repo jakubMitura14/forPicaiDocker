@@ -103,6 +103,7 @@ RUN apt-get update -q -y && \
     libtbb2 \
     sqlite3 \
     mysql-server \
+    libmysqlclient-dev \
     #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
@@ -341,7 +342,7 @@ RUN python3.8 -m pip install \
     fairscale \ 
     lightning-bolts \
     easy_install mysql-python \
-    mysqlclient
+    mysqlclient 
     # git+https://github.com/ray-project/ray_lightning
 
 
