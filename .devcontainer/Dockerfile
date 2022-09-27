@@ -101,6 +101,7 @@ RUN apt-get update -q -y && \
     software-properties-common\
     libhdf5-serial-dev\
     libtbb2 \
+    sqlite3 \
     #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
@@ -187,10 +188,8 @@ RUN set -x && \
     rmdir src && \
     apt install -y python3.8 && \
     apt install -y python3-pip && \
-    sqlite3 && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
-
 
 
 
@@ -519,8 +518,8 @@ USER ${NB_USER}
 
 
 # CMD /bin/bash start.sh
-#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
