@@ -299,7 +299,7 @@ RUN python3.8 -m pip install \
     gdown==4.4.0 \
     seaborn==0.11.2 \
     PyTorchUtils==0.0.3 \
-    optuna==2.10.0 \
+    optuna==3.0.2 \
     jupyterlab-git==0.37.1 \
     comet-ml==3.31.5 \
     voxelmorph==0.2 \
