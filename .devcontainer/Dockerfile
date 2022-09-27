@@ -58,6 +58,7 @@ RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt
 
 #consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 
+
 RUN apt-get update -q -y && \
     apt-get install -q -y \
     vim net-tools curl \
@@ -523,6 +524,12 @@ USER root
 COPY start.sh .
 RUN ["chmod", "+x", "start.sh"]
 RUN chown ${NB_USER} start.sh
+
+
+RUN apt-get update -q -y && \
+    apt-get install -q -y \
+    mysql-client-core-8.0
+
 USER ${NB_USER}
 
 
