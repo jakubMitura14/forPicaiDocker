@@ -187,6 +187,7 @@ RUN set -x && \
     rmdir src && \
     apt install -y python3.8 && \
     apt install -y python3-pip && \
+    sqlite3 && \
     #easy_install -y pip && \
     apt-get purge -y --auto-remove build-essential
 
@@ -526,3 +527,16 @@ ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
+    # optimizer = trial.suggest_categorical("optimizer", ["MomentumSGD", "Adam"])
+
+    # # Integer parameter
+    # num_layers = trial.suggest_int("num_layers", 1, 3)
+
+    # # Integer parameter (log)
+    # num_channels = trial.suggest_int("num_channels", 32, 512, log=True)
+
+    # # Integer parameter (discretized)
+    # num_units = trial.suggest_int("num_units", 10, 100, step=5)
+
+    # # Floating point parameter
+    # dropout_rate = trial.suggest_float("dropout_rate", 0.0, 1.0)
