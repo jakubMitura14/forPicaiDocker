@@ -341,7 +341,6 @@ RUN python3.8 -m pip install \
     #git+https://github.com/ray-project/ray_lightning \
     fairscale \ 
     lightning-bolts \
-    easy_install mysql-python \
     mysqlclient 
     # git+https://github.com/ray-project/ray_lightning
 
