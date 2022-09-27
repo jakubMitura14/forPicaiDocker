@@ -527,8 +527,8 @@ USER ${NB_USER}
 
 
 # CMD /bin/bash start.sh
-ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-#ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
