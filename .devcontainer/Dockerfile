@@ -102,6 +102,7 @@ RUN apt-get update -q -y && \
     libhdf5-serial-dev\
     libtbb2 \
     sqlite3 \
+    mysql-server \
     #elastix=4.9.0-1\
     git && \
     apt-get install -q -y --reinstall ca-certificates
@@ -518,8 +519,8 @@ USER ${NB_USER}
 
 
 # CMD /bin/bash start.sh
-ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-#ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
