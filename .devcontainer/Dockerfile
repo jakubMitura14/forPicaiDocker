@@ -336,7 +336,7 @@ RUN python3.8 -m pip install \
     horovod[pytorch] \
     GPy \
     sklearn \
-    git+https://github.com/ray-project/ray_lightning \
+    #git+https://github.com/ray-project/ray_lightning \
     fairscale \ 
     lightning-bolts
     # git+https://github.com/ray-project/ray_lightning
