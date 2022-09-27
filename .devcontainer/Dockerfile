@@ -339,8 +339,11 @@ RUN python3.8 -m pip install \
     sklearn \
     #git+https://github.com/ray-project/ray_lightning \
     fairscale \ 
-    lightning-bolts
+    lightning-bolts \
+    easy_install mysql-python \
+    mysqlclient
     # git+https://github.com/ray-project/ray_lightning
+
 
 # RUN python3.8 -m pip install pytorch-lightning-bolts 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
