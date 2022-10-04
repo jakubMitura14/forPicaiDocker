@@ -244,6 +244,7 @@ RUN apt-get install python3-dev -y
 RUN python3.8 -m pip install --no-cache-dir jupyter matplotlib
 RUN python3.8 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+# RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
 
 RUN python3.8 -m pip install \
     #itk \
