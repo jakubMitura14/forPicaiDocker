@@ -456,8 +456,7 @@ RUN apt-get install -q -y vim nano
 #RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
 
 # LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1 ${HOME}/elastixBase/elastix-5.0.1-linux/bin/elastix
-#  RUN      python3.8 -m zenodo_get --retry=8 10.5281/zenodo.6517397
-
+#  RUN       
 # USER root
 # RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
 # RUN ["chmod", "+x", "/home/sliceruser/data/metadata"]
@@ -530,7 +529,7 @@ RUN chown ${NB_USER} start.sh
 # RUN apt-get update -q -y && \
 #     apt-get install -q -y \
 #     mysql-client-core-8.0
-RUN git config --global --add safe.directory /home/sliceruser/data/piCaiCode
+# RUN git config --global --add safe.directory /home/sliceruser/data/piCaiCode
 
 USER ${NB_USER}
 
