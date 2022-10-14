@@ -335,9 +335,9 @@ RUN python3.8 -m pip install --no-cache-dir \
     torch-optimizer \
     gspread \
     torchmetrics \
-    ray[tune] \
-    ray[air]\
-    horovod[pytorch] \
+    # ray[tune] \
+    # ray[air]\
+    # horovod[pytorch] \
     GPy \
     sklearn \
     #git+https://github.com/ray-project/ray_lightning \
