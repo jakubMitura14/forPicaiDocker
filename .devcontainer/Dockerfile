@@ -246,7 +246,7 @@ RUN python3.8 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.
 RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 # RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
 
-RUN python3.8 -m pip install \
+RUN python3.8 -m pip install --no-cache-dir \
     #itk \
     #pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
@@ -352,8 +352,7 @@ RUN python3.8 -m pip install \
 
 
 # RUN apt-get install python3.8-dev -y
-RUN python3.8 -m pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN python3.8 -m pip install swifter
+RUN python3.8 -m pip install --no-cache-dir 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
