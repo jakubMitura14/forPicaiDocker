@@ -439,39 +439,7 @@ RUN ldconfig
 RUN apt-get install -q -y vim nano 
 
 
-# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so
-# ENV LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1
 
-# ENV PATH="${HOME}/elastixBase/lib/libANNlib-5.0.so:${PATH}" 
-# ENV PATH="${HOME}/elastixBase/lib/libANNlib-5.0.so.1:${PATH}" 
-
-
-# cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so ${HOME}/libANNlib-5.0.so
-# cp ${HOME}/elastixBase/elastix-5.0.1-linux/lib/libANNlib-5.0.so.1 ${HOME}/libANNlib-5.0.so.1
-
-# ${HOME}/elastixBase/elastix-5.0.1-linux/bin/elastix
-
-#https://github.com/SuperElastix/elastix/releases/download/5.0.1/elastix-5.0.1-linux.tar.bz2 && \
-
-#RUN ["chmod", "+x", "/home/sliceruser/elastixBase"]
-
-# LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so LD_LIBRARY_PATH=${HOME}/elastixBase/lib/libANNlib-5.0.so.1 ${HOME}/elastixBase/elastix-5.0.1-linux/bin/elastix
-#  RUN       
-# USER root
-# RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
-# RUN ["chmod", "+x", "/home/sliceruser/data/metadata"]
-# USER ${NB_USER}
-
-
-### needed for distributed optuna
-
-# RUN mysql -u root -e "CREATE DATABASE IF NOT EXISTS picai_hp_31"
-# RUN optuna create-study --study-name "picai_hp_31" --storage "mysql://root@localhost/picai_hp_31"
-
-#USER ${NB_USER}
-
-# RUN /home/sliceruser/install.sh ${HOME}/Slicer/Slicer 
-# #RUN ["chmod", "+x", "/home/sliceruser/Slicer/Slicer"]
 
 EXPOSE $VNCPORT $JUPYTERPORT
 
@@ -486,24 +454,16 @@ RUN git config --global user.name "Jakub Mitura"
 RUN git config --global user.email "jakub.mitura14@gmail.com"
 RUN git config -l
 
-#https://itsfoss.com/solve-open-shared-object-file-quick-tip/
+#instal git for large files
+RUN build_deps="curl" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ${build_deps} ca-certificates && \
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git-lfs && \
+    git lfs install && \
+    DEBIAN_FRONTEND=noninteractive apt-get purge -y --auto-remove ${build_deps} && \
+    rm -r /var/lib/apt/lists/*
 
-# USER root
-# # ENV PYTHONPATH=$PYTHONPATH:'/home/sliceruser/Slicer/bin/PythonSlicer'
-# # ENV PYTHONHOME=$PYTHONHOME:'/home/sliceruser/Slicer/bin/PythonSlicer'
-
-
-# # set PYTHONHOME=C:\Python33
-# # set PYTHONPATH=C:\Python33\lib
-
-# RUN update-alternatives --install /usr/bin/python python /home/sliceruser/Slicer/bin/PythonSlicer 3
-# RUN add-apt-repository ppa:deadsnakes/ppa
-# RUN apt install -y python3.11
-# # RUN apt install -y python3.11-dev
-# # RUN apt install -y python3.11-gdbm
-# USER ${NB_USER}
-
-#RUN    pip install SimpleITK-SimpleElastix
 
 
 #CMD ["/bin/bash"]
@@ -535,8 +495,8 @@ RUN chown ${NB_USER} start.sh
 
 
 # CMD /bin/bash start.sh
-#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
