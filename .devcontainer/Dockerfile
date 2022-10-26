@@ -326,7 +326,6 @@ RUN python3.8 -m pip install --no-cache-dir \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    intensity-normalization[ants] \
     numba==0.55.2 \
     pyro-ppl==1.8.1 \
     warp-lang==0.2.3 \
@@ -364,7 +363,7 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 
-
+RUN python3.8 -m pip install --no-cache-dir intensity-normalization[ants]
 
 #USER root
 
@@ -480,18 +479,13 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.schema-version="1.0"
 
 
-USER root 
+# USER root 
 COPY start.sh .
 RUN ["chmod", "+x", "start.sh"]
 RUN chown ${NB_USER} start.sh
 
-
-# RUN apt-get update -q -y && \
-#     apt-get install -q -y \
-#     mysql-client-core-8.0
-# RUN git config --global --add safe.directory /home/sliceruser/data/piCaiCode
-
-# USER ${NB_USER}
+# RUN git clone https://github.com/jakubMitura14/picai_baseline.git 
+# RUN git switch OPI
 
 
 # CMD /bin/bash start.sh
