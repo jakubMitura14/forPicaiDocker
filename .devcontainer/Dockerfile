@@ -392,8 +392,9 @@ RUN mkdir ${HOME}/scripts
 # RUN python3.8 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
-RUN python3.8 -m pip install --no-cache-dir mysqlclient itk
-RUN python3.8 -m pip install --no-cache-dir mysqlclient SimpleITK
+RUN python3.8 -m pip install --no-cache-dir itk
+RUN python3.8 -m pip install --no-cache-dir SimpleITK
+RUN python3.8 -m pip install --no-cache-dir openpyxl==3.0.10
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
