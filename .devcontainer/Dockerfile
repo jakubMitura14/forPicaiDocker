@@ -464,6 +464,7 @@ RUN build_deps="curl" && \
     DEBIAN_FRONTEND=noninteractive apt-get purge -y --auto-remove ${build_deps} && \
     rm -r /var/lib/apt/lists/*
 
+RUN git config --global --add safe.directory /home/sliceruser/locTemp/picai_baseline
 
 
 #CMD ["/bin/bash"]
