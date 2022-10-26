@@ -363,7 +363,7 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 
-RUN python3.8 -m pip install --no-cache-dir intensity-normalization
+# RUN python3.8 -m pip install --no-cache-dir intensity-normalization
 
 #USER root
 
