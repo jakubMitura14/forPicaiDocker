@@ -151,7 +151,7 @@ RUN python3.9 -m  pip install \
     batchgenerators==0.24 \
     # zenodo_get==1.3.4 \
     git+https://github.com/DIAGNijmegen/picai_baseline \
-    #git+https://github.com/DIAGNijmegen/picai_prep \
+    git+https://github.com/DIAGNijmegen/picai_prep \
     git+https://github.com/DIAGNijmegen/picai_eval \
     #picai_prep==2.0.1 \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
@@ -171,9 +171,18 @@ RUN python3.9 -m  pip install \
     jraph \
     flax \
     toolz \
-    ipyparallel
+    ipyparallel \
+    itk  \
+    SimpleITK \
+    openpyxl==3.0.10 \
+    requests \
+    pytorch-lightning\
+    matplotlib
 
-RUN python3.9 -m  pip install picai_prep==2.0.1
+#    pytorch-lightning==1.7.7 \
+
+
+# RUN python3.9 -m  pip install picai_prep==2.0.1
 
 
 
@@ -235,12 +244,12 @@ RUN mkdir ${HOME}/scripts
 # RUN python3.9 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
-RUN python3.9 -m pip install --no-cache-dir itk  \
-                                            SimpleITK \
-                                            openpyxl==3.0.10 \
-                                            requests \
-                                            pytorch-lightning==1.7.7 \
-                                            matplotlib
+# RUN python3.9 -m pip install --no-cache-dir itk  \
+#                                             SimpleITK \
+#                                             openpyxl==3.0.10 \
+#                                             requests \
+#                                             pytorch-lightning==1.7.7 \
+#                                             matplotlib
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
