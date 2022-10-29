@@ -42,7 +42,7 @@ RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt install -y python3.9
 RUN apt install -y python3-pip
-# RUN apt-get -y purge python3.8
+# RUN apt-get -y purge python3.9
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
 
 RUN update-alternatives --set python /usr/bin/python3.9
@@ -189,12 +189,12 @@ RUN cd ${HOME}/build/scenic
 RUN python3.9 -m  pip install ${HOME}/build
 RUN python3.9 -m pip install --upgrade jax jaxlib
 
-# RUN python3.8 -m pip install pytorch-lightning-bolts 
+# RUN python3.9 -m pip install pytorch-lightning-bolts 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
 
 
-# RUN apt-get install python3.8-dev -y
-RUN python3.8 -m pip install --no-cache-dir 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+# RUN apt-get install python3.9-dev -y
+RUN python3.9 -m pip install --no-cache-dir 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
@@ -206,14 +206,14 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 
-# RUN python3.8 -m pip install --no-cache-dir intensity-normalization
+# RUN python3.9 -m pip install --no-cache-dir intensity-normalization
 
 #USER root
 
-# ENV PATH="/usr/lib/python3.8/lib-dynload:${PATH}"
-# ENV PATH="/usr/local/lib/python3.8/dist-packages:${PATH}"
-# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.8'
-# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.8'
+# ENV PATH="/usr/lib/python3.9/lib-dynload:${PATH}"
+# ENV PATH="/usr/local/lib/python3.9/dist-packages:${PATH}"
+# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.9'
+# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.9'
 
 
 RUN mkdir ${HOME}/scripts
@@ -230,15 +230,15 @@ RUN mkdir ${HOME}/scripts
 # RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging
 # RUN cp ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so /home/sliceruser/
 
-# RUN python3.8 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
+# RUN python3.9 ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/Packaging/setup.py install
 
-# RUN python3.8 -m pip install SimpleITK-SimpleElastix
+# RUN python3.9 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
-RUN python3.8 -m pip install --no-cache-dir itk
-RUN python3.8 -m pip install --no-cache-dir SimpleITK
-RUN python3.8 -m pip install --no-cache-dir openpyxl==3.0.10
-RUN python3.9 -m  pip install--no-cache-dir pytorch-lightning ==1.7.7
+RUN python3.9 -m pip install --no-cache-dir itk
+RUN python3.9 -m pip install --no-cache-dir SimpleITK
+RUN python3.9 -m pip install --no-cache-dir openpyxl==3.0.10
+RUN python3.9 -m pip install --no-cache-dir pytorch-lightning==1.7.7
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
@@ -340,4 +340,4 @@ ENTRYPOINT [ "/bin/bash","-l", "-c" ]
 
 
 
-#  RUN      python3.8 -m zenodo_get --retry=8 10.5281/zenodo.6517397
+#  RUN      python3.9 -m zenodo_get --retry=8 10.5281/zenodo.6517397
