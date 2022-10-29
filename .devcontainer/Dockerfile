@@ -239,6 +239,7 @@ RUN python3.9 -m pip install --no-cache-dir itk
 RUN python3.9 -m pip install --no-cache-dir SimpleITK
 RUN python3.9 -m pip install --no-cache-dir openpyxl==3.0.10
 RUN python3.9 -m pip install --no-cache-dir pytorch-lightning==1.7.7
+RUN python3.9 -m pip install --no-cache-dir matplotlib
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
