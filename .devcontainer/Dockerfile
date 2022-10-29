@@ -235,11 +235,12 @@ RUN mkdir ${HOME}/scripts
 # RUN python3.9 -m pip install SimpleITK-SimpleElastix
 
 #maybe remove if registering?
-RUN python3.9 -m pip install --no-cache-dir itk
-RUN python3.9 -m pip install --no-cache-dir SimpleITK
-RUN python3.9 -m pip install --no-cache-dir openpyxl==3.0.10
-RUN python3.9 -m pip install --no-cache-dir pytorch-lightning==1.7.7
-RUN python3.9 -m pip install --no-cache-dir matplotlib
+RUN python3.9 -m pip install --no-cache-dir itk  \
+                                            SimpleITK \
+                                            openpyxl==3.0.10 \
+                                            requests \
+                                            pytorch-lightning==1.7.7 \
+                                            matplotlib
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
