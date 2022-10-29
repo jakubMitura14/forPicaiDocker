@@ -257,7 +257,7 @@ RUN python3.8 -m pip install --no-cache-dir openpyxl==3.0.10
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
 #from https://installati.one/ubuntu/22.04/libpangoxft-1.0-0/
 RUN apt update
-RUN apt install libtbb-dev
+RUN apt -y install libtbb-dev
 #from https://askubuntu.com/questions/409310/error-while-loading-shared-libraries-cannot-open-shared-object-file-no-such-fi
 RUN apt -y install libgtk-3-dev
 RUN apt update
