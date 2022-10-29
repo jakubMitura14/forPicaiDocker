@@ -178,7 +178,6 @@ RUN python3.9 -m  pip install picai_prep==2.0.1
 
 
 
-
 RUN pip install pycocotools
 RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
@@ -239,6 +238,7 @@ RUN mkdir ${HOME}/scripts
 RUN python3.8 -m pip install --no-cache-dir itk
 RUN python3.8 -m pip install --no-cache-dir SimpleITK
 RUN python3.8 -m pip install --no-cache-dir openpyxl==3.0.10
+RUN python3.9 -m  pip install--no-cache-dir pytorch-lightning ==1.7.7
 
 # ${HOME}/externalRepos/elastix/buildd/SimpleITK-build/Wrapping/Python/_SimpleITK.so
 
