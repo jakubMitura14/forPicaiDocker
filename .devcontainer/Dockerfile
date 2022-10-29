@@ -1,17 +1,11 @@
 
+FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
-## { Mitura start}
-#FROM nvidia/cuda:11.3.1-devel-ubuntu20.04
-FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
-################################################################################
-# Prevent apt-get from prompting for keyboard choice
-#  https://superuser.com/questions/1356914/how-to-install-xserver-xorg-in-unattended-mode
+
+
+
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Remove any third-party apt sources to avoid issues with expiring keys.
-RUN rm -f /etc/apt/sources.list.d/*.list
-
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
     curl \
@@ -31,102 +25,31 @@ RUN apt-get update && apt-get install -y \
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
-
-
-
-## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-# RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-# RUN sudo apt update
-# RUN sudo apt install gh
-#RUN apt autoremove python3 -y
-
-
-RUN mkdir /app
-WORKDIR /app
-
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
-RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+RUN wget https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda-repo-ubuntu2004-11-6-local_11.6.1-510.47.03-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu2004-11-6-local_11.6.1-510.47.03-1_amd64.deb
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-6-local/7fa2af80.pub
 RUN apt-get update
-RUN apt-get -y install cuda-11.3
-RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
-RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
-    echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
-
-#consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+RUN apt-get -y install cuda
 
 
-RUN apt-get update -q -y && \
-    apt-get install -q -y \
-    vim net-tools curl \
-    libgl1-mesa-glx \
-    xserver-xorg-video-dummy \
-    libxrender1 \
-    libpulse0 \
-    libpulse-mainloop-glib0  \
-    libnss3  \
-    libxcomposite1 \
-    libxcursor1 \
-    libfontconfig1 \
-    libxrandr2 \
-    libasound2 \
-    libglu1 \
-    x11vnc \
-    awesome \
-    jq \
-    nautilus\
-    jupyter-core\
-    zip\
-    p7zip-full\
-    apt-utils\
-    octave\
-    kmod\
-    zlib1g\
-    python-dev\
-    bzip2\
-    cmake\
-    cuda-command-line-tools-11.3 \
-    libcublas-11.3 \
-    cuda-nvrtc-11.3\
-    libcufft-11.3 \
-    libcurand-11.3 \
-    libcusolver-11.3 \
-    libcusparse-11.3 \
-    libfreetype6-dev \
-    curl\
-    libzmq3-dev \
-    pkg-config\
-    software-properties-common\
-    libhdf5-serial-dev\
-    libtbb2 \
-    sqlite3 \
-    mysql-server \
-    libmysqlclient-dev \
-    #elastix=4.9.0-1\
-    git && \
-    apt-get install -q -y --reinstall ca-certificates
 
+
+RUN apt update
+RUN apt update && apt upgrade -y
+RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt install -y python3.9
+RUN apt install -y python3-pip
+# RUN apt-get -y purge python3.8
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
 
-#from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/gpu-jupyter.Dockerfile
-
-# For CUDA profiling, TensorFlow requires CUPTI.
-ENV LD_LIBRARY_PATH /usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-
-# Link the libcuda stub to the location where tensorflow is searching for it and reconfigure
-# dynamic linker run-time bindings
-RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
-    && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
-    && ldconfig
-
-# See http://bugs.python.org/issue19846
-ENV LANG C.UTF-8
+RUN update-alternatives --set python /usr/bin/python3.9
 
 
-################################################################################
+RUN python3.9 -m pip install --upgrade pip
+
 # set up user
 ENV NB_USER sliceruser
 ENV NB_UID 1000
@@ -137,123 +60,30 @@ RUN adduser --disabled-password \
     --uid ${NB_UID} \
     ${NB_USER}
 
-WORKDIR ${HOME}
+# RUN python3.9 -m pip install pyzmq
+RUN apt-get install python-dev -y
+RUN apt-get install python3.9-dev -y
+# RUN python3.9 -m pip install --no-cache-dir jupyter matplotlib
+# RUN    pip install --no-cache-dir "intensity-normalization[ants]"
+# Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
+# Pin jedi; see https://github.com/ipython/ipython/issues/12740
+# RUN python3.9 -m  pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
+RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
 
+# ENV JAXLIB_VERSION=0.3.16
 
+#RUN    pip install pyradiomics
+RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 
-
-# Install some basic utilities
-RUN mkdir \
-    ${HOME}/data \
-    ${HOME}/labels \
-    ${HOME}/data/preprocess \
-    ${HOME}/data/orig \
-    ${HOME}/data/preprocess/monai_persistent_Dataset \
-    ${HOME}/output \
-    ${HOME}/data/piCaiCode \
-    ${HOME}/build \
-    ${HOME}/data/lightning_logs \
-    ${HOME}/data/preprocess/standarizationModels \
-    ${HOME}/data/preprocess/Bias_field_corrected \
-    ${HOME}/data/metadata \
-    ${HOME}/data/dummyData
-
-
-
-RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
-
-
-################################################################################
-# these go after installs to avoid trivial invalidation
-ENV VNCPORT=49053
-ENV JUPYTERPORT=8888
-ENV DISPLAY=:10
-
-#COPY xorg.conf .
-
-################################################################################
-# Set up remote desktop access - step 1/2
-
-# Build rebind.so (required by websockify)
-RUN set -x && \
-    apt-get update -q -y && \
-    apt-get install -y build-essential --no-install-recommends && \
-    mkdir src && \
-    cd src && \
-    git clone https://github.com/novnc/websockify websockify && \
-    cd websockify && \
-    make && \
-    cp rebind.so /usr/lib/ && \
-    cd .. && \
-    rm -rf websockify && \
-    cd .. && \
-    rmdir src && \
-    apt install -y python3.8 && \
-    apt install -y python3-pip && \
-    #easy_install -y pip && \
-    apt-get purge -y --auto-remove build-essential
-
-
-
-RUN /sbin/ldconfig -v
-RUN apt-get update \
- && apt-get install -y --no-install-recommends curl ca-certificates gnupg2 less sudo \
- # Spicy build and test dependencies.
- && apt-get install -y --no-install-recommends git cmake ninja-build ccache bison flex g++ libfl-dev zlib1g-dev libssl-dev jq locales-all make \
- # Spicy doc dependencies.
- && apt-get install -y --no-install-recommends python3 python3-pip python3-sphinx python3-sphinx-rtd-theme python3-setuptools python3-wheel doxygen \
- && pip3 install "btest>=0.66" pre-commit \
- # Install a recent CMake.
- && mkdir -p /opt/cmake \
- && curl -L https://github.com/Kitware/CMake/releases/download/v3.18.0/cmake-3.18.0-Linux-x86_64.tar.gz | tar xzvf - -C /opt/cmake --strip-components 1 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/opt/cmake/bin:${PATH}"
-ENV PATH="/usr/lib/python3.8:${PATH}"
-
-
-################################################################################
-# Need to run Slicer as non-root because
-# - mybinder requirement
-# - chrome sandbox inside QtWebEngine does not support root.
-# RUN chown ${NB_USER} ${HOME} ${HOME}/Slicer
-RUN chown ${NB_USER} ${HOME} ${HOME}/labels
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/orig
-RUN chown ${NB_USER} ${HOME} ${HOME}/output
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/piCaiCode
-RUN chown ${NB_USER} ${HOME} ${HOME}/build
-RUN chown ${NB_USER} /var/lib/dpkg
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/lightning_logs
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/monai_persistent_Dataset
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/standarizationModels
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/preprocess/Bias_field_corrected
-RUN chown ${NB_USER} ${HOME} ${HOME}/data/metadata/
-
-
-
-
-
-# First upgrade pip
-RUN python3.8 -m pip install --upgrade pip
-RUN apt-get update  
-RUN apt-get install python3-dev -y
-
-RUN python3.8 -m pip install --no-cache-dir jupyter matplotlib
-RUN python3.8 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
-RUN python3.8 -m pip install --no-cache-dir  torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-# RUN python3.8 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
-
-RUN python3.8 -m pip install --no-cache-dir \
+RUN python3.9 -m  pip install \
     #itk \
-    #pytorch-ignite==0.4.8 \
+    pytorch-ignite==0.4.8 \
     PyWavelets==1.3.0 \
     scipy==1.8.1 \
     nibabel==3.2.2 \
     pillow!=8.3.0 \  
-    #tensorboard==2.9.0 \
+    tensorboard==2.9.0 \
     scikit-image==0.19.2 \
     tqdm>=4.47.0 \
     lmdb==1.3.0 \
@@ -298,53 +128,67 @@ RUN python3.8 -m pip install --no-cache-dir \
     juliacall==0.8.0 \
     jupyterlab_github==3.0.1 \
     torchio==0.18.77 \
-    pytorch-lightning==1.7.7\
+    pytorch-lightning==1.6.4 \
     git+https://github.com/sat28/githubcommit.git \
     gdown==4.4.0 \
     seaborn==0.11.2 \
-    PyTorchUtils==0.0.3 \
-    optuna==3.0.2 \
+    # PyTorchUtils==0.0.3 \
+    # optuna==2.10.0 \
     jupyterlab-git==0.37.1 \
     comet-ml==3.31.5 \
-    voxelmorph==0.2 \
-    tensorflow==2.9.1 \
-    tensorflow_addons==0.17.0 \
+    # voxelmorph==0.2 \
+    # tensorflow==2.9.1 \
+    # tensorflow_addons==0.17.0 \
     ipywidgets==7.7.0 \
     h5py==3.7.0 \
-    #itk-elastix==0.14.1 \
+    itk-elastix==0.14.1 \
     zenodopy==0.2.0 \
     evalutils==0.3.0 \
     nnunet==1.7.0 \
-    #SimpleITK \
+    SimpleITK \
     git+https://github.com/balbasty/nitorch#egg=nitorch[all] \
     threadpoolctl==3.1.0 \
     batchgenerators==0.24 \
-    zenodo_get==1.3.4 \
+    # zenodo_get==1.3.4 \
     git+https://github.com/DIAGNijmegen/picai_baseline \
-    git+https://github.com/DIAGNijmegen/picai_prep \
+    #git+https://github.com/DIAGNijmegen/picai_prep \
     git+https://github.com/DIAGNijmegen/picai_eval \
+    #picai_prep==2.0.1 \
     #https://github.com/DIAGNijmegen/picai_prep/archive/refs/tags/v1.3.2.zip \
     KevinSR==0.1.19 \
     dask==2022.6.0 \
-    numba==0.55.2 \
-    pyro-ppl==1.8.1 \
-    warp-lang==0.2.3 \
+    intensity-normalization[ants] \
+    # numba==0.55.2 \
+    # pyro-ppl==1.8.1 \
+    # warp-lang==0.2.3 \
     report_guided_annotation \
+    SimpleITK-SimpleElastix \
     geomloss[full] \
-    torch-optimizer \
-    gspread \
-    torchmetrics \
-    # ray[tune] \
-    # ray[air]\
-    # horovod[pytorch] \
-    GPy \
-    sklearn \
-    #git+https://github.com/ray-project/ray_lightning \
-    fairscale \ 
-    lightning-bolts \
-    mysqlclient 
-    # git+https://github.com/ray-project/ray_lightning
+    torch-optimizer \ 
+    optax \ 
+    ott-jax \ 
+    evojax[extra] \
+    jraph \
+    flax \
+    toolz \
+    ipyparallel
 
+RUN python3.9 -m  pip install picai_prep==2.0.1
+
+
+
+
+
+RUN pip install pycocotools
+RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+# RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
+# RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
+
+
+RUN git clone https://github.com/google-research/scenic.git ${HOME}/build
+RUN cd ${HOME}/build/scenic
+RUN python3.9 -m  pip install ${HOME}/build
+RUN python3.9 -m pip install --upgrade jax jaxlib
 
 # RUN python3.8 -m pip install pytorch-lightning-bolts 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
