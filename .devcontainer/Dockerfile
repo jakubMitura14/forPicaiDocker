@@ -133,7 +133,6 @@ RUN python3.9 -m  pip install \
     juliacall==0.8.0 \
     jupyterlab_github==3.0.1 \
     torchio==0.18.77 \
-    pytorch-lightning==1.6.4 \
     git+https://github.com/sat28/githubcommit.git \
     gdown==4.4.0 \
     seaborn==0.11.2 \
