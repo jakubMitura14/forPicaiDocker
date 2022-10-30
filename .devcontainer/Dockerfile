@@ -64,15 +64,13 @@ RUN adduser --disabled-password \
 RUN apt-get install python-dev -y
 RUN apt-get install python3.9-dev -y
 # RUN python3.9 -m pip install --no-cache-dir jupyter matplotlib
-# RUN    pip install --no-cache-dir "intensity-normalization[ants]"
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
 # RUN python3.9 -m  pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
 RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
-
 # ENV JAXLIB_VERSION=0.3.16
-RUN apt-get install python3-dev default-libmysqlclient-dev build-essential
+RUN apt-get install -y python3-dev default-libmysqlclient-dev build-essential
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 RUN python3.9 -m  pip install libmysqlclient-dev \
