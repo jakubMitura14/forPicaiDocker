@@ -75,9 +75,8 @@ RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapi
 
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-RUN python3.9 -m  pip install  mysql-server \
-    libmysqlclient-dev 
-
+RUN python3.9 -m  pip install libmysqlclient-dev 
+#mysql-server \
 RUN python3.9 -m  pip install \
     #itk \
     pytorch-ignite==0.4.8 \
