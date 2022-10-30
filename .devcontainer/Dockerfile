@@ -88,7 +88,6 @@ RUN python3.9 -m  pip install \
     scipy==1.8.1 \
     nibabel==3.2.2 \
     pillow!=8.3.0 \  
-    tensorboard==2.9.0 \
     scikit-image==0.19.2 \
     tqdm>=4.47.0 \
     lmdb==1.3.0 \
@@ -124,7 +123,6 @@ RUN python3.9 -m  pip install \
     transformers==4.19.2 \
     mlflow==1.26.1 \
     matplotlib!=3.5.0 \
-    #tensorboardX==2.5 \
     types-PyYAML \
     pyyaml==6.0 \
     fire==0.4.0 \
