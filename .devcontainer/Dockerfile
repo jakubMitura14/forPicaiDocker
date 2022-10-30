@@ -64,7 +64,6 @@ RUN adduser --disabled-password \
 RUN apt-get install python-dev -y
 RUN apt-get install python3.9-dev -y
 RUN apt install -y libssl1.1
-RUN apt install -y libssl1.1=1.1.1f-1ubuntu2
 RUN apt install -y libssl-dev
 RUN apt install -y libmysqlclient-dev
 # RUN python3.9 -m pip install --no-cache-dir jupyter matplotlib
