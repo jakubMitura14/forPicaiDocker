@@ -72,10 +72,11 @@ RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapi
 
 
 # ENV JAXLIB_VERSION=0.3.16
-
+RUN apt-get install python3-dev default-libmysqlclient-dev build-essential
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-RUN python3.9 -m  pip install libmysqlclient-dev 
+RUN python3.9 -m  pip install libmysqlclient-dev \
+    mysql-server
 #mysql-server \
 RUN python3.9 -m  pip install \
     #itk \
