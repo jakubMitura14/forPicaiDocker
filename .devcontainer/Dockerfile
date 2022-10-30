@@ -192,6 +192,7 @@ RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdow
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
 
+RUN python3.9 -m  pip install optuna
 
 RUN git clone https://github.com/google-research/scenic.git ${HOME}/build
 RUN cd ${HOME}/build/scenic
