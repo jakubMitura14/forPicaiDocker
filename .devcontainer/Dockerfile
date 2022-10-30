@@ -75,6 +75,8 @@ RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapi
 
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+RUN python3.9 -m  pip install  mysql-server \
+    libmysqlclient-dev 
 
 RUN python3.9 -m  pip install \
     #itk \
@@ -176,10 +178,8 @@ RUN python3.9 -m  pip install \
     SimpleITK \
     openpyxl==3.0.10 \
     requests \
-    pytorch-lightning\
-    matplotlib \
-    mysql-server \
-    libmysqlclient-dev \
+    pytorch-lightning==1.7.7 \
+    matplotlib 
 
 #    pytorch-lightning==1.7.7 \
 
@@ -189,7 +189,7 @@ RUN python3.9 -m  pip install \
 
 
 
-RUN pip install pycocotools
+
 RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
