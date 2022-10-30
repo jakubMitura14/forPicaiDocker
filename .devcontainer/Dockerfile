@@ -177,7 +177,9 @@ RUN python3.9 -m  pip install \
     openpyxl==3.0.10 \
     requests \
     pytorch-lightning\
-    matplotlib
+    matplotlib \
+    mysql-server \
+    libmysqlclient-dev \
 
 #    pytorch-lightning==1.7.7 \
 
