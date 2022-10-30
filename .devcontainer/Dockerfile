@@ -63,6 +63,10 @@ RUN adduser --disabled-password \
 # RUN python3.9 -m pip install pyzmq
 RUN apt-get install python-dev -y
 RUN apt-get install python3.9-dev -y
+RUN apt install -y libssl1.1
+RUN apt install -y libssl1.1=1.1.1f-1ubuntu2
+RUN apt install -y libssl-dev
+RUN apt install -y libmysqlclient-dev
 # RUN python3.9 -m pip install --no-cache-dir jupyter matplotlib
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
