@@ -4,7 +4,7 @@ echo "staaarting "
 cd /home/sliceruser/locTemp/picai_baseline
 git config --global --add safe.directory /home/sliceruser/locTemp/picai_baseline
 git pull
-git switch LnMono
+git switch LnMonoB
 git pull
 python3.9 -u /home/sliceruser/locTemp/picai_baseline/src/picai_baseline/unet/train.py \
   --weights_dir='/home/sliceruser/locTemp/workdirSemiOpi/results/UNet/weights/' \
