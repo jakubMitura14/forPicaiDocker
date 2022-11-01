@@ -179,7 +179,8 @@ RUN python3.9 -m  pip install \
     openpyxl==3.0.10 \
     requests \
     pytorch-lightning==1.7.7 \
-    matplotlib 
+    matplotlib \
+    torchmetrics==0.10.2
 
 #    pytorch-lightning==1.7.7 \
 
