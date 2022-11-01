@@ -218,6 +218,7 @@ RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externa
 RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
 RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
+RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 
 
 # RUN python3.9 -m pip install --no-cache-dir intensity-normalization
