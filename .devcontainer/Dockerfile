@@ -179,8 +179,8 @@ RUN python3.9 -m  pip install \
     openpyxl==3.0.10 \
     requests \
     pytorch-lightning==1.7.7 \
-    matplotlib \
-    torchmetrics==0.10.2
+    matplotlib 
+    
 
 #    pytorch-lightning==1.7.7 \
 
@@ -195,7 +195,8 @@ RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdow
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
 
-RUN python3.9 -m  pip install optuna
+RUN python3.9 -m  pip install optuna \
+        torchmetrics==0.10.2
 
 RUN git clone https://github.com/google-research/scenic.git ${HOME}/build
 RUN cd ${HOME}/build/scenic
