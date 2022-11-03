@@ -1,0 +1,2 @@
+ 03-11-2022 18:41:00:935 [pid=6805 tid=6805] ERROR  cufio:483 cuInit Failed, error CUDA_ERROR_COMPAT_NOT_SUPPORTED_ON_DEVICE
+ 03-11-2022 18:41:00:935 [pid=6805 tid=6805] ERROR  cufio:587 cuFile initialization failed

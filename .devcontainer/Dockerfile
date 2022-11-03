@@ -1,11 +1,17 @@
 
-FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
+## { Mitura start}
+#FROM nvidia/cuda:11.3.1-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
-
-
-
+################################################################################
+# Prevent apt-get from prompting for keyboard choice
+#  https://superuser.com/questions/1356914/how-to-install-xserver-xorg-in-unattended-mode
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Remove any third-party apt sources to avoid issues with expiring keys.
+RUN rm -f /etc/apt/sources.list.d/*.list
+
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
     curl \
@@ -25,14 +31,85 @@ RUN apt-get update && apt-get install -y \
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
+
+
+
+## installing github CLI - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+# RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+# RUN sudo apt update
+# RUN sudo apt install gh
+#RUN apt autoremove python3 -y
+
+
+RUN mkdir /app
+WORKDIR /app
+
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 RUN mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-RUN wget https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda-repo-ubuntu2004-11-6-local_11.6.1-510.47.03-1_amd64.deb
-RUN dpkg -i cuda-repo-ubuntu2004-11-6-local_11.6.1-510.47.03-1_amd64.deb
-RUN apt-key add /var/cuda-repo-ubuntu2004-11-6-local/7fa2af80.pub
+RUN wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
 RUN apt-get update
-RUN apt-get -y install cuda
+RUN apt-get -y install cuda-11.3
+RUN apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+RUN echo 'APT::Install-Recommends "0" ; APT::Install-Suggests "0" ;' >> /etc/apt/apt.conf && \
+    echo 'Dir::Cache::pkgcache "";\nDir::Cache::srcpkgcache "";' | tee /etc/apt/apt.conf.d/00_disable-cache-files
 
+#consider using venv https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+
+
+RUN apt-get update -q -y && \
+    apt-get install -q -y \
+    vim net-tools curl \
+    libgl1-mesa-glx \
+    xserver-xorg-video-dummy \
+    libxrender1 \
+    libpulse0 \
+    libpulse-mainloop-glib0  \
+    libnss3  \
+    libxcomposite1 \
+    libxcursor1 \
+    libfontconfig1 \
+    libxrandr2 \
+    libasound2 \
+    libglu1 \
+    x11vnc \
+    awesome \
+    jq \
+    nautilus\
+    jupyter-core\
+    zip\
+    p7zip-full\
+    apt-utils\
+    octave\
+    kmod\
+    zlib1g\
+    python-dev\
+    bzip2\
+    cmake\
+    cuda-command-line-tools-11.3 \
+    libcublas-11.3 \
+    cuda-nvrtc-11.3\
+    libcufft-11.3 \
+    libcurand-11.3 \
+    libcusolver-11.3 \
+    libcusparse-11.3 \
+    libfreetype6-dev \
+    curl\
+    libzmq3-dev \
+    pkg-config\
+    software-properties-common\
+    libhdf5-serial-dev\
+    libtbb2 \
+    sqlite3 \
+    mysql-server \
+    libmysqlclient-dev \
+    #elastix=4.9.0-1\
+    git && \
+    apt-get install -q -y --reinstall ca-certificates
+
+RUN add-apt-repository ppa:deadsnakes/ppa
 
 
 
@@ -352,9 +429,12 @@ RUN chown ${NB_USER} start.sh
 
 
 # CMD /bin/bash start.sh
-#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 
 #  RUN      python3.9 -m zenodo_get --retry=8 10.5281/zenodo.6517397
+
+
+sudo docker run --init  --gpus all --ipc host --privileged --net host -it  slicerpicai:latest bash
