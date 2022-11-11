@@ -349,8 +349,6 @@ RUN chown ${NB_USER} start.sh
 
 # RUN git clone https://github.com/jakubMitura14/picai_baseline.git 
 # RUN git switch OPI
-
-
 # CMD /bin/bash start.sh
 ENTRYPOINT [ "/bin/bash","-l", "-c" ]
 #ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
