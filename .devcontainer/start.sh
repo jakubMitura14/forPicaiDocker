@@ -7,13 +7,17 @@ git pull
 # git switch LnMonoB
 git switch ${branch}
 git pull
+# python3.9 -u /home/sliceruser/locTemp/picai_baseline/src/picai_baseline/unet/train.py \
+#   --weights_dir='/home/sliceruser/locTemp/workdirSemiOpi/results/UNet/weights/' \
+#   --overviews_dir='/home/sliceruser/locTemp/workdirSemiOpi/results/UNet/overviews/' \
+#   --folds 0 1 2 3 4 --max_threads 12 --enable_da 1 --num_epochs 250 --batch_size 48 \
+#   --validate_n_epochs 1 --validate_min_epoch 0
+
 python3.9 -u /home/sliceruser/locTemp/picai_baseline/src/picai_baseline/unet/train.py \
-  --weights_dir='/home/sliceruser/locTemp/workdirSemiOpi/results/UNet/weights/' \
-  --overviews_dir='/home/sliceruser/locTemp/workdirSemiOpi/results/UNet/overviews/' \
+  --weights_dir='/mnt/disks/sdb/workdir/results/UNet/weights/' \
+  --overviews_dir='/mnt/disks/sdb/workdir/results/UNet/overviews/' \
   --folds 0 1 2 3 4 --max_threads 12 --enable_da 1 --num_epochs 250 --batch_size 48 \
   --validate_n_epochs 1 --validate_min_epoch 0
-
-
 
 
 # git config --global --add safe.directory /home/sliceruser/locTemp/piCaiCode

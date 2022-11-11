@@ -1,0 +1,12 @@
+ 08-11-2022 15:35:53:388 [pid=2356 tid=2356] ERROR  cufio:483 cuInit Failed, error CUDA_ERROR_COMPAT_NOT_SUPPORTED_ON_DEVICE
+ 08-11-2022 15:35:53:388 [pid=2356 tid=2356] ERROR  cufio:587 cuFile initialization failed
+ 08-11-2022 16:00:17:746 [pid=829 tid=829] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:21:20:121 [pid=6241 tid=6241] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:28:15:932 [pid=8033 tid=8033] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:51:24:312 [pid=13820 tid=13820] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:51:51:820 [pid=14016 tid=14016] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:53:48:535 [pid=14580 tid=14580] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:54:34:464 [pid=14885 tid=14885] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:55:31:548 [pid=15218 tid=15218] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:56:22:269 [pid=15508 tid=15508] NOTICE  cufio-drv:693 running in compatible mode
+ 08-11-2022 16:57:43:301 [pid=16025 tid=16025] NOTICE  cufio-drv:693 running in compatible mode
