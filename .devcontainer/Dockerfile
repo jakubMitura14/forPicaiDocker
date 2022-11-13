@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     nodejs\
     libssl-dev\
     unzip\
+    pkg-config\
     #cuda-11.3\
     #nvidia-cuda-toolkit-11-3\
     && rm -rf /var/lib/apt/lists/*
@@ -180,6 +181,10 @@ RUN python3.9 -m  pip install \
     requests \
     pytorch-lightning==1.7.7 \
     matplotlib 
+
+RUN python3.9 -m  pip install cupy 
+# RUN python3.9 -m  pip install ffcv 
+
     
 
 #    pytorch-lightning==1.7.7 \
@@ -327,7 +332,7 @@ RUN build_deps="curl" && \
 
 RUN git config --global --add safe.directory /home/sliceruser/locTemp/picai_baseline
 
-
+RUN    pip install pyradiomics
 #CMD ["/bin/bash"]
 ################################################################################
 # Build-time metadata as defined at http://label-schema.org
@@ -356,3 +361,4 @@ ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 #  RUN      python3.9 -m zenodo_get --retry=8 10.5281/zenodo.6517397
+# install prefetching for pytorch data loaders https://github.com/libffcv/ffcv/blob/main/docker/Dockerfile
