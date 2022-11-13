@@ -167,7 +167,7 @@ def getValidScore(segmToEvall,labelsToEval):
     valid_metrics.auroc
     valid_metrics.AP
     print(f"auroc {valid_metrics.auroc} AP {valid_metrics.AP}  ")
-    return valid_metrics.score
+    return valid_metrics.score, valid_metrics.auroc, valid_metrics.AP
 
 # scorePrim = getValidScore(segmToEval,labelsToEval)
 # scorePrim = getValidScore(segmToEvalOrig,labelsToEval)
@@ -335,7 +335,7 @@ def modifyFile(row,minMaxesDf,currentCol):
 # modifyFile(row,minMaxess,currentCol)
 
 
-resDf= pd.DataFrame(columns=['modality','currentCol', 'score'])
+resDf= pd.DataFrame(columns=['modality','currentCol', 'score','auroc', 'ap'])
 outputFilepathRes = os.path.join(dataDir, f"RadiomFeatureOnScore.csv")
 # scorePrim = getValidScore(segmToEval,labelsToEval)
         # resDfpd.concat({'modality':modality,'currentCol':currentCol, 'score':score   },ignore_index=True)
@@ -380,11 +380,11 @@ for modalityPair in modalities:
             pool.map( partial(modifyFile,minMaxesDf=minMaxess,currentCol=currentCol),rowws)
         tempPaths=list(map(standardizeFile,tempPaths))
 
-        score = getValidScore(tempPaths,labelsToEval)
+        score,auroc,ap  = getValidScore(tempPaths,labelsToEval)
         print(f"currentCol {currentCol} score {score}  ")
         # curSeriess= pd.Series([modality, currentCol,score])
-        curSeriess=pd.DataFrame([[modality, currentCol,score]],
-                   columns=['modality','currentCol', 'score'])
+        curSeriess=pd.DataFrame([[modality, currentCol,score,auroc,ap ]],
+                   columns=['modality','currentCol', 'score' ,'auroc', 'ap'])
 
         resDf=pd.concat([resDf,curSeriess])
 
