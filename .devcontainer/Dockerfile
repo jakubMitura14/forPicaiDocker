@@ -3,8 +3,6 @@ FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
 
 
-
-
 ENV DEBIAN_FRONTEND=noninteractive
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
@@ -77,7 +75,6 @@ RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapi
 RUN apt-get install -y python3-dev default-libmysqlclient-dev build-essential
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-RUN python3.9 -m  pip install mysqlclient
 # libmysqlclient \
 #                         libmysqlclient-dev \
 #                             mysql-server
@@ -163,7 +160,7 @@ RUN python3.9 -m  pip install \
     intensity-normalization[ants] \
     # numba==0.55.2 \
     # pyro-ppl==1.8.1 \
-    # warp-lang==0.2.3 \
+    warp-lang==0.5.0 \
     report_guided_annotation \
     SimpleITK-SimpleElastix \
     geomloss[full] \
@@ -180,9 +177,14 @@ RUN python3.9 -m  pip install \
     openpyxl==3.0.10 \
     requests \
     pytorch-lightning==1.7.7 \
-    matplotlib 
+    matplotlib \
+    mysqlclient \
+    cupy \
+    optuna \
+    torchmetrics==0.10.2
 
-RUN python3.9 -m  pip install cupy 
+RUN python3.9 -m  pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.12.0+cu116.html
+
 # RUN python3.9 -m  pip install ffcv 
 
     
@@ -197,23 +199,30 @@ RUN python3.9 -m  pip install cupy
 
 
 RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
+RUN python3.9 -m  pip install cr-sparse==0.3.2
+
+RUN python3.9 -m  pip install sentencepiece tensorflow==2.8.1
+
+
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
 
-RUN python3.9 -m  pip install optuna \
-        torchmetrics==0.10.2
 
 RUN git clone https://github.com/google-research/scenic.git ${HOME}/build
 RUN cd ${HOME}/build/scenic
 RUN python3.9 -m  pip install ${HOME}/build
 RUN python3.9 -m pip install --upgrade jax jaxlib
 
+
+RUN git clone https://github.com/google/flaxformer.git ${HOME}/buildb
+RUN cd ${HOME}/buildb/flaxformer
+RUN python3.9 -m  pip install ${HOME}/buildb
+
 # RUN python3.9 -m pip install pytorch-lightning-bolts 
 #ENV CUDAToolkit_ROOT=/usr/local/cuda-11.3 
 
 
 # RUN apt-get install python3.9-dev -y
-RUN python3.9 -m pip install --no-cache-dir 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 #host segmentations and baselines
 RUN git clone https://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@github.com/jakubMitura14/piCaiCode.git ${HOME}/data/piCaiCode
@@ -355,8 +364,8 @@ RUN chown ${NB_USER} start.sh
 # RUN git clone https://github.com/jakubMitura14/picai_baseline.git 
 # RUN git switch OPI
 # CMD /bin/bash start.sh
-#ENTRYPOINT [ "/bin/bash","-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
+ENTRYPOINT [ "/bin/bash","-l", "-c" ]
+# ENTRYPOINT [ "/bin/bash", "start.sh","-l", "-c" ]
 
 
 

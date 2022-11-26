@@ -35,8 +35,8 @@ files=[]
 for subdir, dirs, files in os.walk(targetDir):
     files=files
 #segmDir= '/home/data/picai_labels/csPCa_lesion_delineations/AI/Bosma22a'
-segmDir= '/home/data/orig_unet_semiB'
-segmDirConnected= '/home/data/orig_unet_semiB_copy'
+segmDir= '/home/data/prostateFold'
+segmDirConnected= '/home/data/prostateFoldB'
 
 segmFiles=[]
 for subdir, dirs, files in os.walk(segmDir):
@@ -170,8 +170,8 @@ def getValidScore(segmToEvall,labelsToEval):
     return valid_metrics.score, valid_metrics.auroc, valid_metrics.AP
 
 # scorePrim = getValidScore(segmToEval,labelsToEval)
-# scorePrim = getValidScore(segmToEvalOrig,labelsToEval)
-# scorePrim
+scorePrim = getValidScore(segmToEvalOrig,labelsToEval)
+scorePrim
 
 
 radiomTemp= '/home/data/radiomTemp'
