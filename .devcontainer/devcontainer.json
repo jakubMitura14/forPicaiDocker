@@ -17,7 +17,7 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"python.defaultInterpreterPath": "/usr/lib/python3.8"
+		"python.defaultInterpreterPath": "/usr/lib/python3.9"
 		// "python.linting.enabled": true,
 		// "python.linting.pylintEnabled": true,
 		// "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
@@ -34,19 +34,19 @@
 		"--init", "--gpus", "all"
         ,"--ipc", "host",
         "--net", "host", 
-		"--privileged" ,
-        "-e", "DISPLAY=${env:DISPLAY}",
-        "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+		"--privileged" 
+        // "-e", "DISPLAY=${env:DISPLAY}",
+        // "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
 		],
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python"
-		,"julialang.language-julia"
+		// ,"julialang.language-julia"
 		// "ms-python.vscode-pylance"
 	],
-	"mounts": [
-		"source=/media/jakub/NewVolume/slicerData,target=/home/data,type=bind,consistency=cached"
-	  ],
+	// "mounts": [
+	// 	"source=/media/jakub/NewVolume/slicerData,target=/home/data,type=bind,consistency=cached"
+	//   ],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -57,9 +57,9 @@
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "vscode",
 	"features": {
-		"git": "latest",
+		"git": "latest"
 		// "git-lfs": "latest",
-		 "github-cli": "latest"
+		//  "github-cli": "latest"
 		//"jupyterlab": "latest"
 	}
 }
