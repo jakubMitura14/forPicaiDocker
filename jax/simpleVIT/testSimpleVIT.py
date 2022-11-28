@@ -42,7 +42,7 @@ def create_train_state(rng, learning_rate, momentum,xDim,yDim):
   params = model.init(
         jax.random.PRNGKey(0),
         # Discard the "num_local_devices" dimension for initialization.
-        jnp.ones((xDim,yDim), jnp.float32),
+        jnp.ones((28,28), jnp.float32),
         train=False)['params']
 
   tx = optax.sgd(learning_rate, momentum)

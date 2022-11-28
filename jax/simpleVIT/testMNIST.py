@@ -19,6 +19,27 @@ import jax
 from ml_collections import config_flags
 import tensorflow as tf
 from absl import app
+import models_vit
+from models_vit import VisionTransformer
+
+import functools
+import os
+import time
+
+from absl import logging
+from clu import metric_writers
+from clu import periodic_actions
+import flax
+from flax.training import checkpoints as flax_checkpoints
+import jax
+import jax.numpy as jnp
+import ml_collections
+import numpy as np
+import optax
+import tensorflow as tf
+
+
+
 
 try:
     app.run(lambda argv: None)
@@ -34,31 +55,28 @@ config_flags.DEFINE_config_file(
     'File path to the training hyperparameter configuration.',
     lock_config=True)
 
+configCurr = ml_collections.ConfigDict()
+configCurr.patches=ml_collections.ConfigDict({'size': (16, 16)})
+configCurr.transformer = ml_collections.ConfigDict()
+configCurr.hidden_size = 192
+configCurr.transformer.mlp_dim = 10
+configCurr.transformer.num_heads = 2
+configCurr.transformer.num_layers = 1
+# configCurr.learning_rate=0.01
 
 
-class CNN(nn.Module):
-  """A simple CNN model."""
+num_classes=10
+model = VisionTransformer(num_classes=num_classes, **configCurr)
 
-  @nn.compact
-  def __call__(self, x):
-    x = nn.Conv(features=32, kernel_size=(3, 3))(x)
-    x = nn.relu(x)
-    x = nn.avg_pool(x, window_shape=(2, 2), strides=(2, 2))
-    x = nn.Conv(features=64, kernel_size=(3, 3))(x)
-    x = nn.relu(x)
-    x = nn.avg_pool(x, window_shape=(2, 2), strides=(2, 2))
-    x = x.reshape((x.shape[0], -1))  # flatten
-    x = nn.Dense(features=256)(x)
-    x = nn.relu(x)
-    x = nn.Dense(features=10)(x)
-    return x
 
 
 @jax.jit
-def apply_model(state, images, labels):
+def apply_model(state, images, labels,rng):
+  _, new_rng = jax.random.split(rng)
+  dropout_rng = new_rng#jax.random.fold_in(rng, jax.lax.axis_index(0))
   """Computes gradients, loss and accuracy for a single batch."""
   def loss_fn(params):
-    logits = state.apply_fn({'params': params}, images)
+    logits = state.apply_fn({'params': params}, images,rngs=dict(dropout=dropout_rng),train=True)
     one_hot = jax.nn.one_hot(labels, 10)
     loss = jnp.mean(optax.softmax_cross_entropy(logits=logits, labels=one_hot))
     return loss, logits
@@ -89,13 +107,19 @@ def train_epoch(state, train_ds, batch_size, rng):
   for perm in perms:
     batch_images = train_ds['image'][perm, ...]
     batch_labels = train_ds['label'][perm, ...]
-    grads, loss, accuracy = apply_model(state, batch_images, batch_labels)
+    grads, loss, accuracy = apply_model(state, batch_images, batch_labels,rng)
     state = update_model(state, grads)
     epoch_loss.append(loss)
     epoch_accuracy.append(accuracy)
   train_loss = np.mean(epoch_loss)
   train_accuracy = np.mean(epoch_accuracy)
   return state, train_loss, train_accuracy
+
+
+config = ml_collections.ConfigDict()
+config.patches=ml_collections.ConfigDict({'size': (16, 16)})
+config.transformer = ml_collections.ConfigDict()
+config.hidden_size = 192
 
 
 def get_datasets():
@@ -111,9 +135,17 @@ def get_datasets():
 
 def create_train_state(rng, config):
   """Creates initial `TrainState`."""
-  cnn = CNN()
-  params = cnn.init(rng, jnp.ones([1, 28, 28, 1]))['params']
-  tx = optax.sgd(config.learning_rate, config.momentum)
+  cnn = VisionTransformer(num_classes=num_classes, **config)
+  params = cnn.init(
+        jax.random.PRNGKey(0),
+        # Discard the "num_local_devices" dimension for initialization.
+        jnp.ones([1, 16, 16, 1], jnp.float32),
+        train=False)['params']
+  learning_rate=0.01
+  momentum=0.9
+
+  tx = optax.sgd(learning_rate, momentum)
+  
   return train_state.TrainState.create(
       apply_fn=cnn.apply, params=params, tx=tx)
 
@@ -129,20 +161,20 @@ def train_and_evaluate(config: ml_collections.ConfigDict,
   """
   train_ds, test_ds = get_datasets()
   rng = jax.random.PRNGKey(0)
-
+  batch_size=5
   summary_writer = tensorboard.SummaryWriter(workdir)
   summary_writer.hparams(dict(config))
 
   rng, init_rng = jax.random.split(rng)
   state = create_train_state(init_rng, config)
-
-  for epoch in range(1, config.num_epochs + 1):
+  num_epochs=5
+  for epoch in range(1, num_epochs + 1):
     rng, input_rng = jax.random.split(rng)
     state, train_loss, train_accuracy = train_epoch(state, train_ds,
-                                                    config.batch_size,
+                                                    batch_size,
                                                     input_rng)
     _, test_loss, test_accuracy = apply_model(state, test_ds['image'],
-                                              test_ds['label'])
+                                              test_ds['label'],rng)
 
     logging.info(
         'epoch:% 3d, train_loss: %.4f, train_accuracy: %.2f, test_loss: %.4f, test_accuracy: %.2f'
@@ -178,7 +210,7 @@ def main():
   platform.work_unit().create_artifact(platform.ArtifactType.DIRECTORY,
                                        FLAGS.workdir, 'workdir')
 
-  train_and_evaluate(FLAGS.config, FLAGS.workdir)
+  train_and_evaluate(configCurr, FLAGS.workdir)
 
 
 flags.mark_flags_as_required(['config', 'workdir'])
