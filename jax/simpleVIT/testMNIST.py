@@ -1,3 +1,5 @@
+#get 3d mnist 
+
 
 from absl import logging
 from flax import linen as nn
@@ -9,8 +11,6 @@ import ml_collections
 import numpy as np
 import optax
 import tensorflow_datasets as tfds
-
-
 from absl import app
 from absl import flags
 from absl import logging
@@ -21,11 +21,9 @@ import tensorflow as tf
 from absl import app
 import models_vit
 from models_vit import VisionTransformer
-
 import functools
 import os
 import time
-
 from absl import logging
 from clu import metric_writers
 from clu import periodic_actions
@@ -38,15 +36,15 @@ import numpy as np
 import optax
 import tensorflow as tf
 
-
-
-
 try:
     app.run(lambda argv: None)
 except:
     pass
 
 FLAGS = flags.FLAGS
+
+#setting number of CPU as in https://github.com/google/jax/blob/main/docs/notebooks/xmap_tutorial.ipynb
+os.environ["XLA_FLAGS"] = '--xla_force_host_platform_device_count=20' # Use 8 CPU devices
 
 flags.DEFINE_string('workdir', '/workspaces/forPicaiDocker/jax/data', 'Directory to store model data.')
 config_flags.DEFINE_config_file(
@@ -63,11 +61,8 @@ configCurr.transformer.mlp_dim = 10
 configCurr.transformer.num_heads = 2
 configCurr.transformer.num_layers = 1
 # configCurr.learning_rate=0.01
-
-
 num_classes=10
 model = VisionTransformer(num_classes=num_classes, **configCurr)
-
 
 
 @jax.jit

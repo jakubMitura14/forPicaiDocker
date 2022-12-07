@@ -229,7 +229,6 @@ RUN git clone https://github.com/DIAGNijmegen/AbdomenMRUS-prostate-segmentation.
 RUN git clone https://github.com/DIAGNijmegen/picai_baseline.git ${HOME}/externalRepos/picaiHostBaseline
 RUN git clone https://github.com/brudfors/UniRes.git ${HOME}/externalRepos/uniRes
 RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/conditionalAtlasGAN
-RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 
 
@@ -282,6 +281,7 @@ RUN mkdir ${HOME}/scripts
 
 # https://github.com/SuperElastix/elastix.git
 
+RUN git clone https://github.com/SuperElastix/SimpleElastix ${HOME}/externalRepos/elastix
 
 RUN ["chmod", "+x", "/home/sliceruser/externalRepos/elastix"]
 #from https://installati.one/ubuntu/22.04/libpangoxft-1.0-0/

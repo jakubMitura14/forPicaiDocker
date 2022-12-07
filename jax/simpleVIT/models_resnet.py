@@ -16,14 +16,17 @@ from typing import Callable, Sequence, TypeVar
 
 from flax import linen as nn
 import jax.numpy as jnp
+from jax import lax
+from jax.nn import one_hot, relu
+from jax.scipy.special import logsumexp
 
 T = TypeVar('T')
 
-def weight_standardize(w, axis, eps):
+def weight_standardize(w, axis, eps,forMean_axes):
   """
   So simple standardize
   Subtracts mean and divides by standard deviation."""
-  w = w - jnp.mean(w, axis=axis)
+  w = w - lax.pmean(w,forMean_axes)
   w = w / (jnp.std(w, axis=axis) + eps)
   return w
 
@@ -39,7 +42,7 @@ class StdConv(nn.Conv):
             *init_args) -> T:
     param = super().param(name, init_fn, *init_args)
     if name == 'kernel':
-      param = weight_standardize(param, axis=[0, 1, 2], eps=1e-5)# TODO( add axis 3)
+      param = weight_standardize(param, axis=[0, 1, 2], eps=1e-5,)# TODO( add axis 3)
     return param
 
 
