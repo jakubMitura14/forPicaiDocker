@@ -197,10 +197,10 @@ RUN python3.9 -m  pip install torch-scatter torch-sparse torch-cluster torch-spl
 
 
 RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN python3.9 -m  pip install cr-sparse==0.3.2
+RUN python3.9 -m  pip install cr-sparse==0.3.2 
 
 RUN python3.9 -m  pip install sentencepiece tensorflow==2.8.1
-
+RUN python3.9 -m  pip install equinox h5py==3.7.0 absl-py==1.3.0
 
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
@@ -232,14 +232,6 @@ RUN git clone https://github.com/neel-dey/Atlas-GAN.git ${HOME}/externalRepos/co
 RUN git clone https://github.com/DIAGNijmegen/picai_labels.git ${HOME}/labels
 
 
-# RUN python3.9 -m pip install --no-cache-dir intensity-normalization
-
-#USER root
-
-# ENV PATH="/usr/lib/python3.9/lib-dynload:${PATH}"
-# ENV PATH="/usr/local/lib/python3.9/dist-packages:${PATH}"
-# ENV PYTHONPATH=$PYTHONPATH:'/usr/lib/python3.9'
-# ENV PYTHONHOME=$PYTHONHOME:'/usr/lib/python3.9'
 
 
 RUN mkdir ${HOME}/scripts
@@ -360,7 +352,7 @@ RUN ["chmod", "+x", "start.sh"]
 RUN chown ${NB_USER} start.sh
 
 
-RUN python3.9 -m  pip install absl-py==1.3.0
+
 
 # RUN git clone https://github.com/jakubMitura14/picai_baseline.git 
 # RUN git switch OPI
