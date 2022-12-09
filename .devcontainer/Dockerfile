@@ -58,18 +58,19 @@ RUN adduser --disabled-password \
     ${NB_USER}
 
 # RUN python3.9 -m pip install pyzmq
-RUN apt-get install python-dev -y
-RUN apt-get install python3.9-dev -y
-RUN apt install -y libssl1.1
-RUN apt install -y libssl-dev
-RUN apt install -y libmysqlclient-dev
+RUN apt-get install python-dev -y  \
+ apt-get install python3.9-dev -y  \
+ apt install -y libssl1.1  \
+ apt install -y libssl-dev  \
+ apt install -y libmysqlclient-dev
 # RUN python3.9 -m pip install --no-cache-dir jupyter matplotlib
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 # Pin jedi; see https://github.com/ipython/ipython/issues/12740
 # RUN python3.9 -m  pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0 jedi==0.17.2
-RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+# RUN python3.9 -m  pip install "jax[cuda11_cudnn82]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+RUN python3.9 -m  pip install "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
-# ENV JAXLIB_VERSION=0.3.16
+ENV JAXLIB_VERSION=0.3.25
 RUN apt-get install -y python3-dev default-libmysqlclient-dev build-essential
 #RUN    pip install pyradiomics
 RUN python3.9 -m  pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
@@ -179,9 +180,15 @@ RUN python3.9 -m  pip install \
     mysqlclient \
     cupy \
     optuna \
-    torchmetrics==0.10.2
+    torchmetrics==0.10.2  \
+    cr-sparse==0.3.2 \
+    sentencepiece \
+    tensorflow==2.8.1 \
+    h5py==3.7.0 \
+    absl-py==1.3.0
 
 RUN python3.9 -m  pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.12.0+cu116.html
+RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
 
 # RUN python3.9 -m  pip install ffcv 
 
@@ -194,13 +201,6 @@ RUN python3.9 -m  pip install torch-scatter torch-sparse torch-cluster torch-spl
 
 
 
-
-
-RUN python3.9 -m  pip install 'monai[nibabel, skimage, pillow, tensorboard, gdown, ignite, torchvision, itk, tqdm, lmdb, psutil, cucim, pandas, einops, transformers, mlflow, matplotlib, tensorboardX, tifffile, imagecodecs]'
-RUN python3.9 -m  pip install cr-sparse==0.3.2 
-
-RUN python3.9 -m  pip install sentencepiece tensorflow==2.8.1
-RUN python3.9 -m  pip install equinox h5py==3.7.0 absl-py==1.3.0
 
 # RUN pip3 install numpy scipy six wheel jaxlib==${JAXLIB_VERSION}+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_releases.html jax[cuda11_cudnn82] -f https://storage.googleapis.com/jax-releases/jax_releases.html
 # RUN pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html \
@@ -283,10 +283,10 @@ RUN apt -y install libtbb-dev
 RUN apt -y install libgtk-3-dev
 RUN apt update
 
-RUN apt-get -y install libidn11-dev
-RUN apt-get -y install libglu1-mesa-dev
-RUN apt-get -y install libpangox-1.0-dev
-RUN apt-get -y install libpangoxft-1.0-0
+RUN apt-get -y install libidn11-dev  \
+apt-get -y install libglu1-mesa-dev  \
+apt-get -y install libpangox-1.0-dev  \
+apt-get -y install libpangoxft-1.0-0
 
 RUN mkdir ${HOME}/elastixBase && \
 cd ${HOME}/elastixBase && \
